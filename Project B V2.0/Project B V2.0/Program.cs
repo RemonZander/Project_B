@@ -10,7 +10,7 @@ namespace Project_B_V2._0
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("hoi");
+            Console.WriteLine("hoi2");
         }
     }
 }
