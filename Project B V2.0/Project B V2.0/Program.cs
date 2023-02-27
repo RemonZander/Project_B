@@ -23,7 +23,6 @@ namespace Project_B_V2._0
                 Display();
                 Refresh();
             } while (true);
-
         }
 
         static internal void Display()
