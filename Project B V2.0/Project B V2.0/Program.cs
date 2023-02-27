@@ -47,7 +47,6 @@ namespace Project_B_V2._0
         protected const string DOWN_ARROW = "DOWNARROW";
         protected const string LEFT_ARROW = "LEFTARROW";
         protected const string RIGHT_ARROW = "RIGHTARROW";
-
         public string previousScreen = "one";
 
         /// <summary>
