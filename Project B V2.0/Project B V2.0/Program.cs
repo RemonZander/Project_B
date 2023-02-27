@@ -36,7 +36,6 @@ namespace Project_B_V2._0
         {
             Console.Clear();
         }
-
     }
 
     internal abstract partial class Screen
