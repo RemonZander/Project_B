@@ -24,13 +24,6 @@
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Project_B_V2._0.TestScreen">
-    <Position X="6.5" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Program.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Project_B_V2._0.User">
     <Position X="0.75" Y="6" Width="1.5" />
     <TypeIdentifier>
@@ -48,11 +41,11 @@
   <Class Name="Project_B_V2._0.Mederwerker">
     <Position X="0.75" Y="7.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
       <FileName>Mederwerker.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="role" />
+      <Property Name="Role" />
     </ShowAsAssociation>
   </Class>
   <Enum Name="Project_B_V2._0.Roles">
