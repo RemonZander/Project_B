@@ -402,6 +402,35 @@ namespace Project_B_V2._0
                 }
             }
         }
+
+                /// <summary>
+        /// you use this function if you want to put 2 lists of lines together to make one big box
+        /// </summary>
+        /// <param name="input">This is the list of list string where this is a list of list lines</param>
+        /// <returns>This returns a list of list lines</returns>
+        protected List<List<string>> Makedubbelboxes(List<List<string>> input)
+        {
+            List<List<string>> output = new List<List<string>>();
+            for (int a = 0; a < input.Count; a += 2)
+            {
+                if (a == input.Count - 1)
+                {
+                    output.Add(input[a]);
+                    break;
+                }
+                List<string> blocknew = new List<string>();
+                List<string> blockold1 = input[a];
+                List<string> blockold2 = input[a + 1];
+
+                for (int b = 0; b < blockold1.Count; b++)
+                {
+                    blocknew.Add(blockold1[b] + "##  " + blockold2[b]);
+                }
+                output.Add(blocknew);
+            }
+
+            return output;
+        }
     }
 
     internal class StartScreen : Screen
@@ -472,13 +501,18 @@ namespace Project_B_V2._0
                     {
                         List<string> gebruikerInfo = new List<string>
                         {
-                            $"Unieke code: {gebruiker.UniekeCode}",
-                            $"Reservering datum: {gebruiker.Reservering}"
+                            "".PadRight(40),
+                            "".PadRight(40),
+                            $"Unieke code: {gebruiker.UniekeCode}".PadRight(40),
+                            $"Reservering datum: {gebruiker.Reservering}".PadRight(40),
+                            "".PadRight(40),
+                            "".PadRight(40),
                         };
                         gebruikers.Add(gebruikerInfo);
                     }
 
-                    var boxes = BoxAroundText(gebruikers, "#", 2, 2, 80, false);
+                    List<string> boxes = BoxAroundText(Makedubbelboxes(gebruikers), "#", 2, 0, 84, false);
+;
                     for (int a = 0; a < boxes.Count; a++)
                     {
                         Console.WriteLine(boxes[a]);
