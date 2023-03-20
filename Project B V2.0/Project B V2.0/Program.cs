@@ -16,13 +16,13 @@ namespace Project_B_V2._0
         static void Main(string[] args)
         {
             screens.Add(new StartScreen()); // 0
-            screens.Add(new TestScreen()); // 1
+            screens.Add(new TestDataGeneratorScreen()); // 1
             currentScreen = 0;
             do
             {
                 Display();
                 Refresh();
-            } while (true);
+            } while (currentScreen != -1);
         }
 
         static internal void Display()
@@ -412,10 +412,11 @@ namespace Project_B_V2._0
         /// <returns>here you return the index of the next screen. This index is based on the Screens field in the program class</returns>
         internal override int DoWork()
         {
-            Console.WriteLine("Screen one");
-            Console.WriteLine($"previousScreen: {previousScreen}");
-            Thread.Sleep(1000);
-            return 1;
+            Console.WriteLine("SHoofdscherm");
+            Console.WriteLine($"Druk op 1 om naar het scherm te gaan om test data aan te maken.");
+            Console.WriteLine("Druk op escape om af te sluiten");
+            (string, int) answer = AskForInput(-1);
+            return Convert.ToInt32(answer.Item1);
         }
 
         /// <summary>
@@ -426,15 +427,11 @@ namespace Project_B_V2._0
         /// <returns></returns>
         internal override List<Screen> Update(List<Screen> screens)
         {
-            foreach (var screen in screens)
-            {
-                screen.previousScreen = "one";
-            }
             return screens;
         }
     }
 
-    internal class TestScreen : Screen
+    internal class TestDataGeneratorScreen : Screen
     {
         /// <summary>
         /// This is the main entrypoint for the current screen. In here you can do whatever you want your screen to do.
@@ -442,10 +439,56 @@ namespace Project_B_V2._0
         /// <returns>here you return the index of the next screen. This index is based on the Screens field in the program class</returns>
         internal override int DoWork()
         {
-            Console.WriteLine("Screen two");
-            Console.WriteLine($"previousScreen: {previousScreen}");
-            Thread.Sleep(1000);
-            return 0;
+            Console.WriteLine("TestDataGeneratorScreen");
+            Console.WriteLine("Druk op 1 om unieke codes aan te maken.");
+            Console.WriteLine("Druk op 2 om gebruikers aan te maken.");
+            (string, int) answer = AskForInput(0);
+            if (answer.Item1 == "1")
+            {
+                (List<int>, Exception) result = TestDataGenerator.MaakUniekeCodes(10);
+                if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
+                {
+                    Console.WriteLine($"Er is een error opgetreden: {result.Item1}");
+                    Thread.Sleep(4000);
+                    return 1;
+                }
+                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op escape om terug te gaan of druk op 2 om de gebruikers aan te maken");
+            }
+            else if (answer.Item1 == "2")
+            {
+                (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(10);
+                if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
+                {
+                    Console.WriteLine($"Er is een error opgetreden: {result.Item2}");
+                    Thread.Sleep(4000);
+                    return 1;
+                }
+                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op escape om terug te gaan of druk op 1 om de aangemaakte users te zien.");
+                answer = AskForInput(0);
+                if (answer.Item1 == "1")
+                {
+                    List<List<string>> gebruikers = new List<List<string>>();
+                    foreach (var gebruiker in result.Item1)
+                    {
+                        List<string> gebruikerInfo = new List<string>
+                        {
+                            $"Unieke code: {gebruiker.UniekeCode}",
+                            $"Reservering datum: {gebruiker.Reservering}"
+                        };
+                        gebruikers.Add(gebruikerInfo);
+                    }
+
+                    var boxes = BoxAroundText(gebruikers, "#", 2, 2, 80, false);
+                    for (int a = 0; a < boxes.Count; a++)
+                    {
+                        Console.WriteLine(boxes[a]);
+                    }
+                    Console.ReadLine();
+                }
+                return 0;
+
+            }
+            return Convert.ToInt32(answer.Item1);
         }
 
         /// <summary>
@@ -456,10 +499,6 @@ namespace Project_B_V2._0
         /// <returns></returns>
         internal override List<Screen> Update(List<Screen> screens)
         {
-            foreach (var screen in screens)
-            {
-                screen.previousScreen = "two";
-            }
             return screens;
         }
     }
