@@ -492,7 +492,8 @@ namespace Project_B_V2._0
                     Thread.Sleep(4000);
                     return 1;
                 }
-                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op escape om terug te gaan of druk op 1 om de aangemaakte users te zien.");
+                Console.WriteLine();
+                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op 1 om de aangemaakte users te zien.");
                 answer = AskForInput(0);
                 if (answer.Item1 == "1")
                 {
@@ -517,10 +518,10 @@ namespace Project_B_V2._0
                     {
                         Console.WriteLine(boxes[a]);
                     }
-                    Console.ReadLine();
+                    Console.WriteLine("Druk op een toets om terug te gaan.");
+                    Console.ReadKey(false);
                 }
                 return 0;
-
             }
             return Convert.ToInt32(answer.Item1);
         }
