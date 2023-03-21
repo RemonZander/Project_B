@@ -14,11 +14,9 @@ namespace Project_B_V2._0
         public static List<User> DeserializeCodes()
         {
             //TODO Implementeer logica om JSON uit te lezen
-            StreamReader stream = new("test.json");
+            var jsonData = File.ReadAllText("test.json");
 
-            var data = stream.ReadToEnd();
-
-            List<User> users = JsonSerializer.Deserialize<List<User>>(data);
+            List<User> users = JsonSerializer.Deserialize<List<User>>(jsonData);
 
             return users;
         }
