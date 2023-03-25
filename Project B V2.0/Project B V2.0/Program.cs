@@ -402,6 +402,41 @@ namespace Project_B_V2._0
                 }
             }
         }
+
+        /// <summary>
+        /// you use this function if you want to put 2 lists of lines together to make one big box
+        /// </summary>
+        /// <param name="input">This is the list of list string where this is a list of list lines</param>
+        /// <param name="sym">This is the symbole you want to use as a saperator for the 2 boxes. It is smart to use the same symbol here you also use for the boxaroundtext function</param>
+        /// <returns>This returns a list of list lines</returns>
+        protected List<List<string>> MakeDubbelBoxes(List<List<string>> input, string sym)
+        {
+            List<List<string>> output = new List<List<string>>();
+            for (int a = 0; a < input.Count; a += 2)
+            {
+                //When you have a uneven list you need to check if you are at the last item and then break.
+                //This is because we take steps of 2 in this forloop (a+=2)
+                if (a == input.Count - 1)           
+                {
+                    output.Add(input[a]);
+                    break;
+                }
+                //blocknew is new list of blocks where block n and block n + 1 are concatenated togerther.
+                //This means that all the lines from blockold1 aka block n and all the lines from blockold2 aka block n + 1 are added together.
+                //This will make one big block with sym + sym as a seperator thus making 2 boxes next to each other
+                List<string> blocknew = new List<string>();
+                List<string> blockold1 = input[a];
+                List<string> blockold2 = input[a + 1];
+
+                for (int b = 0; b < blockold1.Count; b++)
+                {
+                    blocknew.Add(blockold1[b] + $"{sym + sym}  " + blockold2[b]);
+                }
+                output.Add(blocknew);
+            }
+
+            return output;
+        }
     }
 
     internal class StartScreen : Screen
@@ -453,7 +488,26 @@ namespace Project_B_V2._0
                     Thread.Sleep(4000);
                     return 1;
                 }
-                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op escape om terug te gaan of druk op 2 om de gebruikers aan te maken");
+                Console.WriteLine();
+                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op escape om terug te gaan of druk op 1 om de aangemaakte unieke codes te zien");
+                answer = AskForInput(0);
+                Console.WriteLine();
+                if (answer.Item1 == "1")
+                {
+                    List<string> uniekeCodes = new List<string>();
+                    foreach (var code in result.Item1)
+                    {
+                        uniekeCodes.Add("".PadRight(21));
+                        uniekeCodes.Add($"Unieke code: {code}".PadRight(20));
+                        uniekeCodes.Add("".PadRight(21));
+                    }
+
+                    string box = BoxAroundText(uniekeCodes, "#", 2, 0, 21, false);
+                    Console.WriteLine(box);
+                    Console.WriteLine("Druk op een toets om terug te gaan.");
+                    Console.ReadKey(false);
+                }
+                return 0;
             }
             else if (answer.Item1 == "2")
             {
@@ -464,8 +518,11 @@ namespace Project_B_V2._0
                     Thread.Sleep(4000);
                     return 1;
                 }
-                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op escape om terug te gaan of druk op 1 om de aangemaakte users te zien.");
+                Console.WriteLine();
+                JsonManager.SerializeGebruikers(result.Item1);
+                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op 1 om de aangemaakte users te zien.");
                 answer = AskForInput(0);
+                Console.WriteLine();
                 if (answer.Item1 == "1")
                 {
                     List<List<string>> gebruikers = new List<List<string>>();
@@ -473,21 +530,26 @@ namespace Project_B_V2._0
                     {
                         List<string> gebruikerInfo = new List<string>
                         {
-                            $"Unieke code: {gebruiker.UniekeCode}",
-                            $"Reservering datum: {gebruiker.Reservering}"
+                            "".PadRight(40),
+                            "".PadRight(40),
+                            $"Unieke code: {gebruiker.UniekeCode}".PadRight(40),
+                            $"Reservering datum: {gebruiker.Reservering}".PadRight(40),
+                            "".PadRight(40),
+                            "".PadRight(40),
                         };
                         gebruikers.Add(gebruikerInfo);
                     }
 
-                    var boxes = BoxAroundText(gebruikers, "#", 2, 2, 80, false);
+                    List<string> boxes = BoxAroundText(MakeDubbelBoxes(gebruikers, "#"), "#", 2, 0, 84, false);
+;
                     for (int a = 0; a < boxes.Count; a++)
                     {
                         Console.WriteLine(boxes[a]);
                     }
-                    Console.ReadLine();
+                    Console.WriteLine("Druk op een toets om terug te gaan.");
+                    Console.ReadKey(false);
                 }
                 return 0;
-
             }
             return Convert.ToInt32(answer.Item1);
         }
