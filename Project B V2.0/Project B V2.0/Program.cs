@@ -408,7 +408,7 @@ namespace Project_B_V2._0
         /// </summary>
         /// <param name="input">This is the list of list string where this is a list of list lines</param>
         /// <returns>This returns a list of list lines</returns>
-        protected List<List<string>> Makedubbelboxes(List<List<string>> input)
+        protected List<List<string>> MakeDubbelBoxes(List<List<string>> input)
         {
             List<List<string>> output = new List<List<string>>();
             for (int a = 0; a < input.Count; a += 2)
@@ -482,7 +482,26 @@ namespace Project_B_V2._0
                     Thread.Sleep(4000);
                     return 1;
                 }
-                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op escape om terug te gaan of druk op 2 om de gebruikers aan te maken");
+                Console.WriteLine();
+                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op escape om terug te gaan of druk op 1 om de aangemaakte unieke codes te zien");
+                answer = AskForInput(0);
+                Console.WriteLine();
+                if (answer.Item1 == "1")
+                {
+                    List<string> uniekeCodes = new List<string>();
+                    foreach (var code in result.Item1)
+                    {
+                        uniekeCodes.Add("".PadRight(21));
+                        uniekeCodes.Add($"Unieke code: {code}".PadRight(20));
+                        uniekeCodes.Add("".PadRight(21));
+                    }
+
+                    string box = BoxAroundText(uniekeCodes, "#", 2, 0, 21, false);
+                    Console.WriteLine(box);
+                    Console.WriteLine("Druk op een toets om terug te gaan.");
+                    Console.ReadKey(false);
+                }
+                return 0;
             }
             else if (answer.Item1 == "2")
             {
@@ -494,8 +513,10 @@ namespace Project_B_V2._0
                     return 1;
                 }
                 Console.WriteLine();
+                JsonManager.SerializeGebruikers(result.Item1);
                 Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op 1 om de aangemaakte users te zien.");
                 answer = AskForInput(0);
+                Console.WriteLine();
                 if (answer.Item1 == "1")
                 {
                     List<List<string>> gebruikers = new List<List<string>>();
@@ -513,7 +534,7 @@ namespace Project_B_V2._0
                         gebruikers.Add(gebruikerInfo);
                     }
 
-                    List<string> boxes = BoxAroundText(Makedubbelboxes(gebruikers), "#", 2, 0, 84, false);
+                    List<string> boxes = BoxAroundText(MakeDubbelBoxes(gebruikers), "#", 2, 0, 84, false);
 ;
                     for (int a = 0; a < boxes.Count; a++)
                     {
