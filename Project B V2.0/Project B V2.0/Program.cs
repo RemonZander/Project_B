@@ -407,6 +407,7 @@ namespace Project_B_V2._0
         /// you use this function if you want to put 2 lists of lines together to make one big box
         /// </summary>
         /// <param name="input">This is the list of list string where this is a list of list lines</param>
+        /// <param name="sym">This is the symbole you want to use as a saperator for the 2 boxes. It is smart to use the same symbol here you also use for the boxaroundtext function</param>
         /// <returns>This returns a list of list lines</returns>
         protected List<List<string>> MakeDubbelBoxes(List<List<string>> input, string sym)
         {
