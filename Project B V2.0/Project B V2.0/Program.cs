@@ -403,28 +403,33 @@ namespace Project_B_V2._0
             }
         }
 
-                /// <summary>
+        /// <summary>
         /// you use this function if you want to put 2 lists of lines together to make one big box
         /// </summary>
         /// <param name="input">This is the list of list string where this is a list of list lines</param>
         /// <returns>This returns a list of list lines</returns>
-        protected List<List<string>> MakeDubbelBoxes(List<List<string>> input)
+        protected List<List<string>> MakeDubbelBoxes(List<List<string>> input, string sym)
         {
             List<List<string>> output = new List<List<string>>();
             for (int a = 0; a < input.Count; a += 2)
             {
-                if (a == input.Count - 1)
+                //When you have a uneven list you need to check if you are at the last item and then break.
+                //This is because we take steps of 2 in this forloop (a+=2)
+                if (a == input.Count - 1)           
                 {
                     output.Add(input[a]);
                     break;
                 }
+                //blocknew is new list of blocks where block n and block n + 1 are concatenated togerther.
+                //This means that all the lines from blockold1 aka block n and all the lines from blockold2 aka block n + 1 are added together.
+                //This will make one big block with sym + sym as a seperator thus making 2 boxes next to each other
                 List<string> blocknew = new List<string>();
                 List<string> blockold1 = input[a];
                 List<string> blockold2 = input[a + 1];
 
                 for (int b = 0; b < blockold1.Count; b++)
                 {
-                    blocknew.Add(blockold1[b] + "##  " + blockold2[b]);
+                    blocknew.Add(blockold1[b] + $"{sym + sym}  " + blockold2[b]);
                 }
                 output.Add(blocknew);
             }
@@ -534,7 +539,7 @@ namespace Project_B_V2._0
                         gebruikers.Add(gebruikerInfo);
                     }
 
-                    List<string> boxes = BoxAroundText(MakeDubbelBoxes(gebruikers), "#", 2, 0, 84, false);
+                    List<string> boxes = BoxAroundText(MakeDubbelBoxes(gebruikers, "#"), "#", 2, 0, 84, false);
 ;
                     for (int a = 0; a < boxes.Count; a++)
                     {
