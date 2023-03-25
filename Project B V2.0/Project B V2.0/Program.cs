@@ -416,21 +416,6 @@ namespace Project_B_V2._0
             Console.WriteLine($"Druk op 1 om naar het scherm te gaan om test data aan te maken.");
             Console.WriteLine("Druk op escape om af te sluiten");
 
-            //List<User> users = JsonManager.DeserializeCodes();
-            //List<string> gebruikers = new List<string>();
-
-            //foreach (User gebruiker in users)
-            //{
-            //    gebruikers.Add($"unieke code: {gebruiker.UniekeCode}");
-            //}
-
-            //var boxes = BoxAroundText(gebruikers, "#", 2, 2, 80, false);
-            //for (int a = 0; a < boxes.Count(); a++)
-            //{
-            //    Console.WriteLine(boxes[a]);
-            //}
-            //Console.ReadLine();
-
             (string, int) answer = AskForInput(-1);
             return Convert.ToInt32(answer.Item1);
         }
