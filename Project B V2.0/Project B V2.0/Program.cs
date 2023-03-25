@@ -444,6 +444,7 @@ namespace Project_B_V2._0
             Console.WriteLine("SHoofdscherm");
             Console.WriteLine($"Druk op 1 om naar het scherm te gaan om test data aan te maken.");
             Console.WriteLine("Druk op escape om af te sluiten");
+
             (string, int) answer = AskForInput(-1);
             return Convert.ToInt32(answer.Item1);
         }
