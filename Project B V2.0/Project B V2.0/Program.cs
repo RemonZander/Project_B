@@ -17,6 +17,7 @@ namespace Project_B_V2._0
         {
             screens.Add(new StartScreen()); // 0
             screens.Add(new TestDataGeneratorScreen()); // 1
+            screens.Add(new HomeScreen()); // 2
             currentScreen = 0;
             do
             {
@@ -450,6 +451,7 @@ namespace Project_B_V2._0
             Console.WriteLine("SHoofdscherm");
             Console.WriteLine($"Druk op 1 om naar het scherm te gaan om test data aan te maken.");
             Console.WriteLine("Druk op escape om af te sluiten");
+            Console.WriteLine("Druk op 2 om naar homescherm te gaan");
 
             (string, int) answer = AskForInput(-1);
             return Convert.ToInt32(answer.Item1);
@@ -565,4 +567,40 @@ namespace Project_B_V2._0
             return screens;
         }
     }
+
+    internal class HomeScreen : Screen {
+        internal override int DoWork()
+        {   
+            List<List<string>> rondleidingInformatie = new List<List<string>>();
+            DateTime time = new DateTime(2023, 1, 1, 11, 0, 0);
+            for (int i = 0; i < 19; i++)
+            {
+                rondleidingInformatie.Add(new List<string>
+                {
+                    (time.ToShortTimeString() + "-" + time.AddMinutes(20).ToShortTimeString()).PadRight(19),
+                    "".PadRight(19),
+
+                });
+                time = time.AddMinutes(20);
+            }
+
+            List<string> Boxes = BoxAroundText(rondleidingInformatie, "#", 2, 0, 19, false);
+            for (int i = 0; i < Boxes.Count; i++)
+            {
+                Console.WriteLine(Boxes[i]);
+                
+            }
+
+            Console.WriteLine("Druk op een toets om terug te gaan.");
+            Console.ReadKey(false);
+            return 0;
+        }
+
+        internal override List<Screen> Update(List<Screen> screens) {
+
+            return screens;
+        }
+    }
 }
+
+
