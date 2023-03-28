@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,14 +10,30 @@ namespace Project_B_V2._0
 {
     internal class Program
     {
+        [DllImport("kernel32.dll", ExactSpelling = true)]
+        private static extern IntPtr GetConsoleWindow();
+        private static IntPtr ThisCon = GetConsoleWindow();
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        // State of the application once loaded
+        private const int HIDE = 0;
+        private const int MAXIMIZE = 3;
+        private const int MINIMIZE = 6;
+        private const int RESTORE = 9;
+
+
         private static int currentScreen;
         private static int lastscreen;
         private static List<Screen> screens = new List<Screen>();
 
         static void Main(string[] args)
         {
-            screens.Add(new StartScreen()); // 0
+            ShowWindow(ThisCon, MAXIMIZE);
+            screens.Add(new HomeScreen()); // 0
             screens.Add(new TestDataGeneratorScreen()); // 1
+            
             currentScreen = 0;
             do
             {
@@ -449,8 +466,9 @@ namespace Project_B_V2._0
         {
             Console.WriteLine("SHoofdscherm");
             Console.WriteLine($"Druk op 1 om naar het scherm te gaan om test data aan te maken.");
+            Console.WriteLine("Druk op 2 om naar homescherm te gaan");
             Console.WriteLine("Druk op escape om af te sluiten");
-
+            
             (string, int) answer = AskForInput(-1);
             return Convert.ToInt32(answer.Item1);
         }
@@ -565,4 +583,136 @@ namespace Project_B_V2._0
             return screens;
         }
     }
+
+    internal class HomeScreen : Screen {
+        internal override int DoWork()
+        {
+            int pos = 0;
+            bool cont = true;
+            List<List<string>> rondleidingInformatie = new List<List<string>>();
+            DateTime time = new DateTime(2023, 1, 1, 11, 0, 0);
+            for (int i = 0; i < 18; i++)
+            {
+                rondleidingInformatie.Add(new List<string>
+                {
+                    (time.ToShortTimeString() + "-" + time.AddMinutes(40).ToShortTimeString()).PadRight(19),
+                    "".PadRight(19),
+
+                });
+                time = time.AddMinutes(20);
+            }
+
+            do
+            {
+                //List<string> Boxes = BoxAroundText(MakeDubbelBoxes(rondleidingInformatie, "#"), "#", 2, 0, 42, true);
+                List<string> boxes = new List<string>();
+                if (pos == 0)
+                {
+                    boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, 2), "#")[0], "#", 2, 0, 42, true,
+                        new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+
+                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(2, rondleidingInformatie.Count - 2), "#")
+                        , "#", 2, 0, 42, true));
+                }
+                else if (pos == rondleidingInformatie.Count)
+                {
+                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, rondleidingInformatie.Count - 2), "#"), "#", 2, 0, 42, true));
+
+                    boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(rondleidingInformatie.Count - 2, 2), "#")[0], "#", 2, 0, 42, true,
+                        new List<string> { "[1] reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+                }
+                else if (pos % 2 == 0)
+                {
+                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, pos), "#"), "#", 2, 0, 42, true));
+
+                    boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos, 2), "#")[0], "#", 2, 0, 42, true,
+                        new List<string> { "[1] reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+
+                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos + 2, rondleidingInformatie.Count - (pos + 2)), "#"), "#", 2, 0, 42, true));
+                }
+                else if (pos % 2 == 1)
+                {
+                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, pos - 1), "#"), "#", 2, 0, 42, true));
+
+                    boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos - 1, 2), "#")[0], "#", 2, 0, 42, true,
+                        new List<string> { "".PadRight(19) + "##  [1] reserveren     ", "##".PadLeft(21) + "".PadRight(21) }));
+
+                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos + 1, rondleidingInformatie.Count - (pos + 1)), "#"), "#", 2, 0, 42, true));
+                }
+                Console.Clear();
+                for (int i = 0; i < boxes.Count; i++)
+                {
+                    Console.Write(boxes[i]);
+                
+                }
+
+                Console.WriteLine(new string('#', 48));
+                Console.WriteLine("Gebruik de pijltoesten om te navigeren.");
+                Console.WriteLine("Druk op [2] om je reservering te annuleren.");
+                Console.WriteLine("Druk op [9] voor developper scherm.");
+                ConsoleKeyInfo key = Console.ReadKey(false);
+                
+                if (IsKeyPressed(key, UP_ARROW))
+                {
+                    if (pos > 1)
+                    {
+                        pos -= 2;
+                    }
+                }
+
+                else if (IsKeyPressed(key, DOWN_ARROW)) 
+                {
+                    if (pos < rondleidingInformatie.Count - 2)
+                    {
+                        pos += 2;
+                    }
+                }
+                else if (IsKeyPressed(key, LEFT_ARROW))
+                {
+                    if (pos % 2 == 1) 
+                    {
+                        pos -= 1;
+                    }
+
+                }
+                else if (IsKeyPressed(key, RIGHT_ARROW))
+                {
+                    if (pos % 2 == 0)
+                    {
+                        pos += 1;
+                    }
+                }
+                else if (IsKeyPressed(key, ESCAPE_KEY))
+                {
+                    cont = false;
+                }
+                else if (IsKeyPressed(key, "D9") || IsKeyPressed(key, "NUMPAD9"))
+                {
+                    return 1;
+                }
+                else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Deze functionaliteit is nog niet toegevoegd.");
+                    Thread.Sleep(2000);
+                }
+                else if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
+                {
+                    Console.Clear();
+                    Console.WriteLine("Deze functionaliteit is nog niet toegevoegd.");
+                    Thread.Sleep(2000);
+                }
+
+            } while (cont);
+            return 0;
+
+        }
+
+        internal override List<Screen> Update(List<Screen> screens) {
+
+            return screens;
+        }
+    }
 }
+
+
