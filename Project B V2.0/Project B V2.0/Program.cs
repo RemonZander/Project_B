@@ -465,8 +465,8 @@ namespace Project_B_V2._0
         internal override int DoWork()
         {
             Console.WriteLine("SHoofdscherm");
-            Console.WriteLine($"Druk op [1] om naar het scherm te gaan om test data aan te maken.");
-            Console.WriteLine("Druk op [2] om naar homescherm te gaan");
+            Console.WriteLine($"Druk op [1] + [ENTER] om naar het scherm te gaan om test data aan te maken.");
+            Console.WriteLine("Druk op [2] + [ENTER] om naar homescherm te gaan");
             Console.WriteLine("Druk op [ESC] om af te sluiten");
             
             (string, int) answer = AskForInput(-1);
@@ -494,8 +494,8 @@ namespace Project_B_V2._0
         internal override int DoWork()
         {
             Console.WriteLine("TestDataGeneratorScreen");
-            Console.WriteLine("Druk op [1] om unieke codes aan te maken.");
-            Console.WriteLine("Druk op [2] om gebruikers aan te maken.");
+            Console.WriteLine("Druk op [1] + [ENTER] om unieke codes aan te maken.");
+            Console.WriteLine("Druk op [2] + [ENTER] om gebruikers aan te maken.");
             (string, int) answer = AskForInput(0);
             
             if (answer.Item1 == "1")
@@ -514,7 +514,7 @@ namespace Project_B_V2._0
                     return 1;
                 }
                 Console.WriteLine();
-                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op [ESC] om terug te gaan of druk op [1] om de aangemaakte unieke codes te zien");
+                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op [ESC] om terug te gaan of druk op [1] + [ENTER] om de aangemaakte unieke codes te zien");
                 answer = AskForInput(0);
                 Console.WriteLine();
                 if (answer.Item1 == "1")
@@ -549,7 +549,7 @@ namespace Project_B_V2._0
                 }
                 Console.WriteLine();
                 JsonManager.SerializeGebruikers(result.Item1);
-                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op [1] om de aangemaakte users te zien.");
+                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op [1] + [ENTER] om de aangemaakte users te zien.");
                 answer = AskForInput(0);
                 Console.WriteLine();
                 if (answer.Item1 == "1")
