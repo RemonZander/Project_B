@@ -465,9 +465,9 @@ namespace Project_B_V2._0
         internal override int DoWork()
         {
             Console.WriteLine("SHoofdscherm");
-            Console.WriteLine($"Druk op 1 om naar het scherm te gaan om test data aan te maken.");
-            Console.WriteLine("Druk op 2 om naar homescherm te gaan");
-            Console.WriteLine("Druk op escape om af te sluiten");
+            Console.WriteLine($"Druk op [1] om naar het scherm te gaan om test data aan te maken.");
+            Console.WriteLine("Druk op [2] om naar homescherm te gaan");
+            Console.WriteLine("Druk op [ESC] om af te sluiten");
             
             (string, int) answer = AskForInput(-1);
             return Convert.ToInt32(answer.Item1);
@@ -494,10 +494,17 @@ namespace Project_B_V2._0
         internal override int DoWork()
         {
             Console.WriteLine("TestDataGeneratorScreen");
-            Console.WriteLine("Druk op 1 om unieke codes aan te maken.");
-            Console.WriteLine("Druk op 2 om gebruikers aan te maken.");
+            Console.WriteLine("Druk op [1] om unieke codes aan te maken.");
+            Console.WriteLine("Druk op [2] om gebruikers aan te maken.");
             (string, int) answer = AskForInput(0);
+            
             if (answer.Item1 == "1")
+
+            
+           
+           
+            
+
             {
                 (List<int>, Exception) result = TestDataGenerator.MaakUniekeCodes(10);
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
@@ -507,7 +514,7 @@ namespace Project_B_V2._0
                     return 1;
                 }
                 Console.WriteLine();
-                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op escape om terug te gaan of druk op 1 om de aangemaakte unieke codes te zien");
+                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op [ESC] om terug te gaan of druk op [1] om de aangemaakte unieke codes te zien");
                 answer = AskForInput(0);
                 Console.WriteLine();
                 if (answer.Item1 == "1")
@@ -528,6 +535,10 @@ namespace Project_B_V2._0
                 return 0;
             }
             else if (answer.Item1 == "2")
+
+            
+            
+
             {
                 (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(10);
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
@@ -538,7 +549,7 @@ namespace Project_B_V2._0
                 }
                 Console.WriteLine();
                 JsonManager.SerializeGebruikers(result.Item1);
-                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op 1 om de aangemaakte users te zien.");
+                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op [1] om de aangemaakte users te zien.");
                 answer = AskForInput(0);
                 Console.WriteLine();
                 if (answer.Item1 == "1")
@@ -619,14 +630,14 @@ namespace Project_B_V2._0
                     boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, rondleidingInformatie.Count - 2), "#"), "#", 2, 0, 42, true));
 
                     boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(rondleidingInformatie.Count - 2, 2), "#")[0], "#", 2, 0, 42, true,
-                        new List<string> { "[1] reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+                        new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
                 }
                 else if (pos % 2 == 0)
                 {
                     boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, pos), "#"), "#", 2, 0, 42, true));
 
                     boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos, 2), "#")[0], "#", 2, 0, 42, true,
-                        new List<string> { "[1] reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+                        new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
 
                     boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos + 2, rondleidingInformatie.Count - (pos + 2)), "#"), "#", 2, 0, 42, true));
                 }
@@ -635,7 +646,7 @@ namespace Project_B_V2._0
                     boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, pos - 1), "#"), "#", 2, 0, 42, true));
 
                     boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos - 1, 2), "#")[0], "#", 2, 0, 42, true,
-                        new List<string> { "".PadRight(19) + "##  [1] reserveren     ", "##".PadLeft(21) + "".PadRight(21) }));
+                        new List<string> { "".PadRight(19) + "##  [1] Reserveren     ", "##".PadLeft(21) + "".PadRight(21) }));
 
                     boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos + 1, rondleidingInformatie.Count - (pos + 1)), "#"), "#", 2, 0, 42, true));
                 }
