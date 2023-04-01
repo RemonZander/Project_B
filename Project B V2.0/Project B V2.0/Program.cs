@@ -499,12 +499,6 @@ namespace Project_B_V2._0
             (string, int) answer = AskForInput(0);
             
             if (answer.Item1 == "1")
-
-            
-           
-           
-            
-
             {
                 (List<int>, Exception) result = TestDataGenerator.MaakUniekeCodes(10);
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
@@ -535,12 +529,23 @@ namespace Project_B_V2._0
                 return 0;
             }
             else if (answer.Item1 == "2")
-
-            
-            
-
             {
-                (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(10);
+                bool isNum = false;
+                Console.WriteLine();
+                do
+                {                  
+                    Console.WriteLine("Hoeveel gebruikers wilt u aanmaken: ");
+                    answer = AskForInput(0);
+                    isNum = int.TryParse(answer.Item1, out _);
+                    if (!isNum)
+                    {
+                        Console.WriteLine("Dit was geen getal...");
+                        Thread.Sleep(2000);
+                        Console.Clear();
+                    }
+                } while (!isNum);
+                
+                (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(Convert.ToInt32(answer.Item1));
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
                 {
                     Console.WriteLine($"Er is een error opgetreden: {result.Item2}");
@@ -601,9 +606,11 @@ namespace Project_B_V2._0
             int pos = 0;
             bool cont = true;
             List<List<string>> rondleidingInformatie = new List<List<string>>();
-            DateTime time = new DateTime(2023, 1, 1, 11, 0, 0);
+            List<DateTime> tijden = new List<DateTime>();
+            DateTime time = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
             for (int i = 0; i < 18; i++)
             {
+                tijden.Add(time);
                 rondleidingInformatie.Add(new List<string>
                 {
                     (time.ToShortTimeString() + "-" + time.AddMinutes(40).ToShortTimeString()).PadRight(19),
@@ -615,7 +622,6 @@ namespace Project_B_V2._0
 
             do
             {
-                //List<string> Boxes = BoxAroundText(MakeDubbelBoxes(rondleidingInformatie, "#"), "#", 2, 0, 42, true);
                 List<string> boxes = new List<string>();
                 if (pos == 0)
                 {
@@ -709,8 +715,42 @@ namespace Project_B_V2._0
                 }
                 else if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
                 {
-                    Console.Clear();
-                    Console.WriteLine("Deze functionaliteit is nog niet toegevoegd.");
+                    Console.WriteLine();
+                    Console.WriteLine("Vul hier uw unieke code in: ");
+                    (string, int) answer = AskForInput(0);
+                    if (answer.Item2 != -1)
+                    {
+                        return answer.Item2;
+                    }
+                    List<User> gebruikers = JsonManager.DeserializeGebruikers();
+                    List<string> uniekeCodes = gebruikers.Select(geb => geb.UniekeCode).ToList();
+
+                    for (int a = 0; a < gebruikers.Count; a++)
+                    {
+                        if (gebruikers[a].UniekeCode == answer.Item1 && gebruikers[a].Reservering != new DateTime(1, 1, 1))
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("U heeft al een reservering geplaatst");
+                            Thread.Sleep(2000);
+                            return 0;
+                        }
+                        else if (gebruikers[a].UniekeCode == answer.Item1)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("succes!");
+                            Console.ReadLine();
+
+                            gebruikers[a].Reservering = tijden[pos];
+
+                            JsonManager.SerializeGebruikers(gebruikers);
+
+                            Thread.Sleep(2000);
+                            return 0;
+                        }
+                    }
+
+                    Console.WriteLine();
+                    Console.WriteLine("Deze unieke code is bij ons niet bekent");
                     Thread.Sleep(2000);
                 }
 

@@ -40,6 +40,15 @@ namespace Project_B_V2._0
             {
                 for (int a = 0; a < hoeveelheid; a++)
                 {
+                    if (rnd.Next(1, 5) == 3)
+                    {
+                        Users.Add(new User
+                        {
+                            UniekeCode = UniekeCodes.Item1[a].ToString(),
+                            Reservering = new DateTime(1, 1, 1),
+                        });
+                        continue;
+                    }
                     Users.Add(new User
                     {
                         UniekeCode = UniekeCodes.Item1[a].ToString(),
