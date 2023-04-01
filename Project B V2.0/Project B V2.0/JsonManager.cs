@@ -45,7 +45,7 @@ namespace Project_B_V2._0
                 File.Delete("gebruikers.json");
             }
 
-            File.WriteAllText("gebruikers.json", JsonSerializer.Serialize(data));
+            File.WriteAllText("gebruikers.json", JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
 
 
             return "200: Success";
@@ -59,7 +59,7 @@ namespace Project_B_V2._0
                 File.Delete("rondleidingen.json");
             }
 
-            File.WriteAllText("rondleidingen.json", JsonSerializer.Serialize(data));
+            File.WriteAllText("rondleidingen.json", JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
 
 
             return "200: Success";

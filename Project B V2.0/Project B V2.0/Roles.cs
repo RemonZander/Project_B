@@ -7,7 +7,7 @@ namespace Project_B_V2._0
 {
     public enum Roles
     {
-        Gits = 0,
+        Gids = 0,
         Afdelingshoofd = 1
     }
 }
