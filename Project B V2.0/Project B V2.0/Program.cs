@@ -33,6 +33,7 @@ namespace Project_B_V2._0
             ShowWindow(ThisCon, MAXIMIZE);
             screens.Add(new HomeScreen()); // 0
             screens.Add(new TestDataGeneratorScreen()); // 1
+            screens.Add(new AfdelingshoofdScherm()); //2
             
             currentScreen = 0;
             do
@@ -660,9 +661,10 @@ namespace Project_B_V2._0
                 Console.WriteLine(new string('#', 48));
                 Console.WriteLine("Gebruik de pijltoesten om te navigeren.");
                 Console.WriteLine("Druk op [2] om je reservering te annuleren.");
+                Console.WriteLine("Druk op [4] om naar het afdelingshoofdscherm te gaan.");
                 Console.WriteLine("Druk op [9] voor developper scherm.");
                 ConsoleKeyInfo key = Console.ReadKey(false);
-                
+
                 if (IsKeyPressed(key, UP_ARROW))
                 {
                     if (pos > 1)
@@ -671,7 +673,7 @@ namespace Project_B_V2._0
                     }
                 }
 
-                else if (IsKeyPressed(key, DOWN_ARROW)) 
+                else if (IsKeyPressed(key, DOWN_ARROW))
                 {
                     if (pos < rondleidingInformatie.Count - 2)
                     {
@@ -680,7 +682,7 @@ namespace Project_B_V2._0
                 }
                 else if (IsKeyPressed(key, LEFT_ARROW))
                 {
-                    if (pos % 2 == 1) 
+                    if (pos % 2 == 1)
                     {
                         pos -= 1;
                     }
@@ -713,6 +715,10 @@ namespace Project_B_V2._0
                     Console.WriteLine("Deze functionaliteit is nog niet toegevoegd.");
                     Thread.Sleep(2000);
                 }
+                else if (IsKeyPressed(key, "D4") || IsKeyPressed(key, "NUMPAD4"))
+                { 
+                    return 2;
+                }
 
             } while (cont);
             return 0;
@@ -724,6 +730,23 @@ namespace Project_B_V2._0
             return screens;
         }
     }
+    internal class AfdelingshoofdScherm : Screen {
+
+        internal override int DoWork()
+        {
+            Console.WriteLine("AfdelingshoofdScherm");
+            Thread.Sleep(2000);
+
+            return 0;   
+        }
+
+        internal override List<Screen> Update(List<Screen> screens)
+        {
+
+            return screens;
+        }
+    }
+
 }
 
 
