@@ -11,6 +11,8 @@ namespace Project_B_V2._0
 
         public int Bezettingsgraad { get; set; }
 
+        public int MaxGrootte { get; set; } = 13;
+
         public int CalculateBezettingsgraad(List<User> users)
         {
             List<User> reserverdUsers = new List<User>();
@@ -20,7 +22,7 @@ namespace Project_B_V2._0
                 if(user.Reservering == Datum) reserverdUsers.Add(user);
             }
 
-            Bezettingsgraad = (reserverdUsers.Count / 13) * 100;
+            Bezettingsgraad = (reserverdUsers.Count / MaxGrootte) * 100;
 
             return Bezettingsgraad;
         }
