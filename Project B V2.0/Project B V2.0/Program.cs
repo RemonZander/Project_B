@@ -709,13 +709,64 @@ namespace Project_B_V2._0
                 }
                 else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
                 {
-                    Console.Clear();
-                    Console.WriteLine("Deze functionaliteit is nog niet toegevoegd.");
-                    Thread.Sleep(2000);
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine("_".PadRight(21));
+                    Console.WriteLine("Voer hier uw unieke code in: ");
+                    (string, int) answer = AskForInput(0);
+                    if (answer.Item2 != -1)
+                    {
+                        return answer.Item2;
+                    }
+                    List<User> gebruikers = JsonManager.DeserializeGebruikers();
+
+                    //Als de gebruiker is gevonden, returned hij het naar een nieuwe variabel
+                    User targetedUser = gebruikers.FirstOrDefault(geb => geb.UniekeCode.Equals(answer.Item1));
+
+                    if (targetedUser != null)
+                    {
+                        //Als de gebruiker geen reservering heeft, geef de volgende melding
+                        if(targetedUser.Reservering == default)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("U heeft nog geen reservering geplaatst");
+                            Thread.Sleep(2000);
+                            return 0;
+                        }
+
+                        //Zet de resveringsdatum naar default om te legen / resetten
+                        targetedUser.Reservering = default;
+
+                        //Zoek naar de gebruiker in de gebruikers lijst
+                        int index = gebruikers.FindIndex(geb => geb.UniekeCode == targetedUser.UniekeCode);
+
+                        //Overschrijf de gebruiker in de lijst
+                        gebruikers[index] = targetedUser;
+
+                        JsonManager.SerializeGebruikers(gebruikers);
+
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        Console.WriteLine("Uw reservering is succesvol geannuleerd");
+                        Thread.Sleep(2000);
+                        return 0;
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Deze user is niet bekend bij ons.");
+                        Thread.Sleep(2000);
+                        return 0;
+                    }
+
                 }
                 else if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
                 {
                     Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine("_".PadRight(21));
                     Console.WriteLine("Vul hier uw unieke code in: ");
                     (string, int) answer = AskForInput(0);
                     if (answer.Item2 != -1)
@@ -723,7 +774,7 @@ namespace Project_B_V2._0
                         return answer.Item2;
                     }
                     List<User> gebruikers = JsonManager.DeserializeGebruikers();
-                    List<string> uniekeCodes = gebruikers.Select(geb => geb.UniekeCode).ToList();
+                    List<string> uniekeCodes = gebruikers.Select(geb => geb.UniekeCode).ToList(); //?
 
                     for (int a = 0; a < gebruikers.Count; a++)
                     {
@@ -736,15 +787,16 @@ namespace Project_B_V2._0
                         }
                         else if (gebruikers[a].UniekeCode == answer.Item1)
                         {
-                            Console.WriteLine();
-                            Console.WriteLine("succes!");
-                            Console.ReadLine();
-
                             gebruikers[a].Reservering = tijden[pos];
 
                             JsonManager.SerializeGebruikers(gebruikers);
 
-                            Thread.Sleep(2000);
+                            Console.WriteLine();
+                            Console.WriteLine($"Uw reservering voor {tijden[pos].ToShortTimeString} is geplaatst.");
+                            Console.ReadLine();
+
+
+                            Thread.Sleep(4000);
                             return 0;
                         }
                     }
