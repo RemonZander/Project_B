@@ -712,7 +712,7 @@ namespace Project_B_V2._0
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine();
-                    Console.WriteLine("_".PadRight(21));
+                    Console.WriteLine(new string('_', 48));
                     Console.WriteLine("Voer hier uw unieke code in: ");
                     (string, int) answer = AskForInput(0);
                     if (answer.Item2 != -1)
@@ -766,7 +766,7 @@ namespace Project_B_V2._0
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine();
-                    Console.WriteLine("_".PadRight(21));
+                    Console.WriteLine(new string('_', 48));
                     Console.WriteLine("Vul hier uw unieke code in: ");
                     (string, int) answer = AskForInput(0);
                     if (answer.Item2 != -1)
@@ -792,9 +792,7 @@ namespace Project_B_V2._0
                             JsonManager.SerializeGebruikers(gebruikers);
 
                             Console.WriteLine();
-                            Console.WriteLine($"Uw reservering voor {tijden[pos].ToShortTimeString} is geplaatst.");
-                            Console.ReadLine();
-
+                            Console.WriteLine($"Uw reservering voor {tijden[pos].ToShortTimeString()} is geplaatst.");
 
                             Thread.Sleep(4000);
                             return 0;
