@@ -88,6 +88,7 @@ namespace Project_B_V2._0
         protected static bool IsKeyPressed(ConsoleKeyInfo cki, string key) => cki.Key.ToString().ToUpper() == key.ToUpper();
 
 
+        [Obsolete]
         protected (string, int) AskForInput(int screenIndex)
         {
             bool AskRepeat = true;
@@ -458,35 +459,6 @@ namespace Project_B_V2._0
         }
     }
 
-    internal class StartScreen : Screen
-    {
-        /// <summary>
-        /// This is the main entrypoint for the current screen. In here you can do whatever you want your screen to do.
-        /// </summary>
-        /// <returns>here you return the index of the next screen. This index is based on the Screens field in the program class</returns>
-        internal override int DoWork()
-        {
-            Console.WriteLine("SHoofdscherm");
-            Console.WriteLine($"Druk op [1] + [ENTER] om naar het scherm te gaan om test data aan te maken.");
-            Console.WriteLine("Druk op [2] + [ENTER] om naar homescherm te gaan");
-            Console.WriteLine("Druk op [ESC] om af te sluiten");
-            
-            (string, int) answer = AskForInput(-1);
-            return Convert.ToInt32(answer.Item1);
-        }
-
-        /// <summary>
-        /// This function is needed when you need to update information on all the screens. For example when you are logged in or logged uit.
-        /// It is done this way to avoid shared state.
-        /// </summary>
-        /// <param name="screens"></param>
-        /// <returns></returns>
-        internal override List<Screen> Update(List<Screen> screens)
-        {
-            return screens;
-        }
-    }
-
     internal class TestDataGeneratorScreen : Screen
     {
         /// <summary>
@@ -496,12 +468,13 @@ namespace Project_B_V2._0
         internal override int DoWork()
         {
             Console.WriteLine("TestDataGeneratorScreen");
-            Console.WriteLine("Druk op [1] + [ENTER] om unieke codes aan te maken.");
-            Console.WriteLine("Druk op [2] + [ENTER] om gebruikers aan te maken.");
-            Console.WriteLine("Druk op [3] + [ENTER] om rondleidingen aan te maken.");
-            (string, int) answer = AskForInput(0);
+            Console.WriteLine("Druk op [1] om unieke codes aan te maken.");
+            Console.WriteLine("Druk op [2] om gebruikers aan te maken.");
+            Console.WriteLine("Druk op [3] om rondleidingen aan te maken.");
+            ConsoleKeyInfo input = Console.ReadKey(false);
+            //(string, int) answer = AskForInput(0);
             
-            if (answer.Item1 == "1")
+            if (IsKeyPressed(input, "D1") || IsKeyPressed(input, "NUMPAD1"))
             {
                 (List<int>, Exception) result = TestDataGenerator.MaakUniekeCodes(10);
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
@@ -511,10 +484,10 @@ namespace Project_B_V2._0
                     return 1;
                 }
                 Console.WriteLine();
-                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op [ESC] om terug te gaan of druk op [1] + [ENTER] om de aangemaakte unieke codes te zien");
-                answer = AskForInput(0);
+                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op [ESC] om terug te gaan of druk op [1] om de aangemaakte unieke codes te zien");
+                ConsoleKeyInfo key = Console.ReadKey(false);
                 Console.WriteLine();
-                if (answer.Item1 == "1")
+                if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
                 {
                     List<string> uniekeCodes = new List<string>();
                     foreach (var code in result.Item1)
@@ -529,16 +502,16 @@ namespace Project_B_V2._0
                     Console.WriteLine("Druk op een toets om terug te gaan.");
                     Console.ReadKey(false);
                 }
-                return 0;
             }
-            else if (answer.Item1 == "2")
+            else if (IsKeyPressed(input, "D2") || IsKeyPressed(input, "NUMPAD2"))
             {
-                bool isNum = false;
+                int amount = 0;
                 Console.WriteLine();
+                bool isNum;
                 do
-                {                  
+                {
                     Console.WriteLine("Hoeveel gebruikers wilt u aanmaken: ");
-                    answer = AskForInput(0);
+                    (string, int) answer = AskForInput(0);
                     isNum = int.TryParse(answer.Item1, out _);
                     if (!isNum)
                     {
@@ -546,9 +519,13 @@ namespace Project_B_V2._0
                         Thread.Sleep(2000);
                         Console.Clear();
                     }
+                    else
+                    {
+                        amount = Convert.ToInt32(answer.Item1);
+                    }
                 } while (!isNum);
-                
-                (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(Convert.ToInt32(answer.Item1));
+
+                (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(Convert.ToInt32(amount));
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
                 {
                     Console.WriteLine($"Er is een error opgetreden: {result.Item2}");
@@ -557,10 +534,10 @@ namespace Project_B_V2._0
                 }
                 Console.WriteLine();
                 JsonManager.SerializeGebruikers(result.Item1);
-                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op [1] + [ENTER] om de aangemaakte users te zien.");
-                answer = AskForInput(0);
+                Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op [1] om de aangemaakte users te zien.");
+                ConsoleKeyInfo key = Console.ReadKey(false);
                 Console.WriteLine();
-                if (answer.Item1 == "1")
+                if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
                 {
                     List<List<string>> gebruikers = new List<List<string>>();
                     foreach (var gebruiker in result.Item1)
@@ -586,10 +563,10 @@ namespace Project_B_V2._0
                     Console.WriteLine("Druk op een toets om terug te gaan.");
                     Console.ReadKey(false);
                 }
-                return 0;
             }
-            else if (answer.Item1 == "3")
+            else if (IsKeyPressed(input, "D3") || IsKeyPressed(input, "NUMPAD3"))
             {
+                Console.WriteLine();
                 Console.WriteLine("Geef de start datum op vanaf wanneer je rondleidngen wilt maken. Format: dd-MM-YYYY");
                 DateTime start = Convert.ToDateTime(Console.ReadLine());
                 Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidngen wilt maken. Format: dd-MM-YYYY");
@@ -607,7 +584,15 @@ namespace Project_B_V2._0
                 Console.WriteLine("Rondleidingen zijn opgeslagen!");
                 Thread.Sleep(4000);
             }
-            return Convert.ToInt32(answer.Item1);
+            else if (IsKeyPressed(input, ESCAPE_KEY))
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+            return 0;
         }
 
         /// <summary>
@@ -681,8 +666,7 @@ namespace Project_B_V2._0
                 Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
                 {
-                    Console.Write(boxes[i]);
-                
+                    Console.Write(boxes[i]);               
                 }
 
                 Console.WriteLine(new string('#', 48));
@@ -827,7 +811,6 @@ namespace Project_B_V2._0
 
             } while (cont);
             return 0;
-
         }
 
         internal override List<Screen> Update(List<Screen> screens) {
