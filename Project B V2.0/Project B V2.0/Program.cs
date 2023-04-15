@@ -735,9 +735,41 @@ namespace Project_B_V2._0
         internal override int DoWork()
         {
             Console.WriteLine("AfdelingshoofdScherm");
-            Thread.Sleep(2000);
+            List<Rondleiding> rondleidinen = new List<Rondleiding>();
+            List<List<string>> rondleidingInformatie = new List<List<string>>();
+            DateTime time = new DateTime(2023, 1, 1, 11, 0, 0);
+            for (int i = 0; i < 18; i++)
+            {
+                Rondleiding rondleiding = new()
+                {
+                    Datum = time,
+                    Bezettingsgraad = 0
+                };
 
-            return 0;   
+                rondleidinen.Add(rondleiding);
+                
+                time = time.AddMinutes(20);
+            }
+
+            List<User> gebruikers = JsonManager.DeserializeGebruikers();
+
+            foreach(Rondleiding rondleiding in rondleidinen)
+            {
+                rondleiding.CalculateBezettingsgraad(gebruikers);
+
+                Console.WriteLine($"{rondleiding.Datum}, Bezettingsgraad: {rondleiding.Bezettingsgraad}%");
+            }
+
+            ConsoleKeyInfo key = Console.ReadKey(false);
+
+            if (IsKeyPressed(key, "D9") || IsKeyPressed(key, "NUMPAD9"))
+            {
+                return 1;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
         internal override List<Screen> Update(List<Screen> screens)
