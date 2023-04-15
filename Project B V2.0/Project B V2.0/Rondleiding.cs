@@ -22,7 +22,8 @@ namespace Project_B_V2._0
                 if(user.Reservering == Datum) reserverdUsers.Add(user);
             }
 
-            Bezettingsgraad = (reserverdUsers.Count / MaxGrootte) * 100;
+            double graad = reserverdUsers.Count;
+            Bezettingsgraad = (int)((graad / MaxGrootte) * 100);
 
             return Bezettingsgraad;
         }

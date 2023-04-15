@@ -842,7 +842,7 @@ namespace Project_B_V2._0
             Console.WriteLine("AfdelingshoofdScherm");
             List<Rondleiding> rondleidinen = new List<Rondleiding>();
             List<List<string>> rondleidingInformatie = new List<List<string>>();
-            DateTime time = new DateTime(2023, 1, 1, 11, 0, 0);
+            DateTime time = new DateTime(2023, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
             for (int i = 0; i < 18; i++)
             {
                 Rondleiding rondleiding = new()
@@ -865,15 +865,16 @@ namespace Project_B_V2._0
                 Console.WriteLine($"{rondleiding.Datum}, Bezettingsgraad: {rondleiding.Bezettingsgraad}%");
             }
 
+            Console.WriteLine("\n Druk op 1 om terug te gaan naar het Hoofdscherm");
             ConsoleKeyInfo key = Console.ReadKey(false);
 
-            if (IsKeyPressed(key, "D9") || IsKeyPressed(key, "NUMPAD9"))
+            if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
             {
-                return 1;
+                return 0;
             }
             else
             {
-                return 1;
+                return 0;
             }
         }
 
