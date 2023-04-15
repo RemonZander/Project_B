@@ -13,6 +13,8 @@ namespace Project_B_V2._0
 
         public int MaxGrootte { get; set; } = 13;
 
+        public int Bezetting { get; set; }
+
         public int CalculateBezettingsgraad(List<User> users)
         {
             List<User> reserverdUsers = new List<User>();
