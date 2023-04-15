@@ -831,19 +831,6 @@ namespace Project_B_V2._0
 
             List<Rondleiding> rondleidingen = new List<Rondleiding>();
             rondleidingen = JsonManager.DeserializeRondleidingen();
-            DateTime time = new DateTime(2023, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
-            //for (int i = 0; i < 18; i++)
-            //{
-            //    Rondleiding rondleiding = new()
-            //    {
-            //        Datum = time,
-            //        Bezettingsgraad = 0
-            //    };
-
-            //    rondleidingen.Add(rondleiding);
-                
-            //    time = time.AddMinutes(20);
-            //}
 
             List<User> gebruikers = JsonManager.DeserializeGebruikers();
 
