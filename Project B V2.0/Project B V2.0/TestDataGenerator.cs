@@ -31,6 +31,14 @@ namespace Project_B_V2._0
 
         internal static (List<User>, Exception) MaakGebruikers(int hoeveelheid)
         {
+            List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen();
+            if (rondleidingen.Count == 0)
+            {
+                (List<Rondleiding>, Exception) temp = MaakRondleidingen(new DateTime(2023, 1, 1, 11, 0, 0), new DateTime(2023, 12, 31, 17, 00, 0));
+                rondleidingen = temp.Item1;
+                JsonManager.SerializeRondleidingen(rondleidingen);
+            }
+
             Exception ex = new Exception();
             (List<int>, Exception) UniekeCodes = MaakUniekeCodes(hoeveelheid);
             if (UniekeCodes.Item2.Message != "Exception of type 'System.Exception' was thrown.") return (new List<User>(), UniekeCodes.Item2);
@@ -49,11 +57,17 @@ namespace Project_B_V2._0
                         });
                         continue;
                     }
+                    int nextRondleiding = rnd.Next(0, rondleidingen.Count);
                     Users.Add(new User
                     {
                         UniekeCode = UniekeCodes.Item1[a].ToString(),
-                        Reservering = new DateTime(DateTime.Now.Year, rnd.Next(1, 13), rnd.Next(1, 29)),
+                        Reservering = rondleidingen[nextRondleiding].Datum,
                     });
+                    rondleidingen[nextRondleiding].Bezetting += 1;
+                    if (rondleidingen[nextRondleiding].Bezetting == 13)
+                    {
+                        rondleidingen.RemoveAt(nextRondleiding);
+                    }
                 }
             }
             catch (Exception exception)
@@ -61,6 +75,42 @@ namespace Project_B_V2._0
                 ex = exception;
             }
             return (Users, ex);
+        }
+
+        internal static (List<Rondleiding>, Exception) MaakRondleidingen(DateTime start, DateTime end)
+        {
+            Exception ex = new Exception();
+            Random rnd = new Random();
+            List<Rondleiding> rondleidingen = new List<Rondleiding>();
+            try
+            {
+                do
+                {
+                    rondleidingen.Add(new Rondleiding
+                    {
+                        Datum = start,
+                        Bezettingsgraad = rnd.Next(1, 14)
+                    });
+
+                    if (start.Hour == 16 && start.Minute > 20 || start.Hour > 16)
+                    {
+                        start = start.AddDays(1);
+                        start = start.AddHours(-start.Hour + 11);
+                        start = start.AddMinutes(-start.Minute);
+                    }
+                    else
+                    {
+                        start = start.AddMinutes(20);
+
+                    }
+                } while (start < end);
+            }
+            catch (Exception exception)
+            {
+                ex = exception;
+            }
+
+            return (rondleidingen, ex);
         }
     }
 }
