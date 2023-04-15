@@ -53,5 +53,41 @@ namespace Project_B_V2._0
             }
             return (Users, ex);
         }
+
+        internal static (List<Rondleiding>, Exception) MaakRondleidingen(DateTime start, DateTime end)
+        {
+            Exception ex = new Exception();
+            Random rnd = new Random();
+            List<Rondleiding> rondleidingen = new List<Rondleiding>();
+            try
+            {
+                do
+                {
+                    rondleidingen.Add(new Rondleiding
+                    {
+                        Datum = start,
+                        Bezettingsgraad = rnd.Next(1, 14)
+                    });
+
+                    if (start.Hour == 16 && start.Minute > 20 || start.Hour > 16)
+                    {
+                        start = start.AddDays(1);
+                        start.AddHours(-start.Hour + 11);
+                        start.AddMinutes(-start.Minute);
+                    }
+                    else
+                    {
+                        start = start.AddMinutes(20);
+
+                    }
+                } while (start < end);
+            }
+            catch (Exception exception)
+            {
+                ex = exception;
+            }
+
+            return (rondleidingen, ex);
+        }
     }
 }

@@ -497,15 +497,10 @@ namespace Project_B_V2._0
             Console.WriteLine("TestDataGeneratorScreen");
             Console.WriteLine("Druk op [1] + [ENTER] om unieke codes aan te maken.");
             Console.WriteLine("Druk op [2] + [ENTER] om gebruikers aan te maken.");
+            Console.WriteLine("Druk op [3] + [ENTER] om rondleidingen aan te maken.");
             (string, int) answer = AskForInput(0);
             
             if (answer.Item1 == "1")
-
-            
-           
-           
-            
-
             {
                 (List<int>, Exception) result = TestDataGenerator.MaakUniekeCodes(10);
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
@@ -536,10 +531,6 @@ namespace Project_B_V2._0
                 return 0;
             }
             else if (answer.Item1 == "2")
-
-            
-            
-
             {
                 (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(10);
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
@@ -580,6 +571,25 @@ namespace Project_B_V2._0
                     Console.ReadKey(false);
                 }
                 return 0;
+            }
+            else if (answer.Item1 == "3")
+            {
+                Console.WriteLine("Geef de start datum op vanaf wanneer je rondleidngen wilt maken. Format: dd-MM-YYYY");
+                DateTime start = Convert.ToDateTime(Console.ReadLine());
+                Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidngen wilt maken. Format: dd-MM-YYYY");
+                DateTime end = Convert.ToDateTime(Console.ReadLine());
+                (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end);
+                if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
+                {
+                    Console.WriteLine($"Er is een error opgetreden: {result.Item2}");
+                    Thread.Sleep(4000);
+                    return 1;
+                }
+
+                JsonManager.SerializeRondleidingen(result.Item1);
+
+                Console.WriteLine("Rondleidingen zijn opgeslagen!");
+                Thread.Sleep(4000);
             }
             return Convert.ToInt32(answer.Item1);
         }
