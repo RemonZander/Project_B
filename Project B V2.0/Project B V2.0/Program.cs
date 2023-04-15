@@ -824,7 +824,6 @@ namespace Project_B_V2._0
         {
             Console.WriteLine("AfdelingshoofdScherm");
             List<Rondleiding> rondleidinen = new List<Rondleiding>();
-            List<List<string>> rondleidingInformatie = new List<List<string>>();
             DateTime time = new DateTime(2023, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
             for (int i = 0; i < 18; i++)
             {
