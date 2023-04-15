@@ -823,28 +823,37 @@ namespace Project_B_V2._0
         internal override int DoWork()
         {
             Console.WriteLine("AfdelingshoofdScherm");
-            List<Rondleiding> rondleidingen = new List<Rondleiding>();
-            DateTime time = new DateTime(2023, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
-            for (int i = 0; i < 18; i++)
-            {
-                Rondleiding rondleiding = new()
-                {
-                    Datum = time,
-                    Bezettingsgraad = 0
-                };
+            Console.WriteLine();
+            Console.WriteLine("Geef de start datum op vanaf wanneer je de rondleidingss bezettingsgraad wil zien. Format: dd-MM-YYYY");
+            DateTime start = Convert.ToDateTime(Console.ReadLine());
+            Console.WriteLine("Geef de eind datum op vanaf wanneer je de rondleidingss bezettingsgraad wil zien. Format: dd-MM-YYYY");
+            DateTime end = Convert.ToDateTime(Console.ReadLine());
 
-                rondleidingen.Add(rondleiding);
+            List<Rondleiding> rondleidingen = new List<Rondleiding>();
+            rondleidingen = JsonManager.DeserializeRondleidingen();
+            DateTime time = new DateTime(2023, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
+            //for (int i = 0; i < 18; i++)
+            //{
+            //    Rondleiding rondleiding = new()
+            //    {
+            //        Datum = time,
+            //        Bezettingsgraad = 0
+            //    };
+
+            //    rondleidingen.Add(rondleiding);
                 
-                time = time.AddMinutes(20);
-            }
+            //    time = time.AddMinutes(20);
+            //}
 
             List<User> gebruikers = JsonManager.DeserializeGebruikers();
 
             foreach (Rondleiding rondleiding in rondleidingen)
             {
-                rondleiding.CalculateBezettingsgraad(gebruikers);
-
-                Console.WriteLine($"{rondleiding.Datum}, Bezettingsgraad: {rondleiding.Bezettingsgraad}%");
+                if(rondleiding.Datum > start && rondleiding.Datum < end)
+                {
+                    rondleiding.CalculateBezettingsgraad(gebruikers);
+                    Console.WriteLine($"{rondleiding.Datum}, Bezettingsgraad: {rondleiding.Bezettingsgraad}%");
+                }
             }
 
             Console.WriteLine("\n Druk op 1 om terug te gaan naar het Hoofdscherm");
