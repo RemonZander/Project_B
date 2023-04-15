@@ -823,7 +823,7 @@ namespace Project_B_V2._0
         internal override int DoWork()
         {
             Console.WriteLine("AfdelingshoofdScherm");
-            List<Rondleiding> rondleidinen = new List<Rondleiding>();
+            List<Rondleiding> rondleidingen = new List<Rondleiding>();
             List<List<string>> rondleidingInformatie = new List<List<string>>();
             DateTime time = new DateTime(2023, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
             for (int i = 0; i < 18; i++)
@@ -834,14 +834,14 @@ namespace Project_B_V2._0
                     Bezettingsgraad = 0
                 };
 
-                rondleidinen.Add(rondleiding);
+                rondleidingen.Add(rondleiding);
                 
                 time = time.AddMinutes(20);
             }
 
             List<User> gebruikers = JsonManager.DeserializeGebruikers();
 
-            foreach(Rondleiding rondleiding in rondleidinen)
+            foreach (Rondleiding rondleiding in rondleidingen)
             {
                 rondleiding.CalculateBezettingsgraad(gebruikers);
 
