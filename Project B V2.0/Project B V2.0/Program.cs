@@ -34,7 +34,8 @@ namespace Project_B_V2._0
             screens.Add(new HomeScreen()); // 0
             screens.Add(new TestDataGeneratorScreen()); // 1
             screens.Add(new AfdelingshoofdScherm()); //2
-            
+            screens.Add(new GidsScherm()); //3
+
             currentScreen = 0;
             do
             {
@@ -247,181 +248,81 @@ namespace Project_B_V2._0
             return output += new string(Convert.ToChar(sym), maxlength + 2 + spacingside * 2) + "\n";
         }
 
-        protected static List<string> MakePages(List<string> alldata, int maxblocks)
+        protected static List<string> MakeInfoBoxes(List<List<string>> DisplayInfo, int pos) 
         {
-            string[] output = new string[alldata.Count / maxblocks + 1];
-
-            for (int a = 0, b = 1; a < alldata.Count; a++)
+            List<string> boxes = new List<string>();
+            if (pos == 0)
             {
-                if (a < maxblocks * b)
-                {
-                    output[b - 1] += alldata[a];
-                }
-                else
-                {
-                    b++;
-                    output[b - 1] += alldata[a];
-                }
+                boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, 2), "#")[0], "#", 2, 0, 42, true,
+                    new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+
+                boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(2, DisplayInfo.Count - 2), "#")
+                    , "#", 2, 0, 42, true));
+            }
+            else if (pos == DisplayInfo.Count)
+            {
+                boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, DisplayInfo.Count - 2), "#"), "#", 2, 0, 42, true));
+
+                boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(DisplayInfo.Count - 2, 2), "#")[0], "#", 2, 0, 42, true,
+                    new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+            }
+            else if (pos % 2 == 0)
+            {
+                boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, pos), "#"), "#", 2, 0, 42, true));
+
+                boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos, 2), "#")[0], "#", 2, 0, 42, true,
+                    new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+
+                boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos + 2, DisplayInfo.Count - (pos + 2)), "#"), "#", 2, 0, 42, true));
+            }
+            else if (pos % 2 == 1)
+            {
+                boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, pos - 1), "#"), "#", 2, 0, 42, true));
+
+                boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos - 1, 2), "#")[0], "#", 2, 0, 42, true,
+                    new List<string> { "".PadRight(19) + "##  [1] Reserveren     ", "##".PadLeft(21) + "".PadRight(21) }));
+
+                boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos + 1, DisplayInfo.Count - (pos + 1)), "#"), "#", 2, 0, 42, true));
             }
 
-            List<string> done = output.ToList();
-            done.RemoveAll(x => x == null);
-            return done;
+            return boxes;
         }
-
-        protected (int, int, double) Nextpage(int page, double pos, double maxpos, int screenIndex, List<Tuple<(int, int, double), string>> choices, List<string> text)
+        protected static int NavigateBoxes(int pos, List<List<string>> DisplayInfo, ConsoleKeyInfo key) 
         {
-            foreach (var item in text)
-            {
-                Console.WriteLine(item);
-            }
-            ConsoleKeyInfo key = new ConsoleKeyInfo();
-            do
-            {
-                key = new ConsoleKeyInfo();
-                key = Console.ReadKey();
-            } while (IsKeyPressed(key, ENTER_KEY));
-            if (IsKeyPressed(key, ESCAPE_KEY))
-            {
-                return (page, screenIndex, pos);
-            }
+           
             if (IsKeyPressed(key, UP_ARROW))
             {
-                if (pos % 2 != 0)
+                if (pos > 1)
                 {
-                    if ((pos - 1 > 6 * page && page != 0) || (pos > 2 && page == 0))
-                    {
-                        pos -= 2;
-                    }
+                    pos -= 2;
                 }
-                else
-                {
-                    if ((pos > 6 * page && page != 0) || (pos > 1 && page == 0))
-                    {
-                        pos -= 2;
-                    }
-                }
-                return (page, -1, pos);
             }
+
             else if (IsKeyPressed(key, DOWN_ARROW))
             {
-                if (pos % 2 != 0)
+                if (pos < DisplayInfo.Count - 2)
                 {
-                    if (((pos + 1 < 6 * (page + 1) && page != 0) || pos < 4) && pos < maxpos - 1)
-                    {
-                        pos += 2;
-                    }
+                    pos += 2;
                 }
-                else
-                {
-                    if (((pos + 2 < 6 * (page + 1) && page != 0) || pos < 4) && pos < maxpos - 1)
-                    {
-                        pos += 2;
-                    }
-                }
-                return (page, -1, pos);
             }
             else if (IsKeyPressed(key, LEFT_ARROW))
             {
-                if (pos % 2 != 0 && pos > 0)
+                if (pos % 2 == 1)
                 {
                     pos -= 1;
                 }
-                return (page, -1, pos);
+
             }
             else if (IsKeyPressed(key, RIGHT_ARROW))
             {
-                if ((pos % 2 == 0 || pos == 0) && pos < maxpos)
+                if (pos % 2 == 0)
                 {
                     pos += 1;
                 }
-                return (page, -1, pos);
             }
 
-            Console.ReadKey();
-/*            if (IsKeyPressed(key, "D0") || IsKeyPressed(key, "NumPad0"))
-            {
-                logoutUpdate = true;
-                Logout();
-                return (page, 0, pos);
-            }*/
-            foreach (var choice in choices)
-            {
-                if (IsKeyPressed(key, choice.Item2))
-                {
-                    return choice.Item1;
-                }
-            }
-
-            Console.WriteLine("U moet wel een juiste keuze maken...");
-            Console.WriteLine("Druk op en knop om verder te gaan.");
-            Console.ReadKey();
-            return (page, -1, pos);
+            return pos;
         }
-
-        protected (int, int) Nextpage(int page, int maxpage, int screenIndex)
-        {
-            if (page < maxpage)
-            {
-                Console.WriteLine("[1] Volgende pagina");
-                Console.WriteLine("[2] Terug");
-                ConsoleKeyInfo key = Console.ReadKey();
-                if (IsKeyPressed(key, ESCAPE_KEY))
-                {
-                    return (page, screenIndex);
-                }
-                Console.ReadKey();
-                if (IsKeyPressed(key, "D1"))
-                {
-                    return (page + 1, -1);
-                }
-                else if (IsKeyPressed(key, "D2"))
-                {
-                    return (page, screenIndex);
-                }
-/*                else if (IsKeyPressed(key, "D0"))
-                {
-                    logoutUpdate = true;
-                    Logout();
-                    return (page, 0);
-                }*/
-                else
-                {
-                    Console.WriteLine("U moet wel een juiste keuze maken...");
-                    Console.WriteLine("Druk op en knop om verder te gaan.");
-                    Console.ReadKey();
-                    return (page, -1);
-                }
-            }
-            else
-            {
-                Console.WriteLine("[1] Terug");
-                ConsoleKeyInfo key = Console.ReadKey();
-                if (IsKeyPressed(key, ESCAPE_KEY))
-                {
-                    return (page, screenIndex);
-                }
-                Console.ReadKey();
-                if (IsKeyPressed(key, "D1"))
-                {
-                    return (page, screenIndex);
-                }
-/*                else if (IsKeyPressed(key, "D0"))
-                {
-                    logoutUpdate = true;
-                    Logout();
-                    return (page, 0);
-                }*/
-                else
-                {
-                    Console.WriteLine("U moet wel een juiste keuze maken...");
-                    Console.WriteLine("Druk op en knop om verder te gaan.");
-                    Console.ReadKey();
-                    return (page, -1);
-                }
-            }
-        }
-        
 
         /// <summary>
         /// you use this function if you want to put 2 lists of lines together to make one big box
@@ -429,7 +330,7 @@ namespace Project_B_V2._0
         /// <param name="input">This is the list of list string where this is a list of list lines</param>
         /// <param name="sym">This is the symbole you want to use as a saperator for the 2 boxes. It is smart to use the same symbol here you also use for the boxaroundtext function</param>
         /// <returns>This returns a list of list lines</returns>
-        protected List<List<string>> MakeDubbelBoxes(List<List<string>> input, string sym)
+        protected static List<List<string>> MakeDubbelBoxes(List<List<string>> input, string sym)
         {
             List<List<string>> output = new List<List<string>>();
             for (int a = 0; a < input.Count; a += 2)
@@ -569,7 +470,7 @@ namespace Project_B_V2._0
                 Console.WriteLine();
                 Console.WriteLine("Geef de start datum op vanaf wanneer je rondleidngen wilt maken. Format: dd-MM-YYYY");
                 DateTime start = Convert.ToDateTime(Console.ReadLine());
-                Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidngen wilt maken. Format: dd-MM-YYYY");
+                Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
                 DateTime end = Convert.ToDateTime(Console.ReadLine());
                 (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end);
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
@@ -629,40 +530,9 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes = new List<string>();
-                if (pos == 0)
-                {
-                    boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, 2), "#")[0], "#", 2, 0, 42, true,
-                        new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+                
 
-                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(2, rondleidingInformatie.Count - 2), "#")
-                        , "#", 2, 0, 42, true));
-                }
-                else if (pos == rondleidingInformatie.Count)
-                {
-                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, rondleidingInformatie.Count - 2), "#"), "#", 2, 0, 42, true));
-
-                    boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(rondleidingInformatie.Count - 2, 2), "#")[0], "#", 2, 0, 42, true,
-                        new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
-                }
-                else if (pos % 2 == 0)
-                {
-                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, pos), "#"), "#", 2, 0, 42, true));
-
-                    boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos, 2), "#")[0], "#", 2, 0, 42, true,
-                        new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
-
-                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos + 2, rondleidingInformatie.Count - (pos + 2)), "#"), "#", 2, 0, 42, true));
-                }
-                else if (pos % 2 == 1)
-                {
-                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(0, pos - 1), "#"), "#", 2, 0, 42, true));
-
-                    boxes.Add(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos - 1, 2), "#")[0], "#", 2, 0, 42, true,
-                        new List<string> { "".PadRight(19) + "##  [1] Reserveren     ", "##".PadLeft(21) + "".PadRight(21) }));
-
-                    boxes.AddRange(BoxAroundText(MakeDubbelBoxes(rondleidingInformatie.GetRange(pos + 1, rondleidingInformatie.Count - (pos + 1)), "#"), "#", 2, 0, 42, true));
-                }
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos);
                 Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
                 {
@@ -672,101 +542,17 @@ namespace Project_B_V2._0
                 Console.WriteLine(new string('#', 48));
                 Console.WriteLine("Gebruik de pijltoesten om te navigeren.");
                 Console.WriteLine("Druk op [2] om je reservering te annuleren.");
+                Console.WriteLine("Druk op [3] om naar het gidsscherm te gaan.");
                 Console.WriteLine("Druk op [4] om naar het afdelingshoofdscherm te gaan.");
                 Console.WriteLine("Druk op [9] voor developper scherm.");
                 ConsoleKeyInfo key = Console.ReadKey(false);
 
-                if (IsKeyPressed(key, UP_ARROW))
-                {
-                    if (pos > 1)
-                    {
-                        pos -= 2;
-                    }
-                }
+                pos = NavigateBoxes(pos, rondleidingInformatie, key);
 
-                else if (IsKeyPressed(key, DOWN_ARROW))
-                {
-                    if (pos < rondleidingInformatie.Count - 2)
-                    {
-                        pos += 2;
-                    }
-                }
-                else if (IsKeyPressed(key, LEFT_ARROW))
-                {
-                    if (pos % 2 == 1)
-                    {
-                        pos -= 1;
-                    }
-
-                }
-                else if (IsKeyPressed(key, RIGHT_ARROW))
-                {
-                    if (pos % 2 == 0)
-                    {
-                        pos += 1;
-                    }
-                }
-                else if (IsKeyPressed(key, ESCAPE_KEY))
+                
+                if (IsKeyPressed(key, ESCAPE_KEY))
                 {
                     cont = false;
-                }
-                else if (IsKeyPressed(key, "D9") || IsKeyPressed(key, "NUMPAD9"))
-                {
-                    return 1;
-                }
-                else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
-                {
-                    Console.WriteLine();
-                    Console.WriteLine();
-                    Console.WriteLine();
-                    Console.WriteLine(new string('_', 48));
-                    Console.WriteLine("Voer hier uw unieke code in: ");
-                    (string, int) answer = AskForInput(0);
-                    if (answer.Item2 != -1)
-                    {
-                        return answer.Item2;
-                    }
-                    List<User> gebruikers = JsonManager.DeserializeGebruikers();
-
-                    //Als de gebruiker is gevonden, returned hij het naar een nieuwe variabel
-                    User targetedUser = gebruikers.FirstOrDefault(geb => geb.UniekeCode.Equals(answer.Item1));
-
-                    if (targetedUser != null)
-                    {
-                        //Als de gebruiker geen reservering heeft, geef de volgende melding
-                        if(targetedUser.Reservering == default)
-                        {
-                            Console.WriteLine();
-                            Console.WriteLine("U heeft nog geen reservering geplaatst");
-                            Thread.Sleep(2000);
-                            return 0;
-                        }
-
-                        //Zet de resveringsdatum naar default om te legen / resetten
-                        targetedUser.Reservering = default;
-
-                        //Zoek naar de gebruiker in de gebruikers lijst
-                        int index = gebruikers.FindIndex(geb => geb.UniekeCode == targetedUser.UniekeCode);
-
-                        //Overschrijf de gebruiker in de lijst
-                        gebruikers[index] = targetedUser;
-
-                        JsonManager.SerializeGebruikers(gebruikers);
-
-                        Console.WriteLine();
-                        Console.WriteLine();
-                        Console.WriteLine("Uw reservering is succesvol geannuleerd");
-                        Thread.Sleep(2000);
-                        return 0;
-                    }
-                    else
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("Deze user is niet bekend bij ons.");
-                        Thread.Sleep(2000);
-                        return 0;
-                    }
-
                 }
                 else if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
                 {
@@ -804,9 +590,72 @@ namespace Project_B_V2._0
                     Console.WriteLine("Deze unieke code is bij ons niet bekent");
                     Thread.Sleep(2000);
                 }
+                else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine(new string('_', 48));
+                    Console.WriteLine("Voer hier uw unieke code in: ");
+                    (string, int) answer = AskForInput(0);
+                    if (answer.Item2 != -1)
+                    {
+                        return answer.Item2;
+                    }
+                    List<User> gebruikers = JsonManager.DeserializeGebruikers();
+
+                    //Als de gebruiker is gevonden, returned hij het naar een nieuwe variabel
+                    User targetedUser = gebruikers.FirstOrDefault(geb => geb.UniekeCode.Equals(answer.Item1));
+
+                    if (targetedUser != null)
+                    {
+                        //Als de gebruiker geen reservering heeft, geef de volgende melding
+                        if (targetedUser.Reservering == default)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("U heeft nog geen reservering geplaatst");
+                            Thread.Sleep(2000);
+                            return 0;
+                        }
+
+                        //Zet de resveringsdatum naar default om te legen / resetten
+                        targetedUser.Reservering = default;
+
+                        //Zoek naar de gebruiker in de gebruikers lijst
+                        int index = gebruikers.FindIndex(geb => geb.UniekeCode == targetedUser.UniekeCode);
+
+                        //Overschrijf de gebruiker in de lijst
+                        gebruikers[index] = targetedUser;
+
+                        JsonManager.SerializeGebruikers(gebruikers);
+
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        Console.WriteLine("Uw reservering is succesvol geannuleerd");
+                        Thread.Sleep(2000);
+                        return 0;
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Deze user is niet bekend bij ons.");
+                        Thread.Sleep(2000);
+                        return 0;
+                    }
+
+                }
+                else if (IsKeyPressed(key, "D3") || IsKeyPressed(key, "NUMPAD3"))
+                {
+                    return 3;
+                }
                 else if (IsKeyPressed(key, "D4") || IsKeyPressed(key, "NUMPAD4"))
                 { 
                     return 2;
+                }
+
+                else if (IsKeyPressed(key, "D9") || IsKeyPressed(key, "NUMPAD9"))
+                {
+                    return 1;
                 }
 
             } while (cont);
@@ -824,10 +673,23 @@ namespace Project_B_V2._0
         {
             Console.WriteLine("AfdelingshoofdScherm");
             Console.WriteLine();
-            Console.WriteLine("Geef de start datum op vanaf wanneer je de rondleidingss bezettingsgraad wil zien. Format: dd-MM-YYYY");
-            DateTime start = Convert.ToDateTime(Console.ReadLine());
-            Console.WriteLine("Geef de eind datum op vanaf wanneer je de rondleidingss bezettingsgraad wil zien. Format: dd-MM-YYYY");
-            DateTime end = Convert.ToDateTime(Console.ReadLine());
+            Console.WriteLine("Geef de start datum op vanaf wanneer je de rondleidings bezettingsgraad wil zien. Format: dd-MM-YYYY");
+            (string, int) input = AskForInput(0);
+            
+            if (input.Item2 != -1) { 
+                return input.Item2;
+            }
+            
+            DateTime start = Convert.ToDateTime(input.Item1);
+            Console.WriteLine("Geef de eind datum op vanaf wanneer je de rondleidings bezettingsgraad wil zien. Format: dd-MM-YYYY");
+            input = AskForInput(0);
+            
+            if (input.Item2 != -1) {
+                return input.Item2;
+            }
+
+            DateTime end = Convert.ToDateTime(input.Item1);
+
 
             List<Rondleiding> rondleidingen = new List<Rondleiding>();
             rondleidingen = JsonManager.DeserializeRondleidingen();
@@ -863,6 +725,20 @@ namespace Project_B_V2._0
         }
     }
 
+    internal class GidsScherm : Screen
+    {
+        internal override int DoWork()
+        {
+            Console.WriteLine("Dit is het GidsScherm.");
+            return 0;
+        }
+
+
+        internal override List<Screen> Update(List<Screen> screens)
+        {
+            return screens;
+        }
+    }
 }
 
 
