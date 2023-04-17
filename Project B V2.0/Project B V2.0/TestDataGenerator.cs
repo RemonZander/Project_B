@@ -32,12 +32,7 @@ namespace Project_B_V2._0
         internal static (List<User>, Exception) MaakGebruikers(int hoeveelheid)
         {
             List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen();
-            if (rondleidingen.Count == 0)
-            {
-                (List<Rondleiding>, Exception) temp = MaakRondleidingen(new DateTime(2023, 1, 1, 11, 0, 0), new DateTime(2023, 12, 31, 17, 00, 0));
-                rondleidingen = temp.Item1;
-                JsonManager.SerializeRondleidingen(rondleidingen);
-            }
+            List<Rondleiding> rondleidingenNew = new List<Rondleiding>();
 
             Exception ex = new Exception();
             (List<int>, Exception) UniekeCodes = MaakUniekeCodes(hoeveelheid);
@@ -64,11 +59,15 @@ namespace Project_B_V2._0
                         Reservering = rondleidingen[nextRondleiding].Datum,
                     });
                     rondleidingen[nextRondleiding].Bezetting += 1;
-                    if (rondleidingen[nextRondleiding].Bezetting == 13)
+                    if (rondleidingen[nextRondleiding].Bezetting >= 13)
                     {
+                        rondleidingenNew.Add(rondleidingen[nextRondleiding]);
                         rondleidingen.RemoveAt(nextRondleiding);
                     }
                 }
+
+                rondleidingenNew.AddRange(rondleidingen);
+                JsonManager.SerializeRondleidingen(rondleidingenNew);
             }
             catch (Exception exception)
             {

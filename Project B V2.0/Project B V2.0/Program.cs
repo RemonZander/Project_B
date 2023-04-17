@@ -349,6 +349,15 @@ namespace Project_B_V2._0
                 List<string> blockold1 = input[a];
                 List<string> blockold2 = input[a + 1];
 
+                if (input[a].Count > input[a + 1].Count)
+                {
+                    blockold2.Add(input[a + 1][^1]);
+                }
+                else if (input[a].Count < input[a + 1].Count)
+                {
+                    blockold1.Add(input[a][^1]);
+                }
+
                 for (int b = 0; b < blockold1.Count; b++)
                 {
                     blocknew.Add(blockold1[b] + $"{sym + sym}  " + blockold2[b]);
@@ -362,6 +371,29 @@ namespace Project_B_V2._0
 
     internal class TestDataGeneratorScreen : Screen
     {
+
+        private int MaakRondleidingen()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Geef de start datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
+            DateTime start = Convert.ToDateTime(Console.ReadLine());
+            Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
+            DateTime end = Convert.ToDateTime(Console.ReadLine());
+            (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end);
+            if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
+            {
+                Console.WriteLine($"Er is een error opgetreden: {result.Item2}");
+                Thread.Sleep(4000);
+                return 1;
+            }
+
+            JsonManager.SerializeRondleidingen(result.Item1);
+
+            Console.WriteLine("Rondleidingen zijn opgeslagen!");
+            Thread.Sleep(4000);
+
+            return -1;
+        }
         /// <summary>
         /// This is the main entrypoint for the current screen. In here you can do whatever you want your screen to do.
         /// </summary>
@@ -369,42 +401,12 @@ namespace Project_B_V2._0
         internal override int DoWork()
         {
             Console.WriteLine("TestDataGeneratorScreen");
-            Console.WriteLine("Druk op [1] om unieke codes aan te maken.");
-            Console.WriteLine("Druk op [2] om gebruikers aan te maken.");
-            Console.WriteLine("Druk op [3] om rondleidingen aan te maken.");
+            Console.WriteLine("Druk op [1] om gebruikers aan te maken.");
+            Console.WriteLine("Druk op [2] om rondleidingen aan te maken.");
             ConsoleKeyInfo input = Console.ReadKey(false);
             //(string, int) answer = AskForInput(0);
             
             if (IsKeyPressed(input, "D1") || IsKeyPressed(input, "NUMPAD1"))
-            {
-                (List<int>, Exception) result = TestDataGenerator.MaakUniekeCodes(10);
-                if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
-                {
-                    Console.WriteLine($"Er is een error opgetreden: {result.Item1}");
-                    Thread.Sleep(4000);
-                    return 1;
-                }
-                Console.WriteLine();
-                Console.WriteLine("De unieke codes zijn aangemaakt. Druk op [ESC] om terug te gaan of druk op [1] om de aangemaakte unieke codes te zien");
-                ConsoleKeyInfo key = Console.ReadKey(false);
-                Console.WriteLine();
-                if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
-                {
-                    List<string> uniekeCodes = new List<string>();
-                    foreach (var code in result.Item1)
-                    {
-                        uniekeCodes.Add("".PadRight(21));
-                        uniekeCodes.Add($"Unieke code: {code}".PadRight(20));
-                        uniekeCodes.Add("".PadRight(21));
-                    }
-
-                    string box = BoxAroundText(uniekeCodes, "#", 2, 0, 21, false);
-                    Console.WriteLine(box);
-                    Console.WriteLine("Druk op een toets om terug te gaan.");
-                    Console.ReadKey(false);
-                }
-            }
-            else if (IsKeyPressed(input, "D2") || IsKeyPressed(input, "NUMPAD2"))
             {
                 int amount = 0;
                 Console.WriteLine();
@@ -426,6 +428,16 @@ namespace Project_B_V2._0
                     }
                 } while (!isNum);
 
+                List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen();
+                if (rondleidingen.Count <= 0)
+                {
+                    Console.WriteLine("Er zijn nog geen rondleidingen in het systeem.");
+                    int screen = MaakRondleidingen();
+                    if (screen != -1)
+                    {
+                        return screen;
+                    }
+                }
                 (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(Convert.ToInt32(amount));
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
                 {
@@ -465,25 +477,13 @@ namespace Project_B_V2._0
                     Console.ReadKey(false);
                 }
             }
-            else if (IsKeyPressed(input, "D3") || IsKeyPressed(input, "NUMPAD3"))
+            else if (IsKeyPressed(input, "D2") || IsKeyPressed(input, "NUMPAD2"))
             {
-                Console.WriteLine();
-                Console.WriteLine("Geef de start datum op vanaf wanneer je rondleidngen wilt maken. Format: dd-MM-YYYY");
-                DateTime start = Convert.ToDateTime(Console.ReadLine());
-                Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
-                DateTime end = Convert.ToDateTime(Console.ReadLine());
-                (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end);
-                if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
+                int screen = MaakRondleidingen();
+                if (screen != -1)
                 {
-                    Console.WriteLine($"Er is een error opgetreden: {result.Item2}");
-                    Thread.Sleep(4000);
-                    return 1;
+                    return screen;
                 }
-
-                JsonManager.SerializeRondleidingen(result.Item1);
-
-                Console.WriteLine("Rondleidingen zijn opgeslagen!");
-                Thread.Sleep(4000);
             }
             else if (IsKeyPressed(input, ESCAPE_KEY))
             {
@@ -514,29 +514,56 @@ namespace Project_B_V2._0
             int pos = 0;
             bool cont = true;
             List<List<string>> rondleidingInformatie = new List<List<string>>();
+            List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
+            if (rondleidingen.Count <= 0)
+            {
+                JsonManager.SerializeRondleidingen(TestDataGenerator.MaakRondleidingen(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
+                    new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 17, 0, 0)).Item1);
+
+                rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
+            }
             List<DateTime> tijden = new List<DateTime>();
             DateTime time = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
-            for (int i = 0; i < 18; i++)
+            for (int i = 0; i < rondleidingen.Count; i++)
             {
                 tijden.Add(time);
-                rondleidingInformatie.Add(new List<string>
+                if (rondleidingen[i].Bezetting >= 8 && rondleidingen[i].Bezetting < 13)
                 {
-                    (time.ToShortTimeString() + "-" + time.AddMinutes(40).ToShortTimeString()).PadRight(19),
-                    "".PadRight(19),
+                    rondleidingInformatie.Add(new List<string>
+                    {
+                        (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
+                        $"Nog {13 - rondleidingen[i].Bezetting} plekken".PadRight(19),
+                        "".PadRight(19),
+                    });
+                }
+               else if (rondleidingen[i].Bezetting < 8)
+                {
+                    rondleidingInformatie.Add(new List<string>
+                    {
+                        (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
+                        "".PadRight(19),
+                    });
+                }
+                else
+                {
+                    rondleidingInformatie.Add(new List<string>
+                    {
+                        (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
+                        $"VOL!!!!!".PadRight(19),
+                        "".PadRight(19),
+                    });
+                }
 
-                });
                 time = time.AddMinutes(20);
             }
 
             do
             {
-                
-
                 List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos);
                 Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
                 {
-                    Console.Write(boxes[i]);               
+                    Console.Write(boxes[i]);
                 }
 
                 Console.WriteLine(new string('#', 48));
@@ -581,7 +608,9 @@ namespace Project_B_V2._0
 
                             JsonManager.SerializeGebruikers(gebruikers);
 
-                            Thread.Sleep(2000);
+                            Console.WriteLine();
+                            Console.WriteLine($"De reservering om {tijden[pos]} is geplaatst. U wordt terug gestuurd...");
+                            Thread.Sleep(3000);
                             return 0;
                         }
                     }
