@@ -9,4 +9,8 @@
     <StartupObject></StartupObject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="bin\Debug\net6.0\codes.json" />
+  </ItemGroup>
+
 </Project>

@@ -40,19 +40,21 @@ namespace Project_B_V2._0
             }
 
             Exception ex = new Exception();
-            (List<int>, Exception) UniekeCodes = MaakUniekeCodes(hoeveelheid);
-            if (UniekeCodes.Item2.Message != "Exception of type 'System.Exception' was thrown.") return (new List<User>(), UniekeCodes.Item2);
+            //(List<int>, Exception) UniekeCodes = MaakUniekeCodes(hoeveelheid);
+            List<string> UniekeCodes = JsonManager.DeserializeCodes();
+            //if (UniekeCodes.Item2.Message != "Exception of type 'System.Exception' was thrown.") return (new List<User>(), UniekeCodes.Item2);
             List<User> Users = new List<User>();
             Random rnd = new Random();
             try
             {
-                for (int a = 0; a < hoeveelheid; a++)
+                for (
+                    int a = 0; a < hoeveelheid; a++)
                 {
                     if (rnd.Next(1, 5) == 3)
                     {
                         Users.Add(new User
                         {
-                            UniekeCode = UniekeCodes.Item1[a].ToString(),
+                            UniekeCode = UniekeCodes[a],
                             Reservering = new DateTime(1, 1, 1),
                         });
                         continue;
@@ -60,7 +62,7 @@ namespace Project_B_V2._0
                     int nextRondleiding = rnd.Next(0, rondleidingen.Count);
                     Users.Add(new User
                     {
-                        UniekeCode = UniekeCodes.Item1[a].ToString(),
+                        UniekeCode = UniekeCodes[a].ToString(),
                         Reservering = rondleidingen[nextRondleiding].Datum,
                     });
                     rondleidingen[nextRondleiding].Bezetting += 1;

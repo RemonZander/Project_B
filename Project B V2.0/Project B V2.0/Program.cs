@@ -505,27 +505,27 @@ namespace Project_B_V2._0
             }
             else if (IsKeyPressed(input, "D2") || IsKeyPressed(input, "NUMPAD2"))
             {
-                int amount = 0;
-                Console.WriteLine();
-                bool isNum;
-                do
-                {
-                    Console.WriteLine("Hoeveel gebruikers wilt u aanmaken: ");
-                    (string, int) answer = AskForInput(0);
-                    isNum = int.TryParse(answer.Item1, out _);
-                    if (!isNum)
-                    {
-                        Console.WriteLine("Dit was geen getal...");
-                        Thread.Sleep(2000);
-                        Console.Clear();
-                    }
-                    else
-                    {
-                        amount = Convert.ToInt32(answer.Item1);
-                    }
-                } while (!isNum);
-
-                (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(Convert.ToInt32(amount));
+                //int amount = 0;
+                //Console.WriteLine();
+                //bool isNum;
+                //do
+                //{
+                //Console.WriteLine("Hoeveel gebruikers wilt u aanmaken: ");
+                //(string, int) answer = AskForInput(0);
+                //isNum = int.TryParse(answer.Item1, out _);
+                //if (!isNum)
+                //{
+                //    Console.WriteLine("Dit was geen getal...");
+                //    Thread.Sleep(2000);
+                //    Console.Clear();
+                //}
+                //else
+                //{
+                //    amount = Convert.ToInt32(answer.Item1);
+                //}
+                //} while (!isNum);
+                List<string> Codes = JsonManager.DeserializeCodes();
+                (List<User>, Exception) result = TestDataGenerator.MaakGebruikers(Convert.ToInt32(Codes.Count));
                 if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
                 {
                     Console.WriteLine($"Er is een error opgetreden: {result.Item2}");
