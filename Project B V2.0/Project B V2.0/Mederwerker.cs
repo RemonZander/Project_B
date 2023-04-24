@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Project_B_V2._0
 {
-    public class Mederwerker : User
+    public class Mederwerker
     {
         public string? BeveiligingsCode { get; set; }
 
