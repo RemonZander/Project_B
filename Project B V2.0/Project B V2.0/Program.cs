@@ -560,15 +560,8 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes;
-                if (rondleidingen[pos].Bezetting == 13)
-                {
-                    boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Reserveren     ", true);
-                }
-                else
-                {
-                    boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Reserveren     ", false);
-                }
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Reserveren     ", 
+                    rondleidingen[pos].Bezetting == 13 ? true : false);
 
                 Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
@@ -859,15 +852,9 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes;
-                if (rondleidingen[pos].TourIsStarted)
-                {
-                    boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Tour starten   ", true);
-                }
-                else
-                {
-                    boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Tour starten   ", false);
-                }
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Tour starten   ", 
+                    rondleidingen[pos].TourIsStarted ? true : false);
+                
                 Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
                 {
