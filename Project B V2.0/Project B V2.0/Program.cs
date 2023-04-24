@@ -781,10 +781,7 @@ namespace Project_B_V2._0
                 Console.WriteLine("Onjuiste gegevens");
                 Thread.Sleep(2000);
                 return 3;
-            }
-
-            
-            
+            }         
         }
 
         internal override List<Screen> Update(List<Screen> screens)
@@ -820,7 +817,6 @@ namespace Project_B_V2._0
                     {
                         (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
                         $"Nog {13 - rondleidingen[i].Bezetting} plekken".PadRight(19),
-                        //"".PadRight(19),
                     });
                 }
                 else if (rondleidingen[i].Bezetting < 8)
@@ -828,7 +824,6 @@ namespace Project_B_V2._0
                     rondleidingInformatie.Add(new List<string>
                     {
                         (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
-                        //"".PadRight(19),
                     });
                 }
                 else
@@ -837,7 +832,6 @@ namespace Project_B_V2._0
                     {
                         (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
                         $"VOL!!!!!".PadRight(19),
-                        //"".PadRight(19),
                     });
                 }
 
@@ -856,8 +850,6 @@ namespace Project_B_V2._0
 
             do
             {
-               
-
                 List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Tour starten   ");
                 Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
@@ -903,10 +895,7 @@ namespace Project_B_V2._0
                         Thread.Sleep(4000);
                         return 4; 
                     }
-
-
-                }
-                
+                }               
 
             } while (cont);
             return 0;
@@ -919,5 +908,3 @@ namespace Project_B_V2._0
         }
     }
 }
-
-

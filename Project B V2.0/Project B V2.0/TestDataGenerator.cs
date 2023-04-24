@@ -76,6 +76,27 @@ namespace Project_B_V2._0
             return (Users, ex);
         }
 
+        internal static (List<Mederwerker>, Exception) MaakGitsen(int hoeveelheid)
+        {
+            Exception ex = new Exception();
+            List<Mederwerker> Mederwerker = new List<Mederwerker>();
+            try
+            {
+                for (int a = 0; a < hoeveelheid; a++)
+                {
+                    Mederwerker.Add(new Mederwerker {
+                        BeveiligingsCode = a.ToString(),
+                        Role = Roles.Gids,
+                    });
+                }
+            }
+            catch (Exception exception)
+            {
+                ex = exception;
+            }
+            return (Mederwerker, ex);
+        }
+
         internal static (List<Rondleiding>, Exception) MaakRondleidingen(DateTime start, DateTime end)
         {
             Exception ex = new Exception();
