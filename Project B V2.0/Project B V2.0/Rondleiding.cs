@@ -15,6 +15,8 @@ namespace Project_B_V2._0
 
         public int Bezetting { get; set; }
 
+        public bool TourIsStarted { get; set; }
+
         public int CalculateBezettingsgraad(List<User> users)
         {
             List<User> reserverdUsers = new List<User>();
@@ -29,5 +31,6 @@ namespace Project_B_V2._0
 
             return Bezettingsgraad;
         }
+
     }
 }

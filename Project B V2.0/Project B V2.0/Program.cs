@@ -249,13 +249,13 @@ namespace Project_B_V2._0
             return output += new string(Convert.ToChar(sym), maxlength + 2 + spacingside * 2) + "\n";
         }
 
-        protected static List<string> MakeInfoBoxes(List<List<string>> DisplayInfo, int pos) 
+        protected static List<string> MakeInfoBoxes(List<List<string>> DisplayInfo, int pos, string bottomtext) 
         {
             List<string> boxes = new List<string>();
             if (pos == 0)
             {
                 boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, 2), "#")[0], "#", 2, 0, 42, true,
-                    new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+                    new List<string> { $"{bottomtext}##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
 
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(2, DisplayInfo.Count - 2), "#")
                     , "#", 2, 0, 42, true));
@@ -265,14 +265,14 @@ namespace Project_B_V2._0
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, DisplayInfo.Count - 2), "#"), "#", 2, 0, 42, true));
 
                 boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(DisplayInfo.Count - 2, 2), "#")[0], "#", 2, 0, 42, true,
-                    new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+                    new List<string> { $"{bottomtext}##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
             }
             else if (pos % 2 == 0)
             {
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, pos), "#"), "#", 2, 0, 42, true));
 
                 boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos, 2), "#")[0], "#", 2, 0, 42, true,
-                    new List<string> { "[1] Reserveren     ##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
+                    new List<string> { $"{bottomtext}##".PadRight(42), "##".PadLeft(21) + "".PadRight(21) }));
 
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos + 2, DisplayInfo.Count - (pos + 2)), "#"), "#", 2, 0, 42, true));
             }
@@ -281,7 +281,7 @@ namespace Project_B_V2._0
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, pos - 1), "#"), "#", 2, 0, 42, true));
 
                 boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos - 1, 2), "#")[0], "#", 2, 0, 42, true,
-                    new List<string> { "".PadRight(19) + "##  [1] Reserveren     ", "##".PadLeft(21) + "".PadRight(21) }));
+                    new List<string> { "".PadRight(19) + $"##  {bottomtext}", "##".PadLeft(21) + "".PadRight(21) }));
 
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos + 1, DisplayInfo.Count - (pos + 1)), "#"), "#", 2, 0, 42, true));
             }
@@ -560,7 +560,7 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos);
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Reserveren     ");
                 Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
                 {
@@ -800,7 +800,8 @@ namespace Project_B_V2._0
             int pos = 0;
             bool cont = true;
             List<List<string>> rondleidingInformatie = new List<List<string>>();
-            List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
+            List<Rondleiding> allerondleidingen = JsonManager.DeserializeRondleidingen();
+            List<Rondleiding> rondleidingen = allerondleidingen.Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
             if (rondleidingen.Count <= 0)
             {
                 JsonManager.SerializeRondleidingen(TestDataGenerator.MaakRondleidingen(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
@@ -819,7 +820,7 @@ namespace Project_B_V2._0
                     {
                         (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
                         $"Nog {13 - rondleidingen[i].Bezetting} plekken".PadRight(19),
-                        "".PadRight(19),
+                        //"".PadRight(19),
                     });
                 }
                 else if (rondleidingen[i].Bezetting < 8)
@@ -827,7 +828,7 @@ namespace Project_B_V2._0
                     rondleidingInformatie.Add(new List<string>
                     {
                         (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
-                        "".PadRight(19),
+                        //"".PadRight(19),
                     });
                 }
                 else
@@ -836,8 +837,18 @@ namespace Project_B_V2._0
                     {
                         (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
                         $"VOL!!!!!".PadRight(19),
-                        "".PadRight(19),
+                        //"".PadRight(19),
                     });
+                }
+
+                if (rondleidingen[i].TourIsStarted)
+                {
+                    rondleidingInformatie[rondleidingInformatie.Count - 1].Add("Tour is al gestart".PadRight(19));
+                    rondleidingInformatie[rondleidingInformatie.Count - 1].Add("".PadRight(19));
+                }
+                else 
+                {
+                    rondleidingInformatie[rondleidingInformatie.Count - 1].Add("".PadRight(19));
                 }
 
                 time = time.AddMinutes(20);
@@ -845,7 +856,9 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos);
+               
+
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Tour starten   ");
                 Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
                 {
@@ -871,6 +884,9 @@ namespace Project_B_V2._0
                     if (answer == "y")
                     {
                         Console.WriteLine("Deze tour wordt gestart.");
+                        rondleidingen[pos].TourIsStarted = true;
+                        allerondleidingen[allerondleidingen.IndexOf(rondleidingen[pos])].TourIsStarted = true;
+                        JsonManager.SerializeRondleidingen(allerondleidingen);
                         Thread.Sleep(2000);
                         return 4;
                     }
@@ -885,7 +901,7 @@ namespace Project_B_V2._0
                         Console.WriteLine("Geef antwoord met 'y' (yes) of 'n' (no)");
                         Console.WriteLine("Probeer het opnieuw.");
                         Thread.Sleep(4000);
-                        return 4;
+                        return 4; 
                     }
 
 
