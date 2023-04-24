@@ -560,7 +560,16 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Reserveren     ", false);
+                List<string> boxes;
+                if (rondleidingen[pos].Bezetting == 13)
+                {
+                    boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Reserveren     ", true);
+                }
+                else
+                {
+                    boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Reserveren     ", false);
+                }
+
                 Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
                 {
@@ -582,7 +591,7 @@ namespace Project_B_V2._0
                 {
                     cont = false;
                 }
-                else if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
+                else if ((IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1")) && rondleidingen[pos].Bezetting < 13)
                 {
                     Console.WriteLine();
                     Console.WriteLine("Vul hier uw unieke code in: ");
