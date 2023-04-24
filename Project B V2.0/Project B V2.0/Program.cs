@@ -34,7 +34,8 @@ namespace Project_B_V2._0
             screens.Add(new HomeScreen()); // 0
             screens.Add(new TestDataGeneratorScreen()); // 1
             screens.Add(new AfdelingshoofdScherm()); //2
-            screens.Add(new GidsScherm()); //3
+            screens.Add(new InlogGidsScherm()); //3
+            screens.Add(new GidsScherm()); //4
 
             currentScreen = 0;
             do
@@ -754,11 +755,144 @@ namespace Project_B_V2._0
         }
     }
 
+    internal class InlogGidsScherm : Screen 
+    {
+
+        internal override int DoWork() 
+        {
+            string username = "gids";
+            string password = "123";
+
+            Console.WriteLine("Gebruikersnaam:");
+            string usernameingevoerd = Console.ReadLine();
+            Console.WriteLine("Wachtwoord:");
+            string passwordingevoerd = Console.ReadLine();
+
+            if (username == usernameingevoerd && password == passwordingevoerd)
+            {
+                Console.WriteLine();
+                Console.WriteLine("U wordt doorverwezen naar het gidsscherm");
+                Thread.Sleep(2500);
+                return 4;
+            }
+            else 
+            {
+                Console.WriteLine();
+                Console.WriteLine("Onjuiste gegevens");
+                Thread.Sleep(2000);
+                return 3;
+            }
+
+            
+            
+        }
+
+        internal override List<Screen> Update(List<Screen> screens)
+        {
+            return screens;
+        }
+    }
+
     internal class GidsScherm : Screen
     {
         internal override int DoWork()
         {
-            Console.WriteLine("Dit is het GidsScherm.");
+            int pos = 0;
+            bool cont = true;
+            List<List<string>> rondleidingInformatie = new List<List<string>>();
+            List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
+            if (rondleidingen.Count <= 0)
+            {
+                JsonManager.SerializeRondleidingen(TestDataGenerator.MaakRondleidingen(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
+                    new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 17, 0, 0)).Item1);
+
+                rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
+            }
+            List<DateTime> tijden = new List<DateTime>();
+            DateTime time = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
+            for (int i = 0; i < rondleidingen.Count; i++)
+            {
+                tijden.Add(time);
+                if (rondleidingen[i].Bezetting >= 8 && rondleidingen[i].Bezetting < 13)
+                {
+                    rondleidingInformatie.Add(new List<string>
+                    {
+                        (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
+                        $"Nog {13 - rondleidingen[i].Bezetting} plekken".PadRight(19),
+                        "".PadRight(19),
+                    });
+                }
+                else if (rondleidingen[i].Bezetting < 8)
+                {
+                    rondleidingInformatie.Add(new List<string>
+                    {
+                        (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
+                        "".PadRight(19),
+                    });
+                }
+                else
+                {
+                    rondleidingInformatie.Add(new List<string>
+                    {
+                        (rondleidingen[i].Datum.ToShortTimeString() + "-" + rondleidingen[i].Datum.AddMinutes(40).ToShortTimeString()).PadRight(19),
+                        $"VOL!!!!!".PadRight(19),
+                        "".PadRight(19),
+                    });
+                }
+
+                time = time.AddMinutes(20);
+            }
+
+            do
+            {
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos);
+                Console.Clear();
+                for (int i = 0; i < boxes.Count; i++)
+                {
+                    Console.Write(boxes[i]);
+                }
+
+                Console.WriteLine(new string('#', 48));
+                ConsoleKeyInfo key = Console.ReadKey(false);
+
+                pos = NavigateBoxes(pos, rondleidingInformatie, key);
+
+
+                if (IsKeyPressed(key, ESCAPE_KEY))
+                {
+                    cont = false;
+                }
+                else if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
+                {
+                    
+                    Console.WriteLine();
+                    Console.WriteLine("Wilt u deze tour starten? y/n");
+                    string answer = Console.ReadLine();
+                    if (answer == "y")
+                    {
+                        Console.WriteLine("Deze tour wordt gestart.");
+                        Thread.Sleep(2000);
+                        return 4;
+                    }
+                    else if (answer == "n")
+                    {
+                        Console.WriteLine("U wordt teruggestuurd naar het gidsscherm.");
+                        Thread.Sleep(2000);
+                        return 4;
+                    }
+                    else 
+                    {
+                        Console.WriteLine("Geef antwoord met 'y' (yes) of 'n' (no)");
+                        Console.WriteLine("Probeer het opnieuw.");
+                        Thread.Sleep(4000);
+                        return 4;
+                    }
+
+
+                }
+                
+
+            } while (cont);
             return 0;
         }
 
