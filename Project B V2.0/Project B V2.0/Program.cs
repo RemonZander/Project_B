@@ -368,6 +368,28 @@ namespace Project_B_V2._0
 
             return output;
         }
+
+        protected static void Geluid(bool gelukt)
+        {
+            if (gelukt)
+            {
+                Console.Beep(330, 100);
+                Console.Beep(330, 100);
+                Console.Beep(440, 100);
+                Console.Beep(988, 300);
+                return;
+            }
+            else
+            {
+                Console.Beep(440, 100);
+                Console.Beep(440, 100);
+                Console.Beep(330, 100);
+                Console.Beep(247, 300);
+                return;
+            }
+
+        }
+
     }
 
     internal class TestDataGeneratorScreen : Screen
@@ -591,8 +613,9 @@ namespace Project_B_V2._0
                 {
                     cont = false;
                 }
-                else if ((IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1")) && rondleidingen[pos].Bezetting < 13)
-                {
+                else if ((IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1")) && rondleidingen[pos].Bezetting < 13) 
+                { 
+
                     Console.WriteLine();
                     Console.WriteLine("Vul hier uw unieke code in: ");
                     (string, int) answer = AskForInput(0);
@@ -608,6 +631,7 @@ namespace Project_B_V2._0
                         if (gebruikers[a].UniekeCode == answer.Item1 && gebruikers[a].Reservering != new DateTime(1, 1, 1))
                         {
                             Console.WriteLine();
+                            Geluid(false);
                             Console.WriteLine("U heeft al een reservering geplaatst");
                             Thread.Sleep(2000);
                             return 0;
@@ -619,6 +643,7 @@ namespace Project_B_V2._0
                             JsonManager.SerializeGebruikers(gebruikers);
 
                             Console.WriteLine();
+                            Geluid(true);
                             Console.WriteLine($"De reservering om {tijden[pos]} is geplaatst. U wordt terug gestuurd...");
                             Thread.Sleep(3000);
                             return 0;
@@ -626,6 +651,7 @@ namespace Project_B_V2._0
                     }
 
                     Console.WriteLine();
+                    Geluid(false);
                     Console.WriteLine("Deze unieke code is bij ons niet bekent");
                     Thread.Sleep(2000);
                 }
