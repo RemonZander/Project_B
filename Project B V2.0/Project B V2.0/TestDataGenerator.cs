@@ -101,6 +101,7 @@ namespace Project_B_V2._0
         {
             Exception ex = new Exception();
             Random rnd = new Random();
+            start = new DateTime(start.Year, start.Month, start.Day, 11, 0, 0);
             List<Rondleiding> rondleidingen = new List<Rondleiding>();
             try
             {
