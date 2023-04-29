@@ -51,6 +51,20 @@ namespace Project_B_V2._0
             return "200: Success";
         }
 
+        internal static string SerializeCodes(List<string> data)
+        {
+            //TODO Implementeer logica om lijst / data te schrijven naar JSON
+            if (File.Exists("codes.json"))
+            {
+                File.Delete("codes.json");
+            }
+
+            File.WriteAllText("codes.json", JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
+
+
+            return "200: Success";
+        }
+
         internal static string SerializeRondleidingen(List<Rondleiding> data)
         {
             //TODO Implementeer logica om lijst / data te schrijven naar JSON

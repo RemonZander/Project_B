@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="bin\Debug\net6.0\codes.json" />
+    <Folder Include="bin\Debug\net6.0\" />
   </ItemGroup>
 
 </Project>

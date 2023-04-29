@@ -37,6 +37,10 @@ namespace Project_B_V2._0
             screens.Add(new InlogGidsScherm()); //3
             screens.Add(new GidsScherm()); //4
 
+
+            (List<User>, Exception) userInitialize = TestDataGenerator.MaakGebruikers();
+            JsonManager.SerializeGebruikers(userInitialize.Item1);
+
             currentScreen = 0;
             do
             {

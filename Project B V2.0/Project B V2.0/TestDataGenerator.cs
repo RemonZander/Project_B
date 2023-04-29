@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,21 +30,36 @@ namespace Project_B_V2._0
             return (codes, ex);
         }
 
-        internal static (List<User>, Exception) MaakGebruikers(int hoeveelheid)
+        internal static (List<User>, Exception) MaakGebruikers(int hoeveelheid = 0)
         {
             List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen();
             List<Rondleiding> rondleidingenNew = new List<Rondleiding>();
+            List<string> UniekeCodes = new();
 
             Exception ex = new Exception();
             //(List<int>, Exception) UniekeCodes = MaakUniekeCodes(hoeveelheid);
-            List<string> UniekeCodes = JsonManager.DeserializeCodes();
+            if(hoeveelheid == 0)
+            {
+                UniekeCodes = JsonManager.DeserializeCodes();
+            }
+
+            if(UniekeCodes.Count == 0)
+            {
+                (List<int>, Exception) uniqueCodes = MaakUniekeCodes(hoeveelheid);
+
+                foreach (int code in uniqueCodes.Item1)
+                {
+                    UniekeCodes.Add(code.ToString());
+                }
+            }
+
             //if (UniekeCodes.Item2.Message != "Exception of type 'System.Exception' was thrown.") return (new List<User>(), UniekeCodes.Item2);
             List<User> Users = new List<User>();
             Random rnd = new Random();
             try
             {
                 for (
-                    int a = 0; a < hoeveelheid; a++)
+                    int a = 0; a < UniekeCodes.Count; a++)
                 {
                     if (rnd.Next(1, 5) == 3)
                     {
