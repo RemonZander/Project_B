@@ -722,8 +722,9 @@ namespace Project_B_V2._0
             if (input.Item2 != -1) { 
                 return input.Item2;
             }
-            
-            DateTime start = Convert.ToDateTime(input.Item1);
+
+            Console.WriteLine();
+            DateTime start = Convert.ToDateTime($"{input.Item1} 11:00:00");
             Console.WriteLine("Geef de eind datum op vanaf wanneer je de rondleidings bezettingsgraad wil zien. Format: dd-MM-YYYY");
             input = AskForInput(0);
             
@@ -731,7 +732,8 @@ namespace Project_B_V2._0
                 return input.Item2;
             }
 
-            DateTime end = Convert.ToDateTime(input.Item1);
+            DateTime end = Convert.ToDateTime($"{input.Item1} 17:30:00");
+            Console.WriteLine();
 
 
             List<Rondleiding> rondleidingen = new List<Rondleiding>();
@@ -749,10 +751,17 @@ namespace Project_B_V2._0
             }
 
             Console.WriteLine("\n Druk op 1 om terug te gaan naar het Hoofdscherm");
+            Console.WriteLine("\n Druk op 6 om de bezettingsgraden in een bestand op te slaan");
             ConsoleKeyInfo key = Console.ReadKey(false);
 
             if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
             {
+                return 0;
+            }
+            else if (IsKeyPressed(key,"D6") || IsKeyPressed(key, "NUMPAD6"))
+            {
+                JsonManager.SerializeBezettingsgraden(rondleidingen);
+
                 return 0;
             }
             else

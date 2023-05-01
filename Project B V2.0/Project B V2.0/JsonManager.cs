@@ -92,5 +92,24 @@ namespace Project_B_V2._0
 
             return data;
         }
+
+        internal static string SerializeBezettingsgraden(List<Rondleiding> data)
+        {
+            if (File.Exists("bezettingsgraden.json"))
+            {
+                File.Delete("bezettingsgraden.json");
+            }
+
+            List<string> graden = new();
+
+            foreach(Rondleiding rondleiding in data)
+            {
+                graden.Add($"{rondleiding.Datum}: {rondleiding.Bezettingsgraad}%");
+            }
+            File.WriteAllText("bezittingsgraden.json", JsonSerializer.Serialize(graden, new JsonSerializerOptions { WriteIndented = true }));
+
+            return "200: Success";
+
+        }
     }
 }
