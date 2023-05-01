@@ -133,5 +133,10 @@ namespace Project_B_V2._0
 
             return (rondleidingen, ex);
         }
+
+        internal static void PR1()
+        {
+
+        }
     }
 }

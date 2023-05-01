@@ -37,8 +37,16 @@ namespace Project_B_V2._0
         {
             Console.SetOut(console);
             Console.WriteLine(value);
-            this.writer.WriteLine(value);
             Console.SetOut(this);
+            this.writer.WriteLine(value);
+        }
+
+        public override void WriteLine()
+        {
+            Console.SetOut(console);
+            Console.WriteLine();
+            Console.SetOut(this);
+            this.writer.WriteLine();
         }
 
         public override void Flush()

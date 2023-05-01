@@ -30,6 +30,8 @@ namespace Project_B_V2._0
 
         static void Main(string[] args)
         {
+            var dualOutput = new DualConsoleOutput(@"output.txt", Console.Out);
+            Console.SetOut(dualOutput);
             ShowWindow(ThisCon, MAXIMIZE);
             screens.Add(new HomeScreen()); // 0
             screens.Add(new TestDataGeneratorScreen()); // 1
@@ -123,7 +125,7 @@ namespace Project_B_V2._0
 
                 if (CKInfo.KeyChar != '\0')
                 {
-                    Console.Write(CKInfo.KeyChar);
+                    Console.Write(CKInfo.KeyChar.ToString());
                 }
             }
 
@@ -404,6 +406,7 @@ namespace Project_B_V2._0
             Console.WriteLine("TestDataGeneratorScreen");
             Console.WriteLine("Druk op [1] om gebruikers aan te maken.");
             Console.WriteLine("Druk op [2] om rondleidingen aan te maken.");
+            Console.WriteLine("Druk op [3] om PR-1 test data aan te maken.");
             ConsoleKeyInfo input = Console.ReadKey(false);
             //(string, int) answer = AskForInput(0);
             
@@ -486,6 +489,36 @@ namespace Project_B_V2._0
                     return screen;
                 }
             }
+            else if (IsKeyPressed(input, "D3") || IsKeyPressed(input, "NUMPAD3"))
+            {
+                Console.WriteLine();
+                Console.WriteLine("Test data aanmaken voor PR-1.");
+                File.Delete("gebruikers.json");
+                File.Delete("rondleidingen.json");
+                File.Copy(@"..\..\..\testing\preconditions\PR-1\gebruikers.json", "gebruikers.json");
+                File.Copy(@"..\..\..\testing\preconditions\PR-1\rondleidingen.json", "rondleidingen.json");
+                List<User> gebruikers = JsonManager.DeserializeGebruikers();
+                List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen();
+
+                for (int a = 0; a < gebruikers.Count; a++)
+                {
+                    if (gebruikers[a].Reservering != new DateTime(1, 1, 1))
+                    {
+                        gebruikers[a].Reservering = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, gebruikers[a].Reservering.Hour, gebruikers[a].Reservering.Minute, 0);
+                    }
+                }
+
+                for (int b = 0; b < rondleidingen.Count; b++)
+                {
+                    rondleidingen[b].Datum = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, rondleidingen[b].Datum.Hour, rondleidingen[b].Datum.Minute, 0);
+                }
+
+                JsonManager.SerializeGebruikers(gebruikers);
+                JsonManager.SerializeRondleidingen(rondleidingen);
+
+                Console.WriteLine("Test data is aangemaakt. U wordt nu terug gestuurd.");
+                Thread.Sleep(3000);
+            }
             else if (IsKeyPressed(input, ESCAPE_KEY))
             {
                 return 0;
@@ -515,6 +548,7 @@ namespace Project_B_V2._0
             int pos = 0;
             bool cont = true;
             List<List<string>> rondleidingInformatie = new List<List<string>>();
+            List<Rondleiding> alleRondleidingen = JsonManager.DeserializeRondleidingen();
             List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderBy(r => r.Datum).ToList();
             if (rondleidingen.Count <= 0)
             {
@@ -594,7 +628,6 @@ namespace Project_B_V2._0
                         return answer.Item2;
                     }
                     List<User> gebruikers = JsonManager.DeserializeGebruikers();
-                    List<string> uniekeCodes = gebruikers.Select(geb => geb.UniekeCode).ToList(); //?
 
                     for (int a = 0; a < gebruikers.Count; a++)
                     {
@@ -610,6 +643,10 @@ namespace Project_B_V2._0
                             gebruikers[a].Reservering = tijden[pos];
 
                             JsonManager.SerializeGebruikers(gebruikers);
+
+                            alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == rondleidingen[pos].Datum)].Bezetting += 1;
+
+                            JsonManager.SerializeRondleidingen(alleRondleidingen);
 
                             Console.WriteLine();
                             Console.WriteLine($"De reservering om {tijden[pos]} is geplaatst. U wordt terug gestuurd...");
