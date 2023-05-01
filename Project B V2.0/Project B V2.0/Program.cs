@@ -515,13 +515,13 @@ namespace Project_B_V2._0
             int pos = 0;
             bool cont = true;
             List<List<string>> rondleidingInformatie = new List<List<string>>();
-            List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
+            List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderBy(r => r.Datum).ToList();
             if (rondleidingen.Count <= 0)
             {
                 JsonManager.SerializeRondleidingen(TestDataGenerator.MaakRondleidingen(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0),
                     new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 17, 0, 0)).Item1);
 
-                rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).ToList();
+                rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToShortDateString() == DateTime.Now.ToShortDateString()).OrderBy(r => r.Datum).ToList();
             }
             List<DateTime> tijden = new List<DateTime>();
             DateTime time = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 0, 0);
