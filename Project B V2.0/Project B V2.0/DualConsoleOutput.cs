@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,12 +14,14 @@ namespace Project_B_V2._0
         private StreamWriter writer;
         private TextWriter console;
         public override Encoding Encoding{get{return encoding;}}
+        private string filepath;
         public DualConsoleOutput(string filePath,TextWriter console, Encoding encoding = null)
         {
             if (encoding != null)
             {
                 this.encoding = encoding;
             }
+            this.filepath = filePath;
             this.console = console;
             File.Delete(filePath);
             this.writer = new StreamWriter(filePath,false, this.encoding);
@@ -65,6 +68,12 @@ namespace Project_B_V2._0
             this.writer.Close();
             this.writer.Dispose();
             base.Dispose();
+        }
+
+        public void ReStartWriter()
+        {
+            this.writer = new StreamWriter(filepath, false, this.encoding);
+            this.writer.AutoFlush = true;
         }
     }  
 }

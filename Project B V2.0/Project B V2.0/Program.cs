@@ -28,9 +28,10 @@ namespace Project_B_V2._0
         private static int lastscreen;
         private static List<Screen> screens = new List<Screen>();
 
+        private static readonly DualConsoleOutput dualOutput = new DualConsoleOutput(@"output.txt", Console.Out);
+
         static void Main(string[] args)
-        {
-            var dualOutput = new DualConsoleOutput(@"output.txt", Console.Out);
+        {           
             Console.SetOut(dualOutput);
             ShowWindow(ThisCon, MAXIMIZE);
             screens.Add(new HomeScreen()); // 0
@@ -50,7 +51,7 @@ namespace Project_B_V2._0
         static internal void Display()
         {
             lastscreen = currentScreen;
-            currentScreen = screens[currentScreen].DoWork();
+            currentScreen = screens[currentScreen].DoWork(dualOutput);
             screens = screens[lastscreen].Update(screens);
         }
 
@@ -75,7 +76,7 @@ namespace Project_B_V2._0
         /// This is the main function of the current screen. Here is all the logic of that current screen
         /// </summary>
         /// <returns>This function returns the ID of the next screen to display</returns>
-        internal abstract int DoWork();
+        internal abstract int DoWork(DualConsoleOutput dualOutput);
 
         /// <summary>
         /// This function updates all screens with data from one screen to an other
@@ -401,7 +402,7 @@ namespace Project_B_V2._0
         /// This is the main entrypoint for the current screen. In here you can do whatever you want your screen to do.
         /// </summary>
         /// <returns>here you return the index of the next screen. This index is based on the Screens field in the program class</returns>
-        internal override int DoWork()
+        internal override int DoWork(DualConsoleOutput dualOutput)
         {
             Console.WriteLine("TestDataGeneratorScreen");
             Console.WriteLine("Druk op [1] om gebruikers aan te maken.");
@@ -517,6 +518,9 @@ namespace Project_B_V2._0
                 JsonManager.SerializeRondleidingen(rondleidingen);
 
                 Console.WriteLine("Test data is aangemaakt. U wordt nu terug gestuurd.");
+                dualOutput.Close();
+                File.Delete("output.txt");
+                dualOutput.ReStartWriter();
                 Thread.Sleep(3000);
             }
             else if (IsKeyPressed(input, ESCAPE_KEY))
@@ -543,7 +547,7 @@ namespace Project_B_V2._0
     }
 
     internal class HomeScreen : Screen {
-        internal override int DoWork()
+        internal override int DoWork(DualConsoleOutput dualOutput)
         {
             int pos = 0;
             bool cont = true;
@@ -621,6 +625,9 @@ namespace Project_B_V2._0
                 else if ((IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1")) && rondleidingen[pos].Bezetting < 13)
                 {
                     Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine(new string('_', 48));
                     Console.WriteLine("Vul hier uw unieke code in: ");
                     (string, int) answer = AskForInput(0);
                     if (answer.Item2 != -1)
@@ -674,44 +681,38 @@ namespace Project_B_V2._0
                     List<User> gebruikers = JsonManager.DeserializeGebruikers();
 
                     //Als de gebruiker is gevonden, returned hij het naar een nieuwe variabel
-                    User targetedUser = gebruikers.FirstOrDefault(geb => geb.UniekeCode.Equals(answer.Item1));
+                    int index = gebruikers.FindIndex(geb => geb.UniekeCode == answer.Item1);
 
-                    if (targetedUser != null)
+                    if (index != -1 && gebruikers[index].Reservering == default)
                     {
                         //Als de gebruiker geen reservering heeft, geef de volgende melding
-                        if (targetedUser.Reservering == default)
-                        {
                             Console.WriteLine();
                             Console.WriteLine("U heeft nog geen reservering geplaatst");
                             Thread.Sleep(2000);
                             return 0;
-                        }
-
-                        //Zet de resveringsdatum naar default om te legen / resetten
-                        targetedUser.Reservering = default;
-
-                        //Zoek naar de gebruiker in de gebruikers lijst
-                        int index = gebruikers.FindIndex(geb => geb.UniekeCode == targetedUser.UniekeCode);
-
-                        //Overschrijf de gebruiker in de lijst
-                        gebruikers[index] = targetedUser;
-
-                        JsonManager.SerializeGebruikers(gebruikers);
-
-                        Console.WriteLine();
-                        Console.WriteLine();
-                        Console.WriteLine("Uw reservering is succesvol geannuleerd");
-                        Thread.Sleep(2000);
-                        return 0;
                     }
-                    else
+                    else if (index == -1)
                     {
                         Console.WriteLine();
-                        Console.WriteLine("Deze user is niet bekend bij ons.");
+                        Console.WriteLine("Deze unieke code is bij ons niet bekend. U wordt weer terug gestuurd.");
                         Thread.Sleep(2000);
                         return 0;
                     }
 
+                    alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == gebruikers[index].Reservering)].Bezetting -= 1;
+
+                    JsonManager.SerializeRondleidingen(alleRondleidingen);
+
+                    //Zet de resveringsdatum naar default om te legen / resetten
+                    gebruikers[index].Reservering = default;
+
+                    JsonManager.SerializeGebruikers(gebruikers);
+
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine("Uw reservering is succesvol geannuleerd");
+                    Thread.Sleep(2000);
+                    return 0;
                 }
                 else if (IsKeyPressed(key, "D3") || IsKeyPressed(key, "NUMPAD3"))
                 {
@@ -738,7 +739,7 @@ namespace Project_B_V2._0
     }
     internal class AfdelingshoofdScherm : Screen {
 
-        internal override int DoWork()
+        internal override int DoWork(DualConsoleOutput dualOutput)
         {
             Console.WriteLine("AfdelingshoofdScherm");
             Console.WriteLine();
@@ -797,7 +798,7 @@ namespace Project_B_V2._0
     internal class InlogGidsScherm : Screen 
     {
 
-        internal override int DoWork() 
+        internal override int DoWork(DualConsoleOutput dualOutput) 
         {
             string username = "gids";
             string password = "123";
@@ -831,7 +832,7 @@ namespace Project_B_V2._0
 
     internal class GidsScherm : Screen
     {
-        internal override int DoWork()
+        internal override int DoWork(DualConsoleOutput dualOutput)
         {
             int pos = 0;
             bool cont = true;
