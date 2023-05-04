@@ -85,6 +85,26 @@ namespace Project_B_V2._0
         /// <returns>This returns the same list you just gave as param but now it has been updated with information</returns>
         internal abstract List<Screen> Update(List<Screen> screens);
 
+        protected static ConsoleKeyInfo ReadKey()
+        {
+            if (Console.IsInputRedirected)
+            {
+                string input = Console.ReadLine();
+                if (input == "EXIT") Environment.Exit(0);
+                ConsoleKey ck = (ConsoleKey)input[0];
+                return new ConsoleKeyInfo(Convert.ToChar(ck), ck, false, false, false);
+            }
+            return Console.ReadKey();
+        }
+
+        protected static string ReadLine()
+        {
+            string input = Console.ReadLine();
+            if (input == "EXIT") Environment.Exit(0);
+            Console.Write(input);
+            return input;
+        }
+
         /// <summary>
         /// Returns true if the key with the specified keycode is pressed.
         /// </summary>
@@ -96,12 +116,17 @@ namespace Project_B_V2._0
         [Obsolete]
         protected (string, int) AskForInput(int screenIndex)
         {
+            if (Console.IsInputRedirected)
+            {
+                return (ReadLine(), -1);
+            }
+
             bool AskRepeat = true;
             List<char> output = new();
 
             while (AskRepeat)
             {
-                ConsoleKeyInfo CKInfo = Console.ReadKey(true);
+                ConsoleKeyInfo CKInfo = ReadKey();
 
                 if (CKInfo.KeyChar == '\0') continue;
 
@@ -380,9 +405,9 @@ namespace Project_B_V2._0
         {
             Console.WriteLine();
             Console.WriteLine("Geef de start datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
-            DateTime start = Convert.ToDateTime(Console.ReadLine());
+            DateTime start = Convert.ToDateTime(ReadLine());
             Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
-            DateTime end = Convert.ToDateTime(Console.ReadLine());
+            DateTime end = Convert.ToDateTime(ReadLine());
             (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end);
             if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
             {
@@ -408,7 +433,7 @@ namespace Project_B_V2._0
             Console.WriteLine("Druk op [1] om gebruikers aan te maken.");
             Console.WriteLine("Druk op [2] om rondleidingen aan te maken.");
             Console.WriteLine("Druk op [3] om PR-1 test data aan te maken.");
-            ConsoleKeyInfo input = Console.ReadKey(false);
+            ConsoleKeyInfo input = ReadKey();
             //(string, int) answer = AskForInput(0);
             
             if (IsKeyPressed(input, "D1") || IsKeyPressed(input, "NUMPAD1"))
@@ -453,7 +478,7 @@ namespace Project_B_V2._0
                 Console.WriteLine();
                 JsonManager.SerializeGebruikers(result.Item1);
                 Console.WriteLine("De gebruikers zijn aangemaakt. Druk op een toets om terug te gaan of druk op [1] om de aangemaakte users te zien.");
-                ConsoleKeyInfo key = Console.ReadKey(false);
+                ConsoleKeyInfo key = ReadKey();
                 Console.WriteLine();
                 if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
                 {
@@ -479,7 +504,7 @@ namespace Project_B_V2._0
                         Console.WriteLine(boxes[a]);
                     }
                     Console.WriteLine("Druk op een toets om terug te gaan.");
-                    Console.ReadKey(false);
+                    ReadKey();
                 }
             }
             else if (IsKeyPressed(input, "D2") || IsKeyPressed(input, "NUMPAD2"))
@@ -613,7 +638,7 @@ namespace Project_B_V2._0
                 Console.WriteLine("Druk op [3] om naar het gidsscherm te gaan.");
                 Console.WriteLine("Druk op [4] om naar het afdelingshoofdscherm te gaan.");
                 Console.WriteLine("Druk op [9] voor developper scherm.");
-                ConsoleKeyInfo key = Console.ReadKey(false);
+                ConsoleKeyInfo key = ReadKey();
 
                 pos = NavigateBoxes(pos, rondleidingInformatie, key);
 
@@ -776,7 +801,7 @@ namespace Project_B_V2._0
             }
 
             Console.WriteLine("\n Druk op 1 om terug te gaan naar het Hoofdscherm");
-            ConsoleKeyInfo key = Console.ReadKey(false);
+            ConsoleKeyInfo key = ReadKey();
 
             if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
             {
@@ -804,9 +829,9 @@ namespace Project_B_V2._0
             string password = "123";
 
             Console.WriteLine("Gebruikersnaam:");
-            string usernameingevoerd = Console.ReadLine();
+            string usernameingevoerd = ReadLine();
             Console.WriteLine("Wachtwoord:");
-            string passwordingevoerd = Console.ReadLine();
+            string passwordingevoerd = ReadLine();
 
             if (username == usernameingevoerd && password == passwordingevoerd)
             {
@@ -900,7 +925,7 @@ namespace Project_B_V2._0
                 }
 
                 Console.WriteLine(new string('#', 48));
-                ConsoleKeyInfo key = Console.ReadKey(false);
+                ConsoleKeyInfo key = ReadKey();
 
                 pos = NavigateBoxes(pos, rondleidingInformatie, key);
 
@@ -913,7 +938,7 @@ namespace Project_B_V2._0
                 {
                     Console.WriteLine();
                     Console.WriteLine("Wilt u deze tour starten? y/n");
-                    key = Console.ReadKey();
+                    key = ReadKey();
                     Console.WriteLine();
                     if (IsKeyPressed(key, "Y"))
                     {
