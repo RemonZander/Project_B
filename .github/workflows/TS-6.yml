@@ -1,0 +1,24 @@
+name: TS-6
+
+on: [push]
+
+jobs:
+  TS-6:
+    runs-on: windows-latest
+    permissions: write-all
+    strategy:
+      matrix:
+        dotnet-version: [ '6.0.x' ]
+            
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install dependencies
+        run: dotnet restore "Project B V2.0"
+      - name: run test
+        run: |
+          Set-Location -Path "Project B V2.0/Project B V2.0/testing/tests/TS-6/" -PassThru
+          .\RunTest.ps1 -PassThru
