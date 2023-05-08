@@ -927,14 +927,37 @@ namespace Project_B_V2._0
 
                             User targetedUser = gebruikers.FirstOrDefault(geb => geb.UniekeCode.Equals(answer.Item1));
 
-                            if(targetedUser.Reservering == rondleidingen[pos].Datum)
+                            if (targetedUser != null)
                             {
-                                Geluid(true);
-                                bezettingsgraad--;
+                                if (targetedUser.Reservering == rondleidingen[pos].Datum)
+                                {
+                                    Geluid(true);
+                                    bezettingsgraad--;
+                                }
+                                else
+                                {
+                                    Geluid(false);
+                                    if(targetedUser.Reservering == default)
+                                    {
+                                        Console.WriteLine();
+                                        Console.WriteLine("Uw heeft nog geen reservering geplaatst");
+                                        Thread.Sleep(2000);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine();
+                                        Console.WriteLine("Uw heeft gereserveerd voor een andere tijd");
+                                        Thread.Sleep(2000);
+                                    }
+                                
+                                }
                             }
                             else
                             {
                                 Geluid(false);
+                                Console.WriteLine();
+                                Console.WriteLine("Deze unieke code is niet bij ons bekend");
+                                Thread.Sleep(2000);
                             }
                             Console.WriteLine();
                             Console.WriteLine(new string( '_', 48));
