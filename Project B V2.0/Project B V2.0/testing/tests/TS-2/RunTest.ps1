@@ -1,4 +1,4 @@
-﻿cmd /c 'dotnet run --project "..\..\..\Project B V2.0.csproj" 5-2-2023 < input.txt'
+﻿cmd /c 'dotnet run --project "..\..\..\Project B V2.0.csproj" 5-8-2023 < input.txt'
 
 $content1 = (Get-Content -Path ".\output.txt" -raw) -replace "`r`n?", "`n" -replace " +`n", "`n"
 $content2 = (Get-Content -Path ".\expected results\output.txt" -raw) -replace "`r`n?", "`n" -replace " +`n", "`n"
