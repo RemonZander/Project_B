@@ -88,7 +88,7 @@ namespace Project_B_V2._0
         protected const string DOWN_ARROW = "DOWNARROW";
         protected const string LEFT_ARROW = "LEFTARROW";
         protected const string RIGHT_ARROW = "RIGHTARROW";
-        protected const string dateFormat = "d/M/yyyy";
+        protected const string dateFormat = "d-M-yyyy";
         protected const string timeFormat = "HH:mm";
         protected const string dateTimeFormat = "d-M-yyyy HH:mm";
         protected readonly DateTime newSetDate;
@@ -715,7 +715,7 @@ namespace Project_B_V2._0
                             JsonManager.SerializeRondleidingen(alleRondleidingen);
 
                             Console.WriteLine();
-                            Console.WriteLine($"De reservering om {tijden[pos].ToString(dateFormat)} is geplaatst. U wordt terug gestuurd...");
+                            Console.WriteLine($"De reservering om {tijden[pos].ToString(dateTimeFormat)} is geplaatst. U wordt terug gestuurd...");
                             Thread.Sleep(3000);
                             return 0;
                         }
