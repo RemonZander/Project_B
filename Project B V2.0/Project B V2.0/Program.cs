@@ -97,11 +97,6 @@ namespace Project_B_V2._0
             this.newSetDate = newSetDate;
         }
 
-        public Screen()
-        {
-
-        }
-
         /// <summary>
         /// This is the main function of the current screen. Here is all the logic of that current screen
         /// </summary>
@@ -121,6 +116,10 @@ namespace Project_B_V2._0
             {
                 string input = Console.ReadLine();
                 if (input == "EXIT") Environment.Exit(0);
+                if (input == "DOWNARROW") return new ConsoleKeyInfo('a' ,(ConsoleKey)40, false, false, false);
+                if (input == "UPARROW") return new ConsoleKeyInfo('a', (ConsoleKey)38, false, false, false);
+                if (input == "RIGHTARROW") return new ConsoleKeyInfo('a', (ConsoleKey)39, false, false, false);
+                if (input == "LEFTARROW") return new ConsoleKeyInfo('a', (ConsoleKey)37, false, false, false);
                 ConsoleKey ck = (ConsoleKey)input[0];
                 return new ConsoleKeyInfo(Convert.ToChar(ck), ck, false, false, false);
             }
