@@ -30,24 +30,33 @@ namespace Project_B_V2._0
         
         public override void Write(string value)
         {
-            Console.SetOut(console);
-            Console.Write(value);
+            if (!Console.IsInputRedirected)
+            {
+                Console.SetOut(console);
+                Console.Write(value);
+            }
             Console.SetOut(this);  
             this.writer.Write(value);  
         }
 
         public override void WriteLine(string value)
         {
-            Console.SetOut(console);
-            Console.WriteLine(value);
+            if (!Console.IsInputRedirected)
+            {
+                Console.SetOut(console);
+                Console.WriteLine(value);
+            }
             Console.SetOut(this);
             this.writer.WriteLine(value);
         }
 
         public override void WriteLine()
         {
-            Console.SetOut(console);
-            Console.WriteLine();
+            if (!Console.IsInputRedirected)
+            {
+                Console.SetOut(console);
+                Console.WriteLine();
+            }
             Console.SetOut(this);
             this.writer.WriteLine();
         }
