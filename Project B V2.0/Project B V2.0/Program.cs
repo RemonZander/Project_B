@@ -685,6 +685,7 @@ namespace Project_B_V2._0
                         //Overschrijf de gebruiker in de lijst
                         gebruikers[index] = targetedUser;
 
+                        
                         JsonManager.SerializeGebruikers(gebruikers);
 
                         Console.WriteLine();
@@ -909,6 +910,36 @@ namespace Project_B_V2._0
                         rondleidingen[pos].TourIsStarted = true;
                         allerondleidingen[allerondleidingen.IndexOf(rondleidingen[pos])].TourIsStarted = true;
                         JsonManager.SerializeRondleidingen(allerondleidingen);
+                        Thread.Sleep(2000);
+
+                        Console.WriteLine("Vul de unieke codes in");
+                        Console.WriteLine(new string('_', 48));
+
+                        int bezettingsgraad = rondleidingen[pos].Bezetting;
+                        while (bezettingsgraad > 0)
+                        {
+                            (string, int) answer = AskForInput(0);
+                            if (answer.Item2 != -1)
+                            {
+                                return answer.Item2;
+                            }
+                            List<User> gebruikers = JsonManager.DeserializeGebruikers();
+
+                            User targetedUser = gebruikers.FirstOrDefault(geb => geb.UniekeCode.Equals(answer.Item1));
+
+                            if(targetedUser.Reservering == rondleidingen[pos].Datum)
+                            {
+                                Geluid(true);
+                                bezettingsgraad--;
+                            }
+                            else
+                            {
+                                Geluid(false);
+                            }
+                            Console.WriteLine();
+                            Console.WriteLine(new string( '_', 48));
+                        }
+                        Console.WriteLine("De rondleiding kan beginnen!");
                         Thread.Sleep(2000);
                         return 4;
                     }
