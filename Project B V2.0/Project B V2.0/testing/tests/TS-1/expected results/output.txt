@@ -48,7 +48,7 @@ Druk op [9] voor developper scherm.
 ________________________________________________
 Vul hier uw unieke code in: 
 35259667
-De reservering om 2-5-2023 11:00:00 is geplaatst. U wordt terug gestuurd...
+De reservering om 2-5-2023 11:00 is geplaatst. U wordt terug gestuurd...
 ################################################
 #  11:00-11:40        ##  11:20-12:00          #
 #  Nog 4 plekken      ##  Nog 1 plek           #

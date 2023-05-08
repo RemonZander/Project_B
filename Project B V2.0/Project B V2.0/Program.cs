@@ -959,7 +959,8 @@ namespace Project_B_V2._0
                 List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Rondleiding starten ", 
                     rondleidingen[pos].TourIsStarted ? true : false, 52, 24);
                 
-                Console.Clear();
+                
+                if (!Console.IsInputRedirected) Console.Clear(); 
                 for (int i = 0; i < boxes.Count; i++)
                 {
                     Console.Write(boxes[i]);

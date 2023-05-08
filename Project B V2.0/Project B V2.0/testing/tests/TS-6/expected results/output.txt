@@ -312,7 +312,7 @@ Druk op [9] voor developper scherm.
 ________________________________________________
 Vul hier uw unieke code in: 
 44016539
-De reservering om 8-5-2023 15:00:00 is geplaatst. U wordt terug gestuurd...
+De reservering om 8-5-2023 15:00 is geplaatst. U wordt terug gestuurd...
 ################################################
 #  11:00-11:40        ##  11:20-12:00          #
 #  Nog 5 plekken      ##  Nog 1 plek           #
