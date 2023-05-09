@@ -1,6 +1,6 @@
 name: TS-5
 
-on: [push]
+on: [push, merge]
 
 jobs:
   TS-5:

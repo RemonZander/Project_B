@@ -9,6 +9,7 @@ namespace Project_B_V2._0
     {
         public DateTime Datum { get; set; }
 
+        [Obsolete]
         public int Bezettingsgraad { get; set; }
 
         public int MaxGrootte { get; set; } = 13;
@@ -17,6 +18,7 @@ namespace Project_B_V2._0
 
         public bool TourIsStarted { get; set; }
 
+        [Obsolete]
         public int CalculateBezettingsgraad(List<User> users)
         {
             List<User> reserverdUsers = new List<User>();
@@ -31,6 +33,5 @@ namespace Project_B_V2._0
 
             return Bezettingsgraad;
         }
-
     }
 }

@@ -109,8 +109,7 @@ namespace Project_B_V2._0
                 {
                     rondleidingen.Add(new Rondleiding
                     {
-                        Datum = start,
-                        Bezettingsgraad = rnd.Next(1, 14)
+                        Datum = start
                     });
 
                     if (start.Hour == 16 && start.Minute > 20 || start.Hour > 16)
