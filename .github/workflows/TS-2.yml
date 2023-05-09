@@ -1,6 +1,6 @@
 name: TS-2
 
-on: [push, merge]
+on: [push]
 
 jobs:
   TS-2:
