@@ -803,50 +803,78 @@ namespace Project_B_V2._0
         internal override int DoWork(DualConsoleOutput dualOutput)
         {
             Console.WriteLine("AfdelingshoofdScherm");
-            Console.WriteLine();
-            Console.WriteLine("Geef de start datum op vanaf wanneer je de rondleidings bezettingsgraad wil zien. Format: dd-MM-YYYY");
-            (string, int) input = AskForInput(0);
-            
-            if (input.Item2 != -1) { 
-                return input.Item2;
-            }
-            
-            DateTime start = Convert.ToDateTime(input.Item1);
-            Console.WriteLine("Geef de eind datum op vanaf wanneer je de rondleidings bezettingsgraad wil zien. Format: dd-MM-YYYY");
-            input = AskForInput(0);
-            
-            if (input.Item2 != -1) {
-                return input.Item2;
-            }
-
-            DateTime end = Convert.ToDateTime(input.Item1);
-
-
-            List<Rondleiding> rondleidingen = new List<Rondleiding>();
-            rondleidingen = JsonManager.DeserializeRondleidingen();
-
-            List<User> gebruikers = JsonManager.DeserializeGebruikers();
-
-            foreach (Rondleiding rondleiding in rondleidingen)
-            {
-                if(rondleiding.Datum > start && rondleiding.Datum < end)
-                {
-                    rondleiding.CalculateBezettingsgraad(gebruikers);
-                    Console.WriteLine($"{rondleiding.Datum}, Bezettingsgraad: {rondleiding.Bezettingsgraad}%");
-                }
-            }
-
-            Console.WriteLine("\n Druk op 1 om terug te gaan naar het Hoofdscherm");
+            Console.WriteLine("Druk op [1] om de rondleidings bezettingsgraad te zien.");
+            Console.WriteLine("Druk op [2] om het schema voor een bepaalde dag aan te passen.");
             ConsoleKeyInfo key = ReadKey();
 
             if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
             {
-                return 0;
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("Geef de start datum op vanaf wanneer je de rondleidings bezettingsgraad wil zien. Format: dd-MM-YYYY");
+                (string, int) input = AskForInput(0);
+                Console.WriteLine();
+
+                if (input.Item2 != -1)
+                {
+                    return input.Item2;
+                }
+
+                DateTime start = Convert.ToDateTime(input.Item1);
+                Console.WriteLine("Geef de eind datum op vanaf wanneer je de rondleidings bezettingsgraad wil zien. Format: dd-MM-YYYY");
+                input = AskForInput(0);
+                Console.WriteLine();
+
+                if (input.Item2 != -1)
+                {
+                    return input.Item2;
+                }
+
+                DateTime end = Convert.ToDateTime(input.Item1);
+
+
+                List<Rondleiding> rondleidingen = new List<Rondleiding>();
+                rondleidingen = JsonManager.DeserializeRondleidingen();
+
+                List<User> gebruikers = JsonManager.DeserializeGebruikers();
+
+                foreach (Rondleiding rondleiding in rondleidingen)
+                {
+                    if (rondleiding.Datum > start && rondleiding.Datum < end)
+                    {
+                        rondleiding.CalculateBezettingsgraad(gebruikers);
+                        Console.WriteLine($"{rondleiding.Datum}, Bezettingsgraad: {rondleiding.Bezettingsgraad}%");
+                    }
+                }
+
+                Console.WriteLine("\n Druk op 1 om terug te gaan naar het Hoofdscherm");
+                key = ReadKey();
+
+                if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 0;
+                }
             }
-            else
+            else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
             {
-                return 0;
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("Geef de start datum op vanaf wanneer je het rondleidingsschema wilt aanpassen. Format: dd-MM-YYYY");
+                (string, int) input = AskForInput(0);
+                Console.WriteLine();
+
+                if (input.Item2 != -1)
+                {
+                    return input.Item2;
+                }
+
+                DateTime start = Convert.ToDateTime(input.Item1);
             }
+            return 0;
         }
 
         internal override List<Screen> Update(List<Screen> screens)
