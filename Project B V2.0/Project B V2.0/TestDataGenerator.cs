@@ -137,5 +137,26 @@ namespace Project_B_V2._0
         {
 
         }
+
+        internal static List<RondleidingSettingsDayOfWeek> MaakStdWeekschema() 
+        {
+            List<RondleidingSettingsDayOfWeek> dagInfo = new List<RondleidingSettingsDayOfWeek>();
+            TimeOnly tijd = new TimeOnly(10, 0);
+
+            for (int d = 1; d < 7; d++) 
+            {
+                
+                dagInfo.Add(new RondleidingSettingsDayOfWeek());
+                DayOfWeek dag = (DayOfWeek)d;
+                dagInfo[d-1].Day = dag;
+
+                for (int i = 0; i < 19; i++)
+                {
+                    dagInfo[d-1].Rondleidingen.Add(Tuple.Create(tijd, 13));
+                    tijd = tijd.AddMinutes(20);
+                }
+            }
+            return dagInfo;
+        }
     }
 }

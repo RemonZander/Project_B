@@ -851,7 +851,41 @@ namespace Project_B_V2._0
             }
             else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
             {
+                if (!File.Exists("rondleidingenweekschema.json")) 
+                {
+                    
+                }
+                
+
+
+
+
+
+
+                
+
+
+
+
+
+
+                /*Console.WriteLine();
                 Console.WriteLine();
+                Console.WriteLine("Geef de start datum op vanaf wanneer je het rondleidingsschema wilt aanpassen. Format: dd-MM-YYYY");
+                (string, int) input = AskForInput(0);
+                Console.WriteLine();
+                
+
+                if (input.Item2 != -1)
+                {
+                    return input.Item2;
+                }
+
+                DateTime start = Convert.ToDateTime(input.Item1);*/
+
+
+
+                /*Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("Geef de start datum op vanaf wanneer je het rondleidingsschema wilt aanpassen. Format: dd-MM-YYYY");
                 (string, int) input = AskForInput(0);
@@ -864,6 +898,8 @@ namespace Project_B_V2._0
 
                 DateTime start = Convert.ToDateTime(input.Item1);
             }
+            return 0;*/
+            } 
             return 0;
         }
 

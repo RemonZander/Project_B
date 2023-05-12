@@ -78,5 +78,34 @@ namespace Project_B_V2._0
 
             return data;
         }
+
+        internal static string SerializeRondleidingenWeekschema(RondleidingSettingsDayOfWeek data)
+        {
+            //TODO Implementeer logica om lijst / data te schrijven naar JSON
+            if (File.Exists("rondleidingenweekschema.json"))
+            {
+                File.Delete("rondleidingenweekschema.json");
+            }
+
+            File.WriteAllText("rondleidingenweekschema.json", JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
+
+
+            return "200: Success";
+        }
+
+        internal static RondleidingSettingsDayOfWeek DeserializeRondleidingenWeekschema()
+        {
+            //TODO Implementeer logica om lijst / data te schrijven naar JSON
+            if (!File.Exists("rondleidingenweekschema.json"))
+            {
+                return new RondleidingSettingsDayOfWeek();
+            }
+
+            RondleidingSettingsDayOfWeek data = JsonSerializer.Deserialize<RondleidingSettingsDayOfWeek>(File.ReadAllText("rondleidingenweekschema.json"));
+
+
+            return data;
+        }
+
     }
 }
