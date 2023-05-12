@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
-using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace Project_B_V2._0
 {
@@ -820,6 +820,10 @@ namespace Project_B_V2._0
 
             if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
             {
+                CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+                List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r =>
+                cultureInfo.Calendar.GetWeekOfYear(r.Datum, cultureInfo.DateTimeFormat.CalendarWeekRule, cultureInfo.DateTimeFormat.FirstDayOfWeek) ==
+                cultureInfo.Calendar.GetWeekOfYear(newSetDate, cultureInfo.DateTimeFormat.CalendarWeekRule, cultureInfo.DateTimeFormat.FirstDayOfWeek)).ToList();
                 List<List<string>> dayofweeklines1and2 = new List<List<string>>
                 {
                     new List<string> { "".PadRight(20), "".PadRight(20), "  Maandag".PadRight(20), "".PadRight(20), "".PadRight(20), },
