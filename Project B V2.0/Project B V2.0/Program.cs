@@ -438,8 +438,10 @@ namespace Project_B_V2._0
             Console.WriteLine();
             Console.WriteLine("Geef de start datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
             DateTime start = Convert.ToDateTime(ReadLine());
+            Console.WriteLine();
             Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
             DateTime end = Convert.ToDateTime(ReadLine());
+            Console.WriteLine();
             (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end);
             if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
             {
@@ -801,14 +803,14 @@ namespace Project_B_V2._0
 
         public AfdelingshoofdScherm(DateTime newSetDate) : base(newSetDate) { }
 
-        private static List<string> MakeDayOfWeekView(List<List<string>> box1andbox2Lines, List<List<string>> box3Lines, string sym)
+        private static List<string> MakeDayOfWeekView(List<List<string>> box1andbox2Lines, List<List<string>> box3Lines, string sym, int maxLength)
         {
             List<List<string>> box1andbox2 = MakeDubbelBoxes(box1andbox2Lines, sym);
             for (int a = 1, b = 0; a < 4; a += 2, b++)
             {
                 box1andbox2.Insert(a, box3Lines[b]);
             }
-            return BoxAroundText(MakeDubbelBoxes(box1andbox2, sym), sym, 2, 0, 68, true);
+            return BoxAroundText(MakeDubbelBoxes(box1andbox2, sym), sym, 2, 0, maxLength, true);
         }
 
         internal override int DoWork(DualConsoleOutput dualOutput)
@@ -820,31 +822,103 @@ namespace Project_B_V2._0
 
             if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
             {
-                CultureInfo cultureInfo = CultureInfo.CurrentCulture;
+/*                CultureInfo cultureInfo = CultureInfo.CurrentCulture;
                 List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r =>
                 cultureInfo.Calendar.GetWeekOfYear(r.Datum, cultureInfo.DateTimeFormat.CalendarWeekRule, cultureInfo.DateTimeFormat.FirstDayOfWeek) ==
-                cultureInfo.Calendar.GetWeekOfYear(newSetDate, cultureInfo.DateTimeFormat.CalendarWeekRule, cultureInfo.DateTimeFormat.FirstDayOfWeek)).ToList();
+                cultureInfo.Calendar.GetWeekOfYear(newSetDate, cultureInfo.DateTimeFormat.CalendarWeekRule, cultureInfo.DateTimeFormat.FirstDayOfWeek)).ToList();*/
+                List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.Month == newSetDate.Month).ToList();
+                List<List<Rondleiding>> rondleidingenPerDay = new List<List<Rondleiding>>
+                {
+                    rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Monday).ToList(),
+                    rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Tuesday).ToList(),
+                    rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Wednesday).ToList(),
+                    rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Thursday).ToList(),
+                    rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Friday).ToList(),
+                    rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Saturday).ToList(),
+                };
                 List<List<string>> dayofweeklines1and2 = new List<List<string>>
                 {
-                    new List<string> { "".PadRight(20), "".PadRight(20), "  Maandag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                    new List<string> { "".PadRight(20), "".PadRight(20), "  Dinsdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                    new List<string> { "".PadRight(20), "".PadRight(20), "  Donderdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                    new List<string> { "".PadRight(20), "".PadRight(20), "  Vrijdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Maandag".PadLeft(17).PadRight(30),
+                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[0].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Dinsdag".PadLeft(18).PadRight(30),
+                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[1].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Donderdag".PadLeft(18).PadRight(30),
+                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[3].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Vrijdag".PadLeft(18).PadRight(30),
+                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[4].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
                 };
+                List<List<string>> dayofweeklines1and3 = new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Woensdag".PadLeft(18).PadRight(30),
+                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[2].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Zaterdag".PadLeft(18).PadRight(30),
+                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[5].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                };
+
+
+/*                List<List<string>> dayofweeklines1and2 = new List<List<string>>
+                                {
+                                    new List<string> { "".PadRight(20), "".PadRight(20), "  Maandag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                                    new List<string> { "".PadRight(20), "".PadRight(20), "  Dinsdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                                    new List<string> { "".PadRight(20), "".PadRight(20), "  Donderdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                                    new List<string> { "".PadRight(20), "".PadRight(20), "  Vrijdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                                };
 
                 List<List<string>> dayofweeklines1and3 = new List<List<string>>
                 {
                     new List<string> { "".PadRight(20), "".PadRight(20), "  Woensdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
                     new List<string> { "".PadRight(20), "".PadRight(20), "  zaterdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                };
+                };*/
 
-                List<string> weekboxes = MakeDayOfWeekView(dayofweeklines1and2, dayofweeklines1and3, "#");
+                List<string> weekboxes = MakeDayOfWeekView(dayofweeklines1and2, dayofweeklines1and3, "#", 98);
 
                 for (int a = 0; a < weekboxes.Count; a++)
                 {
                     Console.Write(weekboxes[a]);
                 }
-                Console.WriteLine(new string('#', 74));
+                Console.WriteLine(new string('#', 104));
 
                 ReadLine();
 
