@@ -801,6 +801,16 @@ namespace Project_B_V2._0
 
         public AfdelingshoofdScherm(DateTime newSetDate) : base(newSetDate) { }
 
+        private static List<string> MakeDayOfWeekView(List<List<string>> box1andbox2Lines, List<List<string>> box3Lines, string sym)
+        {
+            List<List<string>> box1andbox2 = MakeDubbelBoxes(box1andbox2Lines, sym);
+            for (int a = 1, b = 0; a < 4; a += 2, b++)
+            {
+                box1andbox2.Insert(a, box3Lines[b]);
+            }
+            return BoxAroundText(MakeDubbelBoxes(box1andbox2, sym), sym, 2, 0, 68, true);
+        }
+
         internal override int DoWork(DualConsoleOutput dualOutput)
         {
             Console.WriteLine("AfdelingshoofdScherm");
@@ -810,7 +820,30 @@ namespace Project_B_V2._0
 
             if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
             {
-               
+                List<List<string>> dayofweeklines1and2 = new List<List<string>>
+                {
+                    new List<string> { "".PadRight(20), "".PadRight(20), "  Maandag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                    new List<string> { "".PadRight(20), "".PadRight(20), "  Dinsdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                    new List<string> { "".PadRight(20), "".PadRight(20), "  Donderdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                    new List<string> { "".PadRight(20), "".PadRight(20), "  Vrijdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                };
+
+                List<List<string>> dayofweeklines1and3 = new List<List<string>>
+                {
+                    new List<string> { "".PadRight(20), "".PadRight(20), "  Woensdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                    new List<string> { "".PadRight(20), "".PadRight(20), "  zaterdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
+                };
+
+                List<string> weekboxes = MakeDayOfWeekView(dayofweeklines1and2, dayofweeklines1and3, "#");
+
+                for (int a = 0; a < weekboxes.Count; a++)
+                {
+                    Console.Write(weekboxes[a]);
+                }
+                Console.WriteLine(new string('#', 74));
+
+                ReadLine();
+
             }
             else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
             {
