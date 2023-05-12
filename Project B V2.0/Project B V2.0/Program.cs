@@ -925,6 +925,8 @@ namespace Project_B_V2._0
             }
             else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
             {
+
+
                 List<RondleidingSettingsDayOfWeek> defaultWeekschedule = new List<RondleidingSettingsDayOfWeek>();
                 if (!File.Exists("rondleidingenweekschema.json"))
                 {
@@ -935,14 +937,82 @@ namespace Project_B_V2._0
                     defaultWeekschedule = JsonManager.DeserializeRondleidingenWeekschema();
                 }
 
-                
+                List<List<string>> dayofweeklines1and2 = new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Maandag".PadLeft(17).PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Dinsdag".PadLeft(18).PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Donderdag".PadLeft(18).PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Vrijdag".PadLeft(18).PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                };
+                List<List<string>> dayofweeklines1and3 = new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Woensdag".PadLeft(18).PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                    new List<string>
+                    {
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "Zaterdag".PadLeft(18).PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                        "".PadRight(30),
+                    },
+                };
+
+                List<string> weekboxes = MakeDayOfWeekView(dayofweeklines1and2, dayofweeklines1and3, "#", 98);
+
+                for (int a = 0; a < weekboxes.Count; a++)
+                {
+                    Console.Write(weekboxes[a]);
+                }
+                Console.WriteLine(new string('#', 104));
+
+                ReadLine();
 
 
 
 
 
 
-                
 
 
 

@@ -148,6 +148,7 @@ namespace Project_B_V2._0
             {
                 
                 dagInfo.Add(new RondleidingSettingsDayOfWeek());
+                dagInfo[d - 1].Rondleidingen = new List<Tuple<TimeOnly, int>>();
                 DayOfWeek dag = (DayOfWeek)d;
                 dagInfo[d-1].Day = dag;
 
