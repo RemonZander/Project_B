@@ -853,7 +853,7 @@ namespace Project_B_V2._0
             {
                 if (!File.Exists("rondleidingenweekschema.json")) 
                 {
-                    
+                    List<RondleidingSettingsDayOfWeek> defaultWeekschedule = TestDataGenerator.MaakStdWeekschema();
                 }
                 
 

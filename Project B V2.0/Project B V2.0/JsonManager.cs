@@ -79,7 +79,7 @@ namespace Project_B_V2._0
             return data;
         }
 
-        internal static string SerializeRondleidingenWeekschema(RondleidingSettingsDayOfWeek data)
+        internal static string SerializeRondleidingenWeekschema(List<RondleidingSettingsDayOfWeek> data)
         {
             //TODO Implementeer logica om lijst / data te schrijven naar JSON
             if (File.Exists("rondleidingenweekschema.json"))
@@ -93,15 +93,15 @@ namespace Project_B_V2._0
             return "200: Success";
         }
 
-        internal static RondleidingSettingsDayOfWeek DeserializeRondleidingenWeekschema()
+        internal static List<RondleidingSettingsDayOfWeek> DeserializeRondleidingenWeekschema()
         {
             //TODO Implementeer logica om lijst / data te schrijven naar JSON
             if (!File.Exists("rondleidingenweekschema.json"))
             {
-                return new RondleidingSettingsDayOfWeek();
+                return new List<RondleidingSettingsDayOfWeek>();
             }
 
-            RondleidingSettingsDayOfWeek data = JsonSerializer.Deserialize<RondleidingSettingsDayOfWeek>(File.ReadAllText("rondleidingenweekschema.json"));
+            List<RondleidingSettingsDayOfWeek> data = JsonSerializer.Deserialize<List<RondleidingSettingsDayOfWeek>>(File.ReadAllText("rondleidingenweekschema.json"));
 
 
             return data;
