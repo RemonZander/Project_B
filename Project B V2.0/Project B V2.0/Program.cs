@@ -851,10 +851,16 @@ namespace Project_B_V2._0
             }
             else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
             {
-                if (!File.Exists("rondleidingenweekschema.json")) 
+                List<RondleidingSettingsDayOfWeek> defaultWeekschedule = new List<RondleidingSettingsDayOfWeek>();
+                if (!File.Exists("rondleidingenweekschema.json"))
                 {
-                    List<RondleidingSettingsDayOfWeek> defaultWeekschedule = TestDataGenerator.MaakStdWeekschema();
+                    defaultWeekschedule = TestDataGenerator.MaakStdWeekschema();
                 }
+                else 
+                { 
+                    defaultWeekschedule = JsonManager.DeserializeRondleidingenWeekschema();
+                }
+
                 
 
 
