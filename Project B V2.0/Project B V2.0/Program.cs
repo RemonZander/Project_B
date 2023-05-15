@@ -687,10 +687,12 @@ namespace Project_B_V2._0
 
                 Console.WriteLine(new string('#', 52));
                 Console.WriteLine("Gebruik de pijltoesten om te navigeren.");
-                Console.WriteLine("Druk op [2] om je reservering te annuleren.");
-                Console.WriteLine("Druk op [3] om naar de gidsomgeving te gaan.");
-                Console.WriteLine("Druk op [4] om naar de afdelingshoofdomgeving te gaan.");
+                Console.WriteLine("Druk op [2] om je reservering en unieke te bekijken.");
+                Console.WriteLine("Druk op [3] om je reservering te annuleren.");
+                Console.WriteLine("Druk op [4] om naar de gidsomgeving te gaan.");
+                Console.WriteLine("Druk op [5] om naar de afdelingshoofdomgeving te gaan.");
                 Console.WriteLine("Druk op [9] voor developper scherm.");
+                Console.WriteLine("Druk op escape om terug te gaan.");
                 ConsoleKeyInfo key = ReadKey();
 
                 pos = NavigateBoxes(pos, rondleidingInformatie, key);
@@ -774,6 +776,44 @@ namespace Project_B_V2._0
                     List<User> gebruikers = JsonManager.DeserializeGebruikers();
 
                     //Als de gebruiker is gevonden, returned hij het naar een nieuwe variabel
+                    User gebruiker = gebruikers.First(geb => geb.UniekeCode == answer.Item1);
+
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine("Uw gegevens:");
+                    Console.WriteLine(new string('#', 43));
+                    Console.WriteLine("#".PadRight(42) + "#");
+                    Console.WriteLine($"#  Uw unieke code: {gebruiker.UniekeCode}".PadRight(42) + "#");
+                    if (gebruiker.Reservering != default)
+                    {
+                        Console.WriteLine($"#  Uw heb uw reservering staan op: {gebruiker.Reservering.ToString(timeFormat)}".PadRight(42) + "#");
+                    }
+                    else
+                    {
+                        Console.WriteLine("#  U heeft nog geen reservering".PadRight(42) + "#");
+                    }
+                    Console.WriteLine("#".PadRight(42) + "#");
+                    Console.WriteLine(new string('#', 43));
+                    Console.WriteLine("Druk op een knop om terug te gaan...");
+                    ReadKey();
+                }
+                else if (IsKeyPressed(key, "D3") || IsKeyPressed(key, "NUMPAD3"))
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine(new string('_', 48));
+                    Console.WriteLine("Voer hier uw unieke code in: ");
+                    (string, int) answer = AskForInput(0);
+                    if (answer.Item2 != -1)
+                    {
+                        return answer.Item2;
+                    }
+                    List<User> gebruikers = JsonManager.DeserializeGebruikers();
+
+                    //Als de gebruiker is gevonden, returned hij het naar een nieuwe variabel
                     int index = gebruikers.FindIndex(geb => geb.UniekeCode == answer.Item1);
 
                     if (index != -1 && gebruikers[index].Reservering == default)
@@ -807,11 +847,11 @@ namespace Project_B_V2._0
                     Thread.Sleep(2000);
                     return 0;
                 }
-                else if (IsKeyPressed(key, "D3") || IsKeyPressed(key, "NUMPAD3"))
+                else if (IsKeyPressed(key, "D4") || IsKeyPressed(key, "NUMPAD4"))
                 {
                     return 3;
                 }
-                else if (IsKeyPressed(key, "D4") || IsKeyPressed(key, "NUMPAD4"))
+                else if (IsKeyPressed(key, "D5") || IsKeyPressed(key, "NUMPAD5"))
                 { 
                     return 2;
                 }
@@ -860,6 +900,7 @@ namespace Project_B_V2._0
             Console.WriteLine("AfdelingshoofdScherm");
             Console.WriteLine("Druk op [1] om de rondleidings bezettingsgraad te zien.");
             Console.WriteLine("Druk op [2] om het schema voor een bepaalde dag aan te passen.");
+            Console.WriteLine("Druk op escape om terug te gaan.");
             ConsoleKeyInfo key = ReadKey();
 
             if (IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1"))
@@ -1075,6 +1116,7 @@ namespace Project_B_V2._0
                     Console.WriteLine("Klik op [4] voor Donderdag");
                     Console.WriteLine("Klik op [5] voor Vrijdag");
                     Console.WriteLine("Klik op [6] voor Zaterdag");
+                    Console.WriteLine("Druk op escape om terug te gaan.");
                     key = ReadKey();
 
                     if (key.Key.ToString() == "Escape")
@@ -1104,14 +1146,14 @@ namespace Project_B_V2._0
 
                 do
                 {
-                    Console.WriteLine("Welke tijd wilt u aanpassen? En wat is de nieuwe bezetting? (hh:mm bezetting)");
+                    Console.WriteLine("Welke tijd wilt u aanpassen? (hh:mm)");
                     
                     (string, int) input = AskForInput(2);
                     if (input.Item2 != -1) return input.Item2;
                     
                     try
                     {
-                        tijd = TimeOnly.Parse(input.Item1.Substring(0, input.Item1.IndexOf(' ')));
+                        tijd = TimeOnly.Parse(input.Item1);
                         if (!defaultWeekschedule[editDay - 1].Rondleidingen.Select(r => r.Item1).Contains(tijd)) throw new Exception();
                     }
                     catch 
@@ -1122,7 +1164,12 @@ namespace Project_B_V2._0
                     }
                     try
                     {
-                        bezetting = Convert.ToInt32(input.Item1.Substring(input.Item1.IndexOf(' '), input.Item1.Length - input.Item1.IndexOf(' ')));
+                        Console.WriteLine();
+                        Console.WriteLine("Wat is de maximale bezetting van dee rondleiding? (hh:mm)");
+
+                        input = AskForInput(2);
+                        bezetting = Convert.ToInt32(input.Item1);
+                        if (input.Item2 != -1) return input.Item2;
                         if (bezetting < 0) throw new Exception();
                     }
 
@@ -1275,6 +1322,7 @@ namespace Project_B_V2._0
                 }
 
                 Console.WriteLine(new string('#', 58));
+                Console.WriteLine("Druk op escape om terug te gaan.");
                 ConsoleKeyInfo key = ReadKey();
 
                 pos = NavigateBoxes(pos, rondleidingInformatie, key);
