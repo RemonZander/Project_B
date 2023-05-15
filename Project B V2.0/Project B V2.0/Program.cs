@@ -411,11 +411,13 @@ namespace Project_B_V2._0
 
                 if (input[a].Count > input[a + 1].Count)
                 {
-                    blockold2.Add(input[a + 1][^1]);
+                    blockold2.AddRange(Enumerable.Repeat(input[a + 1][^1], input[a].Count - input[a + 1].Count));
+                    //blockold2.Add(input[a + 1][^1]);
                 }
                 else if (input[a].Count < input[a + 1].Count)
                 {
-                    blockold1.Add(input[a][^1]);
+                    blockold1.AddRange(Enumerable.Repeat(input[a][^1], input[a + 1].Count - input[a].Count));
+                    //blockold1.Add(input[a][^1]);
                 }
 
                 for (int b = 0; b < blockold1.Count; b++)
@@ -925,12 +927,13 @@ namespace Project_B_V2._0
             }
             else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
             {
-
+                if (!Console.IsInputRedirected) Console.Clear();
 
                 List<RondleidingSettingsDayOfWeek> defaultWeekschedule = new List<RondleidingSettingsDayOfWeek>();
                 if (!File.Exists("rondleidingenweekschema.json"))
                 {
                     defaultWeekschedule = TestDataGenerator.MaakStdWeekschema();
+                    JsonManager.SerializeRondleidingenWeekschema(defaultWeekschedule);
                 }
                 else 
                 { 
@@ -941,114 +944,198 @@ namespace Project_B_V2._0
                 {
                     new List<string>
                     {
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "Maandag".PadLeft(17).PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
+                        "".PadRight(45),
+                        "".PadRight(45),
+                        "Maandag".PadLeft(25).PadRight(45),
+                        "".PadRight(45),
+                        ("Rondleidingen".PadLeft(19) + "Max bezetting".PadLeft(18)).PadRight(45),
+                        
                     },
                     new List<string>
                     {
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "Dinsdag".PadLeft(18).PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
+                        "".PadRight(45),
+                        "".PadRight(45),
+                        "Dinsdag".PadLeft(25).PadRight(45),
+                        "".PadRight(45),
+                        ("Rondleidingen".PadLeft(19) + "Max bezetting".PadLeft(18)).PadRight(45),
+                        
                     },
                     new List<string>
                     {
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "Donderdag".PadLeft(18).PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
+                        "".PadRight(45),
+                        "".PadRight(45),
+                        "Donderdag".PadLeft(26).PadRight(45),
+                        "".PadRight(45),
+                        ("Rondleidingen".PadLeft(19) + "Max bezetting".PadLeft(18)).PadRight(45),
+                        
                     },
                     new List<string>
                     {
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "Vrijdag".PadLeft(18).PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
+                        "".PadRight(45),
+                        "".PadRight(45),
+                        "Vrijdag".PadLeft(25).PadRight(45),
+                        "".PadRight(45),
+                        ("Rondleidingen".PadLeft(19) + "Max bezetting".PadLeft(18)).PadRight(45),
+                        
                     },
                 };
                 List<List<string>> dayofweeklines1and3 = new List<List<string>>
                 {
                     new List<string>
                     {
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "Woensdag".PadLeft(18).PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
+                        "".PadRight(45),
+                        "".PadRight(45),
+                        "Woensdag".PadLeft(26).PadRight(45),
+                        "".PadRight(45),
+                        ("Rondleidingen".PadLeft(19) + "Max bezetting".PadLeft(18)).PadRight(45),
+                        
                     },
                     new List<string>
                     {
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "Zaterdag".PadLeft(18).PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
-                        "".PadRight(30),
+                        "".PadRight(45),
+                        "".PadRight(45),
+                        "Zaterdag".PadLeft(26).PadRight(45),
+                        "".PadRight(45),
+                        ("Rondleidingen".PadLeft(19) + "Max bezetting".PadLeft(18)).PadRight(45),
+                        
                     },
                 };
 
-                List<string> weekboxes = MakeDayOfWeekView(dayofweeklines1and2, dayofweeklines1and3, "#", 98);
+                for (int i = 0; i < defaultWeekschedule.Count; i++)
+                {
+                    if (defaultWeekschedule[i].Day == DayOfWeek.Wednesday)
+                    {
+                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
+                        {
+                            dayofweeklines1and3[0].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
+                        }
+                        dayofweeklines1and3[0].Add("".PadRight(45));
+                    }
+                    else if (defaultWeekschedule[i].Day == DayOfWeek.Saturday) 
+                    {
+                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
+                        {
+                            dayofweeklines1and3[1].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
+                        }
+                        dayofweeklines1and3[1].Add("".PadRight(45));
+                    }
+                    else if (defaultWeekschedule[i].Day == DayOfWeek.Monday)
+                    {
+                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
+                        {
+                            dayofweeklines1and2[0].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
+                        }
+                        dayofweeklines1and2[0].Add("".PadRight(45));
+                    }
+                    else if (defaultWeekschedule[i].Day == DayOfWeek.Tuesday)
+                    {
+                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
+                        {
+                            dayofweeklines1and2[1].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
+                        }
+                        dayofweeklines1and2[1].Add("".PadRight(45));
+                    }
+                    else if (defaultWeekschedule[i].Day == DayOfWeek.Thursday)
+                    {
+                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
+                        {
+                            dayofweeklines1and2[2].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
+                        }
+                        dayofweeklines1and2[2].Add("".PadRight(45));
+                    }
+                    else if (defaultWeekschedule[i].Day == DayOfWeek.Friday)
+                    {
+                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
+                        {
+                            dayofweeklines1and2[3].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
+                        }
+                        dayofweeklines1and2[3].Add("".PadRight(45));
+                    }
+
+
+
+                }
+                List<string> weekboxes = MakeDayOfWeekView(dayofweeklines1and2, dayofweeklines1and3, "#", 143);
 
                 for (int a = 0; a < weekboxes.Count; a++)
                 {
                     Console.Write(weekboxes[a]);
                 }
-                Console.WriteLine(new string('#', 104));
+                Console.WriteLine(new string('#', 149));
 
-                ReadLine();
+                bool cont = true;
+                int editDay = 0;
+                int bezetting = 0;
+                TimeOnly tijd = new TimeOnly();
+                do
+                {
+                    Console.WriteLine("Welke dag wilt u aanpassen?");
+                    Console.WriteLine("Klik op [1] voor Maandag");
+                    Console.WriteLine("Klik op [2] voor Dinsdag");
+                    Console.WriteLine("Klik op [3] voor Woensdag");
+                    Console.WriteLine("Klik op [4] voor Donderdag");
+                    Console.WriteLine("Klik op [5] voor Vrijdag");
+                    Console.WriteLine("Klik op [6] voor Zaterdag");
+                    key = ReadKey();
 
-
-
-
-
-
-
-
-
-
-
-
-                /*Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("Geef de start datum op vanaf wanneer je het rondleidingsschema wilt aanpassen. Format: dd-MM-YYYY");
-                (string, int) input = AskForInput(0);
-                Console.WriteLine();
+                    editDay = Convert.ToInt32(key.KeyChar.ToString());
+                    if (editDay < 1 || editDay > 6)
+                    {
+                        Console.WriteLine("Je kan kiezen tussen nummer 1 tot en met 6");
+                        Console.WriteLine("Probeer het nog een keer.");
+                        Thread.Sleep(3000);
+                        continue;
+                    }
+                    cont = false;
+                    
+                } while (cont);
                 
+                cont = true;
 
-                if (input.Item2 != -1)
+                do
                 {
-                    return input.Item2;
-                }
+                    Console.WriteLine("Welke tijd wilt u aanpassen? En wat is de nieuwe bezetting? (hh:mm bezetting)");
+                    
+                    (string, int) input = AskForInput(2);
+                    if (input.Item2 != -1) return input.Item2;
+                    
+                    try
+                    {
+                        tijd = TimeOnly.Parse(input.Item1.Substring(0, input.Item1.IndexOf(' ')));
+                        if (!defaultWeekschedule[editDay - 1].Rondleidingen.Select(r => r.Item1).Contains(tijd)) throw new Exception();
+                    }
+                    catch 
+                    {
+                        Console.WriteLine("Onjuiste tijd ingevoerd.");
+                        Thread.Sleep(2000);
+                        continue;
+                    }
+                    try
+                    {
+                        bezetting = Convert.ToInt32(input.Item1.Substring(input.Item1.IndexOf(' '), input.Item1.Length - input.Item1.IndexOf(' ')));
+                        if (bezetting < 1) throw new Exception();
+                    }
 
-                DateTime start = Convert.ToDateTime(input.Item1);*/
+                    catch
+                    {
+                        Console.WriteLine("Onjuiste bezetting ingevoerd.");
+                        Thread.Sleep(2000);
+                        continue;
+                    }
 
+                    cont = false;
 
+                } while (cont);
 
-                /*Console.WriteLine();
+                int location = defaultWeekschedule[editDay - 1].Rondleidingen.IndexOf(defaultWeekschedule[editDay - 1].Rondleidingen.First(r => r.Item1 == tijd));
+                defaultWeekschedule[editDay - 1].Rondleidingen[location] = Tuple.Create(tijd, bezetting);
+
+                JsonManager.SerializeRondleidingenWeekschema(defaultWeekschedule);
                 Console.WriteLine();
-                Console.WriteLine("Geef de start datum op vanaf wanneer je het rondleidingsschema wilt aanpassen. Format: dd-MM-YYYY");
-                (string, int) input = AskForInput(0);
-                Console.WriteLine();
+                Console.WriteLine("Alles is opgeslagen.");
+                Thread.Sleep(3000);
+                return 2;
 
-                if (input.Item2 != -1)
-                {
-                    return input.Item2;
-                }
-
-                DateTime start = Convert.ToDateTime(input.Item1);
-            }
-            return 0;*/
             } 
             return 0;
         }

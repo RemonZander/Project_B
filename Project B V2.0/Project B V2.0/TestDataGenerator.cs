@@ -157,6 +157,7 @@ namespace Project_B_V2._0
                     dagInfo[d-1].Rondleidingen.Add(Tuple.Create(tijd, 13));
                     tijd = tijd.AddMinutes(20);
                 }
+                tijd = new TimeOnly(10, 0);
             }
             return dagInfo;
         }
