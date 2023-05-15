@@ -435,7 +435,7 @@ namespace Project_B_V2._0
     {
         public TestDataGeneratorScreen(DateTime newSetDate) : base(newSetDate) { }
 
-        private int MaakRondleidingen()
+        private static int MaakRondleidingen()
         {
             Console.WriteLine();
             Console.WriteLine("Geef de start datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
@@ -444,7 +444,7 @@ namespace Project_B_V2._0
             Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
             DateTime end = Convert.ToDateTime(ReadLine());
             Console.WriteLine();
-            (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end);
+            (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end, false);
             if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
             {
                 Console.WriteLine($"Er is een error opgetreden: {result.Item2}");
@@ -618,10 +618,15 @@ namespace Project_B_V2._0
             List<List<string>> rondleidingInformatie = new List<List<string>>();
             List<Rondleiding> alleRondleidingen = JsonManager.DeserializeRondleidingen();
             List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToString(dateFormat) == newSetDate.ToString(dateFormat)).OrderBy(r => r.Datum).ToList();
+            if (!File.Exists("rondleidingenweekschema.json"))
+            {
+                JsonManager.SerializeRondleidingenWeekschema(TestDataGenerator.MaakStdWeekschema());
+            }
+
             if (rondleidingen.Count <= 0)
             {
                 JsonManager.SerializeRondleidingen(TestDataGenerator.MaakRondleidingen(new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 11, 0, 0),
-                    new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 17, 0, 0)).Item1);
+                    new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 17, 0, 0), true).Item1);
 
                 rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToString(dateFormat) == newSetDate.ToString(dateFormat)).OrderBy(r => r.Datum).ToList();
             }
@@ -630,16 +635,16 @@ namespace Project_B_V2._0
             for (int i = 0; i < rondleidingen.Count; i++)
             {
                 tijden.Add(time);
-                if (rondleidingen[i].Bezetting >= 8 && rondleidingen[i].Bezetting < 13)
+                if (rondleidingen[i].Bezetting >= rondleidingen[i].MaxGrootte - 5 && rondleidingen[i].Bezetting < rondleidingen[i].MaxGrootte)
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
                         (rondleidingen[i].Datum.ToString(timeFormat) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(timeFormat)).PadRight(19),
-                        $"Nog {13 - rondleidingen[i].Bezetting} {(rondleidingen[i].Bezetting == 12 ? "plek" : "plekken")}".PadRight(19),
+                        $"Nog {rondleidingen[i].MaxGrootte - rondleidingen[i].Bezetting} {(rondleidingen[i].Bezetting == rondleidingen[i].MaxGrootte - 1 ? "plek" : "plekken")}".PadRight(19),
                         "".PadRight(19),
                     });
                 }
-               else if (rondleidingen[i].Bezetting < 8)
+               else if (rondleidingen[i].Bezetting < rondleidingen[i].MaxGrootte - 5)
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
@@ -801,6 +806,7 @@ namespace Project_B_V2._0
             return screens;
         }
     }
+
     internal class AfdelingshoofdScherm : Screen {
 
         public AfdelingshoofdScherm(DateTime newSetDate) : base(newSetDate) { }
@@ -813,6 +819,16 @@ namespace Project_B_V2._0
                 box1andbox2.Insert(a, box3Lines[b]);
             }
             return BoxAroundText(MakeDubbelBoxes(box1andbox2, sym), sym, 2, 0, maxLength, true);
+        }
+
+        private List<string> AddRondleidingenInfo(List<string> input, List<RondleidingSettingsDayOfWeek> defaultWeekschedule, int pos)
+        {
+            for (int j = 0; j < defaultWeekschedule[pos].Rondleidingen.Count; j++)
+            {
+                input.Add(($"{defaultWeekschedule[pos].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[pos].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
+            }
+            input.Add("".PadRight(45));
+            return input;
         }
 
         internal override int DoWork(DualConsoleOutput dualOutput)
@@ -898,21 +914,6 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                     },
                 };
-
-
-/*                List<List<string>> dayofweeklines1and2 = new List<List<string>>
-                                {
-                                    new List<string> { "".PadRight(20), "".PadRight(20), "  Maandag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                                    new List<string> { "".PadRight(20), "".PadRight(20), "  Dinsdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                                    new List<string> { "".PadRight(20), "".PadRight(20), "  Donderdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                                    new List<string> { "".PadRight(20), "".PadRight(20), "  Vrijdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                                };
-
-                List<List<string>> dayofweeklines1and3 = new List<List<string>>
-                {
-                    new List<string> { "".PadRight(20), "".PadRight(20), "  Woensdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                    new List<string> { "".PadRight(20), "".PadRight(20), "  zaterdag".PadRight(20), "".PadRight(20), "".PadRight(20), },
-                };*/
 
                 List<string> weekboxes = MakeDayOfWeekView(dayofweeklines1and2, dayofweeklines1and3, "#", 98);
 
@@ -1005,55 +1006,28 @@ namespace Project_B_V2._0
                 {
                     if (defaultWeekschedule[i].Day == DayOfWeek.Wednesday)
                     {
-                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
-                        {
-                            dayofweeklines1and3[0].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
-                        }
-                        dayofweeklines1and3[0].Add("".PadRight(45));
+                        dayofweeklines1and3[0] = AddRondleidingenInfo(dayofweeklines1and3[0], defaultWeekschedule, i);
                     }
                     else if (defaultWeekschedule[i].Day == DayOfWeek.Saturday) 
                     {
-                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
-                        {
-                            dayofweeklines1and3[1].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
-                        }
-                        dayofweeklines1and3[1].Add("".PadRight(45));
+                        dayofweeklines1and3[1] = AddRondleidingenInfo(dayofweeklines1and3[1], defaultWeekschedule, i);
                     }
                     else if (defaultWeekschedule[i].Day == DayOfWeek.Monday)
                     {
-                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
-                        {
-                            dayofweeklines1and2[0].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
-                        }
-                        dayofweeklines1and2[0].Add("".PadRight(45));
+                        dayofweeklines1and2[0] = AddRondleidingenInfo(dayofweeklines1and2[0], defaultWeekschedule, i);
                     }
                     else if (defaultWeekschedule[i].Day == DayOfWeek.Tuesday)
                     {
-                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
-                        {
-                            dayofweeklines1and2[1].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
-                        }
-                        dayofweeklines1and2[1].Add("".PadRight(45));
+                        dayofweeklines1and2[1] = AddRondleidingenInfo(dayofweeklines1and2[1], defaultWeekschedule, i);
                     }
                     else if (defaultWeekschedule[i].Day == DayOfWeek.Thursday)
                     {
-                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
-                        {
-                            dayofweeklines1and2[2].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
-                        }
-                        dayofweeklines1and2[2].Add("".PadRight(45));
+                        dayofweeklines1and2[2] = AddRondleidingenInfo(dayofweeklines1and2[2], defaultWeekschedule, i);
                     }
                     else if (defaultWeekschedule[i].Day == DayOfWeek.Friday)
                     {
-                        for (int j = 0; j < defaultWeekschedule[i].Rondleidingen.Count; j++)
-                        {
-                            dayofweeklines1and2[3].Add(($"{defaultWeekschedule[i].Rondleidingen[j].Item1.ToString(timeFormat)}".PadLeft(15) + $"{defaultWeekschedule[i].Rondleidingen[j].Item2}".PadLeft(17)).PadRight(45));
-                        }
-                        dayofweeklines1and2[3].Add("".PadRight(45));
+                        dayofweeklines1and2[3] = AddRondleidingenInfo(dayofweeklines1and2[3], defaultWeekschedule, i);
                     }
-
-
-
                 }
                 List<string> weekboxes = MakeDayOfWeekView(dayofweeklines1and2, dayofweeklines1and3, "#", 143);
 
@@ -1078,6 +1052,10 @@ namespace Project_B_V2._0
                     Console.WriteLine("Klik op [6] voor Zaterdag");
                     key = ReadKey();
 
+                    if (key.Key.ToString() == "Escape")
+                    {
+                        return 2;
+                    }
                     editDay = Convert.ToInt32(key.KeyChar.ToString());
                     if (editDay < 1 || editDay > 6)
                     {
@@ -1113,7 +1091,7 @@ namespace Project_B_V2._0
                     try
                     {
                         bezetting = Convert.ToInt32(input.Item1.Substring(input.Item1.IndexOf(' '), input.Item1.Length - input.Item1.IndexOf(' ')));
-                        if (bezetting < 1) throw new Exception();
+                        if (bezetting < 0) throw new Exception();
                     }
 
                     catch
@@ -1128,11 +1106,18 @@ namespace Project_B_V2._0
                 } while (cont);
 
                 int location = defaultWeekschedule[editDay - 1].Rondleidingen.IndexOf(defaultWeekschedule[editDay - 1].Rondleidingen.First(r => r.Item1 == tijd));
+                if (location == -1)
+                {
+                    Console.WriteLine("Er is een probleem opgetreden in het systeem. Deze tijd kan niet gevonden worden in het schema.");
+                    Console.WriteLine("U wordt terug gestuurd...");
+                    Thread.Sleep(3000);
+                    return 2;
+                }
                 defaultWeekschedule[editDay - 1].Rondleidingen[location] = Tuple.Create(tijd, bezetting);
 
                 JsonManager.SerializeRondleidingenWeekschema(defaultWeekschedule);
                 Console.WriteLine();
-                Console.WriteLine("Alles is opgeslagen.");
+                Console.WriteLine("het standaard weekschema is aangepast.");
                 Thread.Sleep(3000);
                 return 2;
 
@@ -1199,7 +1184,7 @@ namespace Project_B_V2._0
             if (rondleidingen.Count <= 0)
             {
                 JsonManager.SerializeRondleidingen(TestDataGenerator.MaakRondleidingen(new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 11, 0, 0),
-                    new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 17, 0, 0)).Item1);
+                    new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 17, 0, 0), true).Item1);
 
                 rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToString(dateFormat) == newSetDate.ToString(dateFormat)).ToList();
             }
@@ -1208,15 +1193,15 @@ namespace Project_B_V2._0
             for (int i = 0; i < rondleidingen.Count; i++)
             {
                 tijden.Add(time);
-                if (rondleidingen[i].Bezetting >= 8 && rondleidingen[i].Bezetting < 13)
+                if (rondleidingen[i].Bezetting >= rondleidingen[i].MaxGrootte - 5 && rondleidingen[i].Bezetting < rondleidingen[i].MaxGrootte)
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
                         (rondleidingen[i].Datum.ToString(timeFormat) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(timeFormat)).PadRight(24),
-                        $"Nog {13 - rondleidingen[i].Bezetting} {(rondleidingen[i].Bezetting == 12 ? "plek" : "plekken")}".PadRight(24),
+                        $"Nog {rondleidingen[i].MaxGrootte - rondleidingen[i].Bezetting} {(rondleidingen[i].Bezetting == rondleidingen[i].MaxGrootte - 1 ? "plek" : "plekken")}".PadRight(24),
                     });
                 }
-                else if (rondleidingen[i].Bezetting < 8)
+                else if (rondleidingen[i].Bezetting < rondleidingen[i].MaxGrootte - 5)
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
