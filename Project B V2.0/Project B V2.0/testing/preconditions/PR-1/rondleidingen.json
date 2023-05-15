@@ -11,14 +11,14 @@
     "Bezettingsgraad": 6,
     "MaxGrootte": 13,
     "Bezetting": 12,
-    "TourIsStarted": false
+    "TourIsStarted": true
   },
   {
     "Datum": "2023-05-01T11:40:00",
     "Bezettingsgraad": 1,
     "MaxGrootte": 13,
     "Bezetting": 6,
-    "TourIsStarted": false
+    "TourIsStarted": true
   },
   {
     "Datum": "2023-05-01T12:00:00",

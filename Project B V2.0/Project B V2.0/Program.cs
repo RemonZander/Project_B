@@ -635,30 +635,39 @@ namespace Project_B_V2._0
             for (int i = 0; i < rondleidingen.Count; i++)
             {
                 tijden.Add(time);
-                if (rondleidingen[i].Bezetting >= rondleidingen[i].MaxGrootte - 5 && rondleidingen[i].Bezetting < rondleidingen[i].MaxGrootte)
+                if (rondleidingen[i].TourIsStarted)
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
-                        (rondleidingen[i].Datum.ToString(timeFormat) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(timeFormat)).PadRight(19),
-                        $"Nog {rondleidingen[i].MaxGrootte - rondleidingen[i].Bezetting} {(rondleidingen[i].Bezetting == rondleidingen[i].MaxGrootte - 1 ? "plek" : "plekken")}".PadRight(19),
-                        "".PadRight(19),
+                        (rondleidingen[i].Datum.ToString(timeFormat) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(timeFormat)).PadRight(21),
+                        $"Rondleiding gestart".PadRight(21),
+                        "".PadRight(21),
+                    });
+                }
+                else if (rondleidingen[i].Bezetting >= rondleidingen[i].MaxGrootte - 5 && rondleidingen[i].Bezetting < rondleidingen[i].MaxGrootte)
+                {
+                    rondleidingInformatie.Add(new List<string>
+                    {
+                        (rondleidingen[i].Datum.ToString(timeFormat) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(timeFormat)).PadRight(21),
+                        $"Nog {rondleidingen[i].MaxGrootte - rondleidingen[i].Bezetting} {(rondleidingen[i].Bezetting == rondleidingen[i].MaxGrootte - 1 ? "plek" : "plekken")}".PadRight(21),
+                        "".PadRight(21),
                     });
                 }
                else if (rondleidingen[i].Bezetting < rondleidingen[i].MaxGrootte - 5)
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
-                        (rondleidingen[i].Datum.ToString(timeFormat) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(timeFormat)).PadRight(19),
-                        "".PadRight(19),
+                        (rondleidingen[i].Datum.ToString(timeFormat) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(timeFormat)).PadRight(21),
+                        "".PadRight(21),
                     });
                 }
                 else
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
-                        (rondleidingen[i].Datum.ToString(timeFormat) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(timeFormat)).PadRight(19),
-                        $"VOL!!!!!".PadRight(19),
-                        "".PadRight(19),
+                        (rondleidingen[i].Datum.ToString(timeFormat) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(timeFormat)).PadRight(21),
+                        $"VOL!!!!!".PadRight(21),
+                        "".PadRight(21),
                     });
                 }
 
@@ -667,8 +676,8 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Reserveren     ", 
-                    rondleidingen[pos].Bezetting == 13 ? true : false, 42, 19);
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie, pos, "[1] Reserveren       ", 
+                    rondleidingen[pos].Bezetting == 13 || rondleidingen[pos].TourIsStarted ? true : false, 46, 21);
 
                 if (!Console.IsInputRedirected) Console.Clear();
                 for (int i = 0; i < boxes.Count; i++)
@@ -676,11 +685,11 @@ namespace Project_B_V2._0
                     Console.Write(boxes[i]);
                 }
 
-                Console.WriteLine(new string('#', 48));
+                Console.WriteLine(new string('#', 52));
                 Console.WriteLine("Gebruik de pijltoesten om te navigeren.");
                 Console.WriteLine("Druk op [2] om je reservering te annuleren.");
-                Console.WriteLine("Druk op [3] om naar het gidsscherm te gaan.");
-                Console.WriteLine("Druk op [4] om naar het afdelingshoofdscherm te gaan.");
+                Console.WriteLine("Druk op [3] om naar de gidsomgeving te gaan.");
+                Console.WriteLine("Druk op [4] om naar de afdelingshoofdomgeving te gaan.");
                 Console.WriteLine("Druk op [9] voor developper scherm.");
                 ConsoleKeyInfo key = ReadKey();
 
@@ -710,7 +719,22 @@ namespace Project_B_V2._0
                         if (gebruikers[a].UniekeCode == answer.Item1 && gebruikers[a].Reservering != new DateTime(1, 1, 1))
                         {
                             Console.WriteLine();
-                            Console.WriteLine("U heeft al een reservering geplaatst");
+                            Console.WriteLine($"U heeft al een reservering geplaatst om {gebruikers[a].Reservering.ToString(dateTimeFormat)}");
+                            Console.WriteLine($"Wilt u de uw reservering verplaatsen naar: {tijden[pos].ToString(dateTimeFormat)}? (y/n)");
+                            key = ReadKey();
+                            if (key.Key.ToString().ToUpper() == "Y")
+                            {
+                                gebruikers[a].Reservering = tijden[pos];
+
+                                JsonManager.SerializeGebruikers(gebruikers);
+
+                                alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == rondleidingen[pos].Datum)].Bezetting += 1;
+
+                                JsonManager.SerializeRondleidingen(alleRondleidingen);
+
+                                Console.WriteLine();
+                                Console.WriteLine($"De reservering om {tijden[pos].ToString(dateTimeFormat)} is geplaatst. U wordt terug gestuurd...");
+                            }
                             Thread.Sleep(2000);
                             return 0;
                         }
@@ -928,6 +952,7 @@ namespace Project_B_V2._0
             }
             else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
             {
+                begin:
                 if (!Console.IsInputRedirected) Console.Clear();
 
                 List<RondleidingSettingsDayOfWeek> defaultWeekschedule = new List<RondleidingSettingsDayOfWeek>();
@@ -1056,7 +1081,14 @@ namespace Project_B_V2._0
                     {
                         return 2;
                     }
-                    editDay = Convert.ToInt32(key.KeyChar.ToString());
+                    try
+                    {
+                        editDay = Convert.ToInt32(key.KeyChar.ToString());
+                    }
+                    catch
+                    {
+                        goto begin;
+                    }
                     if (editDay < 1 || editDay > 6)
                     {
                         Console.WriteLine("Je kan kiezen tussen nummer 1 tot en met 6");
@@ -1119,7 +1151,7 @@ namespace Project_B_V2._0
                 Console.WriteLine();
                 Console.WriteLine("het standaard weekschema is aangepast.");
                 Thread.Sleep(3000);
-                return 2;
+                goto begin;
 
             } 
             return 0;
