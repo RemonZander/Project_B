@@ -13,6 +13,6 @@ namespace Project_B_V2._0
 
         public int Bezetting { get; set; }
 
-        public bool TourIsStarted { get; set; }
+        public bool RondleidingGestart { get; set; }
     }
 }

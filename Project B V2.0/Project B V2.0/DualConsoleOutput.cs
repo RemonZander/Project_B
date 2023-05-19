@@ -15,7 +15,7 @@ namespace Project_B_V2._0
         private TextWriter console;
         public override Encoding Encoding{get{return encoding;}}
         private string filepath;
-        public DualConsoleOutput(string filePath,TextWriter console, Encoding encoding = null)
+        public DualConsoleOutput(string filePath,TextWriter console, Encoding? encoding = null)
         {
             if (encoding != null)
             {
@@ -28,7 +28,7 @@ namespace Project_B_V2._0
             this.writer.AutoFlush = true;
         }
         
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             if (!Console.IsInputRedirected)
             {
@@ -39,7 +39,7 @@ namespace Project_B_V2._0
             this.writer.Write(value);  
         }
 
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             if (!Console.IsInputRedirected)
             {
@@ -71,7 +71,7 @@ namespace Project_B_V2._0
             this.writer.Close();
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
             this.writer.Flush();
             this.writer.Close();
