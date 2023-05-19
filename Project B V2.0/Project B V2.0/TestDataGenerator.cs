@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -97,8 +98,17 @@ namespace Project_B_V2._0
             return (Mederwerker, ex);
         }
 
-        internal static (List<Rondleiding>, Exception) MaakRondleidingen(DateTime start, DateTime end)
+        internal static (List<Rondleiding>, Exception) MaakRondleidingen(DateTime start, DateTime end, bool useScedule)
         {
+            List<RondleidingSettingsDayOfWeek> Weekschedule = new List<RondleidingSettingsDayOfWeek>();
+            if (useScedule)
+            {
+                Weekschedule = JsonManager.DeserializeRondleidingenWeekschema();
+            }
+            else
+            {
+                Weekschedule = TestDataGenerator.MaakStdWeekschema();
+            }
             Exception ex = new Exception();
             Random rnd = new Random();
             start = new DateTime(start.Year, start.Month, start.Day, 11, 0, 0);
@@ -107,23 +117,17 @@ namespace Project_B_V2._0
             {
                 do
                 {
-                    rondleidingen.Add(new Rondleiding
+                    List<Tuple<TimeOnly, int>>? rondleidingenSchema = Weekschedule[(int)start.DayOfWeek - 1].Rondleidingen;
+                    foreach (var rondleiding in rondleidingenSchema)
                     {
-                        Datum = start,
-                        Bezettingsgraad = rnd.Next(1, 14)
-                    });
-
-                    if (start.Hour == 16 && start.Minute > 20 || start.Hour > 16)
-                    {
-                        start = start.AddDays(1);
-                        start = start.AddHours(-start.Hour + 11);
-                        start = start.AddMinutes(-start.Minute);
+                        rondleidingen.Add(new Rondleiding
+                        {
+                            Datum = new DateTime(start.Year, start.Month, start.Day, rondleiding.Item1.Hour, rondleiding.Item1.Minute, 0),
+                            MaxGrootte = rondleiding.Item2,
+                        });
                     }
-                    else
-                    {
-                        start = start.AddMinutes(20);
 
-                    }
+                    start = start.AddDays(1);
                 } while (start < end);
             }
             catch (Exception exception)
@@ -132,6 +136,29 @@ namespace Project_B_V2._0
             }
 
             return (rondleidingen, ex);
+        }
+
+        internal static List<RondleidingSettingsDayOfWeek> MaakStdWeekschema() 
+        {
+            List<RondleidingSettingsDayOfWeek> dagInfo = new List<RondleidingSettingsDayOfWeek>();
+            TimeOnly tijd = new TimeOnly(10, 0);
+
+            for (int d = 1; d < 7; d++) 
+            {
+                
+                dagInfo.Add(new RondleidingSettingsDayOfWeek());
+                dagInfo[d - 1].Rondleidingen = new List<Tuple<TimeOnly, int>>();
+                DayOfWeek dag = (DayOfWeek)d;
+                dagInfo[d-1].Day = dag;
+
+                for (int i = 0; i <= 19; i++)
+                {
+                    dagInfo[d-1].Rondleidingen.Add(Tuple.Create(tijd, 13));
+                    tijd = tijd.AddMinutes(20);
+                }
+                tijd = new TimeOnly(10, 0);
+            }
+            return dagInfo;
         }
     }
 }

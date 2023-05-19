@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 
 namespace Project_B_V2._0
 {
@@ -19,7 +13,7 @@ namespace Project_B_V2._0
                 return new List<User>();
             }
 
-            List<User> data = JsonSerializer.Deserialize<List<User>>(File.ReadAllText("gebruikers.json"));
+            List<User> data = JsonConvert.DeserializeObject<List<User>>(File.ReadAllText("gebruikers.json"));
 
 
             return data;
@@ -32,7 +26,7 @@ namespace Project_B_V2._0
                 return new List<string>();
             }
 
-            List<string> data = JsonSerializer.Deserialize<List<string>>(File.ReadAllText("codes.json"));
+            List<string> data = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText("codes.json"));
 
             return data;
         }
@@ -45,7 +39,7 @@ namespace Project_B_V2._0
                 File.Delete("gebruikers.json");
             }
 
-            File.WriteAllText("gebruikers.json", JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
+            File.WriteAllText("gebruikers.json", JsonConvert.SerializeObject(data, Formatting.Indented));
 
 
             return "200: Success";
@@ -59,7 +53,7 @@ namespace Project_B_V2._0
                 File.Delete("rondleidingen.json");
             }
 
-            File.WriteAllText("rondleidingen.json", JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true }));
+            File.WriteAllText("rondleidingen.json", JsonConvert.SerializeObject(data, Formatting.Indented));
 
 
             return "200: Success";
@@ -73,10 +67,39 @@ namespace Project_B_V2._0
                 return new List<Rondleiding>();
             }
 
-            List<Rondleiding> data = JsonSerializer.Deserialize<List<Rondleiding>>(File.ReadAllText("rondleidingen.json"));
+            List<Rondleiding> data = JsonConvert.DeserializeObject<List<Rondleiding>>(File.ReadAllText("rondleidingen.json"));
 
 
             return data;
         }
+
+        internal static string SerializeRondleidingenWeekschema(List<RondleidingSettingsDayOfWeek> data)
+        {
+            //TODO Implementeer logica om lijst / data te schrijven naar JSON
+            if (File.Exists("rondleidingenweekschema.json"))
+            {
+                File.Delete("rondleidingenweekschema.json");
+            }
+
+            File.WriteAllText("rondleidingenweekschema.json", JsonConvert.SerializeObject(data, Formatting.Indented));
+
+
+            return "200: Success";
+        }
+
+        internal static List<RondleidingSettingsDayOfWeek> DeserializeRondleidingenWeekschema()
+        {
+            //TODO Implementeer logica om lijst / data te schrijven naar JSON
+            if (!File.Exists("rondleidingenweekschema.json"))
+            {
+                return new List<RondleidingSettingsDayOfWeek>();
+            }
+
+            List<RondleidingSettingsDayOfWeek> data = JsonConvert.DeserializeObject<List<RondleidingSettingsDayOfWeek>>(File.ReadAllText("rondleidingenweekschema.json"));
+
+
+            return data;
+        }
+
     }
 }
