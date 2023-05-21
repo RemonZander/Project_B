@@ -623,6 +623,13 @@ namespace Project_B_V2._0
 
         internal override int DoWork(DualConsoleOutput dualOutput)
         {
+            if (newSetDate.DayOfWeek == DayOfWeek.Sunday)
+            {
+                Console.WriteLine("Op zondag zijn wij gesloten. \nMorgen vanaf 10:00 zijn we weer open.");
+                ReadKey();
+                return 0;
+            }
+
             int pos = 0;
             bool cont = true;
             List<List<string>> rondleidingInformatie = new List<List<string>>();
