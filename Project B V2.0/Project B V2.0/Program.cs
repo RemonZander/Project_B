@@ -647,6 +647,13 @@ namespace Project_B_V2._0
 
                 rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToString(DATE_FORMAT) == newSetDate.ToString(DATE_FORMAT)).OrderBy(r => r.Datum).ToList();
             }
+
+            if (rondleidingen.Count <= 0)
+            {
+                Console.WriteLine("Vandaag zijn wij gesloten.");
+                ReadKey();
+                return 0;
+            }
             List<DateTime> tijden = new List<DateTime>();
             DateTime time = new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 11, 0, 0);
             for (int i = 0; i < rondleidingen.Count; i++)
