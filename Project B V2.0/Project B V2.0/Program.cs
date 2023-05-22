@@ -921,8 +921,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Maandag".PadLeft(17).PadRight(30),
-                        { rondleidingenPerDay[0] != null ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[0].Select(r => r.Bezetting).Average()}".PadRight(30) :
-                        $"Er zijn geen rondleidingen gepland".PadRight(30)},
+                        { rondleidingenPerDay[0].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[0].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -931,8 +931,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Dinsdag".PadLeft(18).PadRight(30),
-                        { rondleidingenPerDay[1] != null ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[1].Select(r => r.Bezetting).Average()}".PadRight(30) :
-                        $"Er zijn geen rondleidingen gepland".PadRight(30)},
+                        { rondleidingenPerDay[1].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[1].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -941,8 +941,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Donderdag".PadLeft(18).PadRight(30),
-                        { rondleidingenPerDay[3] != null ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[3].Select(r => r.Bezetting).Average()}".PadRight(30) :
-                        $"Er zijn geen rondleidingen gepland".PadRight(30)},
+                        { rondleidingenPerDay[3].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[3].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -951,8 +951,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Vrijdag".PadLeft(18).PadRight(30),
-                        { rondleidingenPerDay[4] != null ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[4].Select(r => r.Bezetting).Average()}".PadRight(30) :
-                        $"Er zijn geen rondleidingen gepland".PadRight(30)},
+                        { rondleidingenPerDay[4].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[4].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -964,8 +964,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Woensdag".PadLeft(18).PadRight(30),
-                        { rondleidingenPerDay[2] != null ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[2].Select(r => r.Bezetting).Average()}".PadRight(30) :
-                        $"Er zijn geen rondleidingen gepland".PadRight(30)},
+                        { rondleidingenPerDay[2].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[2].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -974,8 +974,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Zaterdag".PadLeft(18).PadRight(30),
-                        { rondleidingenPerDay[5] != null ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[5].Select(r => r.Bezetting).Average()}".PadRight(30) :
-                        $"Er zijn geen rondleidingen gepland".PadRight(30)},
+                        { rondleidingenPerDay[5].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[5].Select(r => r.Bezetting).Average()}".PadLeft(12).PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -990,16 +990,20 @@ namespace Project_B_V2._0
                 Console.WriteLine(new string('#', 104));
 
                 Console.WriteLine("");
-                Console.WriteLine("Wilt u de data naar een bestand overbrengen? Ja / Nee?");
+                Console.WriteLine("Wilt u de data naar een bestand overbrengen? Y / N?");
                 string answer = ReadLine();
 
-                if (answer == "Ja")
+                if (answer == "Y")
                 {
                     JsonManager.SerializeBezettingsgraden(rondleidingen);
                 }
-                else
+                else if (answer == "N")
                 {
                     return 0;
+                }
+                else
+                {
+                    Console.WriteLine("Voer Y of N in!");
                 }
 
             }
