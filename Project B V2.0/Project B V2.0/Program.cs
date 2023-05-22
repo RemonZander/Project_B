@@ -711,7 +711,7 @@ namespace Project_B_V2._0
 
                 Console.WriteLine(new string('#', 52));
                 Console.WriteLine("Gebruik de pijltoesten om te navigeren.");
-                Console.WriteLine("Druk op [2] om je reservering en unieke te bekijken.");
+                Console.WriteLine("Druk op [2] om je reservering en unieke code te bekijken.");
                 Console.WriteLine("Druk op [3] om je reservering te annuleren.");
                 Console.WriteLine("Druk op [4] om naar de gidsomgeving te gaan.");
                 Console.WriteLine("Druk op [5] om naar de afdelingshoofdomgeving te gaan.");
@@ -755,6 +755,7 @@ namespace Project_B_V2._0
 
                                 JsonManager.SerializeGebruikers(gebruikers);
 
+                                alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == gebruikers[a].Reservering)].Bezetting -= 1;
                                 alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == rondleidingen[pos].Datum)].Bezetting += 1;
 
                                 JsonManager.SerializeRondleidingen(alleRondleidingen);
@@ -839,16 +840,16 @@ namespace Project_B_V2._0
                     if (index != -1 && gebruikers[index].Reservering == default)
                     {
                         //Als de gebruiker geen reservering heeft, geef de volgende melding
-                            Console.WriteLine();
-                            Console.WriteLine("U heeft nog geen reservering geplaatst");
-                            Thread.Sleep(2000);
-                            return 0;
+                        Console.WriteLine();
+                        Console.WriteLine("U heeft nog geen reservering geplaatst");
+                        Thread.Sleep(3000);
+                        return 0;
                     }
                     else if (index == -1)
                     {
                         Console.WriteLine();
                         Console.WriteLine("Deze unieke code is bij ons niet bekend. U wordt weer terug gestuurd.");
-                        Thread.Sleep(2000);
+                        Thread.Sleep(3000);
                         return 0;
                     }
 
@@ -856,15 +857,15 @@ namespace Project_B_V2._0
 
                     JsonManager.SerializeRondleidingen(alleRondleidingen);
 
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine($"Uw reservering om {gebruikers[index].Reservering.ToString(TIME_FORMAT)} is succesvol geannuleerd");
+
                     //Zet de resveringsdatum naar default om te legen / resetten
                     gebruikers[index].Reservering = default;
 
                     JsonManager.SerializeGebruikers(gebruikers);
-
-                    Console.WriteLine();
-                    Console.WriteLine();
-                    Console.WriteLine("Uw reservering is succesvol geannuleerd");
-                    Thread.Sleep(2000);
+                    Thread.Sleep(3000);
                     return 0;
                 }
                 else if (IsKeyPressed(key, "D4") || IsKeyPressed(key, "NUMPAD4"))
