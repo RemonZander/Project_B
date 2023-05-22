@@ -751,11 +751,11 @@ namespace Project_B_V2._0
                             key = ReadKey();
                             if (key.Key.ToString().ToUpper() == "Y")
                             {
+                                alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == gebruikers[a].Reservering)].Bezetting -= 1;
                                 gebruikers[a].Reservering = tijden[pos];
 
                                 JsonManager.SerializeGebruikers(gebruikers);
 
-                                alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == gebruikers[a].Reservering)].Bezetting -= 1;
                                 alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == rondleidingen[pos].Datum)].Bezetting += 1;
 
                                 JsonManager.SerializeRondleidingen(alleRondleidingen);
