@@ -127,7 +127,8 @@ namespace Project_B_V2._0
                         });
                     }
 
-                    start = start.AddDays(1);
+                    if (start.DayOfWeek == DayOfWeek.Saturday) start = start.AddDays(2);
+                    else start = start.AddDays(1);
                 } while (start < end);
             }
             catch (Exception exception)
