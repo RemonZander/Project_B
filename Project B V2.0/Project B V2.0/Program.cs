@@ -1106,10 +1106,12 @@ namespace Project_B_V2._0
                 }
                 else if ((IsKeyPressed(key, "D1") || IsKeyPressed(key, "NUMPAD1")) && !rondleidingen[pos].RondleidingGestart)
                 {
-                    Console.WriteLine("Vul de unieke codes in");
+                    Console.WriteLine("Vul hier de unieke codes in, typ 'klaar' als je klaar bent met unieke codes in te laten vullen.\n" +
+                        "Als alle codes van deze reserevering zijn ingevult stuurt het programma je automatisch door.");
                     Console.WriteLine(new string('_', 48));
 
-                    List<string?> gebruikers = JsonManager.DeserializeGebruikers().Where(geb => geb.Reservering == rondleidingen[pos].Datum).Select(geb => geb.UniekeCode).ToList();
+                    List<User> alleGebruikers = JsonManager.DeserializeGebruikers();
+                    List<string?> gebruikers = alleGebruikers.Where(geb => geb.Reservering == rondleidingen[pos].Datum).Select(geb => geb.UniekeCode).ToList();
                     int bezetting = rondleidingen[pos].Bezetting;
                     while (bezetting > 0)
                     {
@@ -1118,9 +1120,8 @@ namespace Project_B_V2._0
                         {
                             return answer.Item2;
                         }
-                        if (answer.Item1.ToUpper() == "BEGIN")
+                        if (answer.Item1.ToUpper() == "KLAAR")
                         {
-                            bezetting = 0;
                             Console.WriteLine();
                             break;
                         }
@@ -1136,9 +1137,66 @@ namespace Project_B_V2._0
                         Console.WriteLine(new string('_', 48));
                     }
 
+                    if (bezetting > 0)
+                    {
+                        cont = true;
+                        do
+                        {
+                            Console.WriteLine("Er zijn nog plekken over, wilt u nog meer mensen toevoegen? (y/n)");
+                            key = ReadKey();
+                            if (key.Key.ToString().ToUpper() == "Y")
+                            {
+                                Console.WriteLine();
+                                Console.WriteLine("Vul hier de unieke codes in, typ 'klaar' als je klaar bent met unieke codes in te laten vullen.\n" +
+                                    "Als alle codes van deze reserevering zijn ingevult stuurt het programma je automatisch door.");
+                                Console.WriteLine(new string('_', 48));
+                                List<string?> alleGebruikersCodes = alleGebruikers.Select(geb => geb.UniekeCode).ToList();
+                                for (int a = 0; a < bezetting; a++)
+                                {
+                                    (string?, int) answer = AskForInput(0);
+                                    if (answer.Item2 != -1)
+                                    {
+                                        return answer.Item2;
+                                    }
+                                    else if (answer.Item1.ToUpper() == "KLAAR")
+                                    {
+                                        bezetting = 0;
+                                        Console.WriteLine();
+                                        break;
+                                    }
+
+                                    if (alleGebruikersCodes.Contains(answer.Item1) && alleGebruikers.First(geb => geb.UniekeCode == answer.Item1).Reservering != new DateTime(1, 1, 1))
+                                    {
+                                        Geluid(true);
+                                        bezetting--;
+                                    }
+                                    else if (!alleGebruikersCodes.Contains(answer.Item1)) Geluid(false);
+                                    else
+                                    {
+                                        Console.WriteLine();
+                                        Console.WriteLine($"Deze gebruiker heeft al een reservering staan op: " +
+                                            $"{alleGebruikers.First(geb => geb.UniekeCode == answer.Item1).Reservering.ToString(DATE_TIME_FORMAT)}, de reservering wordt verplaatst.");
+                                        alleGebruikers.First(geb => geb.UniekeCode == answer.Item1).Reservering = rondleidingen[pos].Datum;
+                                        JsonManager.SerializeGebruikers(alleGebruikers);
+                                    }
+
+                                    Console.WriteLine();
+                                    Console.WriteLine(new string('_', 48));
+                                }
+
+                                break;
+                            }
+                            else if (key.Key.ToString().ToUpper() == "N")
+                            {
+                                break;
+                            }
+
+                        } while (cont);
+                    }
+
                     allerondleidingen[allerondleidingen.IndexOf(rondleidingen[pos])].RondleidingGestart = true;
                     JsonManager.SerializeRondleidingen(allerondleidingen);
-                    Console.WriteLine($"De rondleiding om {rondleidingen[pos].Datum.ToString(DATE_TIME_FORMAT)} kan beginnen!");
+                    Console.WriteLine($"De rondleiding om {rondleidingen[pos].Datum.ToString(DATE_TIME_FORMAT)} is begonnen!");
                     Thread.Sleep(2500);
                     return 4;
                 }
