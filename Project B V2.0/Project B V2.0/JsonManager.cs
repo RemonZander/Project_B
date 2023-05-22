@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Project_B_V2._0
 {
@@ -101,5 +102,24 @@ namespace Project_B_V2._0
             return data;
         }
 
+        internal static string SerializeBezettingsgraden(List<Rondleiding> data)
+        {
+            if (File.Exists("bezettingsgraden.json"))
+            {
+                File.Delete("bezettingsgraden.json");
+            }
+
+            List<string> graden = new();
+
+            foreach (Rondleiding rondleiding in data)
+            {
+                graden.Add($"{rondleiding.Datum}: {rondleiding.Bezetting * 100 / rondleiding.MaxGrootte}%");
+            }
+            File.WriteAllText("bezittingsgraden.json", JsonConvert.SerializeObject(graden, Formatting.Indented));
+
+            return "200: Success";
+
+
+        }
     }
 }
