@@ -302,17 +302,29 @@ namespace Project_B_V2._0
             if (DisplayInfo.Count % 2 == 1 && pos != DisplayInfo.Count - 1)
             {
                 lastBox = BoxAroundText(DisplayInfo[^1], "#", 2, 0, totalBoxLength / 2 - 3, false);
-                lastBox = lastBox.Remove(0, totalBoxLength / 2 + 3);
-                lastBox = new string('#', totalBoxLength + 6) + lastBox;
+                if (DisplayInfo.Count > 1)
+                {
+                    lastBox = lastBox.Remove(0, totalBoxLength / 2 + 3);
+                    lastBox = new string('#', totalBoxLength + 6) + lastBox;
+                }
                 DisplayInfo.RemoveAt(DisplayInfo.Count - 1);
             }
             else if (DisplayInfo.Count % 2 == 1 && pos == DisplayInfo.Count - 1)
             {
                 lastBox = BoxAroundText(DisplayInfo[^1], "#", 2, 0, totalBoxLength / 2 - 3, false,
                     new List<string> { $"{(!posNoSelect ? BottomText.Remove(BottomText.Length - 1) : "Niet mogelijk".PadRight(subBoxPadding - 1))}", "".PadRight(subBoxPadding - 1) });
-                lastBox = lastBox.Remove(0, totalBoxLength / 2 + 3);
-                lastBox = new string('#', totalBoxLength + 6) + lastBox;
+                if (DisplayInfo.Count > 1)
+                {
+                    lastBox = lastBox.Remove(0, totalBoxLength / 2 + 3);
+                    lastBox = new string('#', totalBoxLength + 6) + lastBox;
+                }
                 DisplayInfo.RemoveAt(DisplayInfo.Count - 1);
+            }
+
+            if (DisplayInfo.Count == 0)
+            {
+                boxes.Add(lastBox);
+                return boxes;
             }
 
             if (pos == 0)
@@ -782,13 +794,16 @@ namespace Project_B_V2._0
                         if (gebruikers[a].UniekeCode == answer.Item1 && gebruikers[a].Reservering != new DateTime(1, 1, 1))
                         {
                             Console.WriteLine();
-                            Geluid(false);
                             Console.WriteLine($"U heeft al een reservering geplaatst om {gebruikers[a].Reservering.ToString(DATE_TIME_FORMAT)}");
                             Console.WriteLine($"Wilt u de uw reservering verplaatsen naar: {tijden[pos].ToString(DATE_TIME_FORMAT)}? (y/n)");
                             key = ReadKey();
                             if (key.Key.ToString().ToUpper() == "Y")
                             {
-                                alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == gebruikers[a].Reservering)].Bezetting -= 1;
+                                try
+                                {
+                                    alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == gebruikers[a].Reservering)].Bezetting -= 1;
+                                }
+                                catch { }
                                 gebruikers[a].Reservering = tijden[pos];
 
                                 JsonManager.SerializeGebruikers(gebruikers);
@@ -1052,7 +1067,7 @@ namespace Project_B_V2._0
             }
             else if (IsKeyPressed(key, "Escape"))
             {
-                return 2;
+                return 0;
             }
             return 0;
         }
@@ -1494,11 +1509,11 @@ namespace Project_B_V2._0
                 try
                 {
                     Console.WriteLine();
-                    Console.WriteLine($"Wat is de maximale bezetting van de rondleiding om {input.Item1}?");
+                    Console.WriteLine($"Vul hier de maximale bezetting in van de rondleiding om {input.Item1}. Vul 0 in om deze rondleiding te verwijderen.");
 
                     input = AskForInput(2);
-                    bezetting = Convert.ToInt32(input.Item1);
                     if (input.Item2 != -1) return input.Item2;
+                    bezetting = Convert.ToInt32(input.Item1);
                     if (bezetting < 0) throw new Exception();
                 }
 
@@ -1521,7 +1536,12 @@ namespace Project_B_V2._0
                 Thread.Sleep(3000);
                 return 5;
             }
-            defaultWeekschedule[editDay - 1].Rondleidingen[location] = Tuple.Create(tijd, bezetting);
+            if (bezetting == 0)
+            {
+                defaultWeekschedule[editDay - 1].Rondleidingen.RemoveAt(location);
+                JsonManager.SerializeRondleidingenWeekschema(defaultWeekschedule);
+            }
+            else defaultWeekschedule[editDay - 1].Rondleidingen[location] = Tuple.Create(tijd, bezetting);
 
             JsonManager.SerializeRondleidingenWeekschema(defaultWeekschedule);
             Console.WriteLine();
