@@ -674,6 +674,13 @@ namespace Project_B_V2._0
 
                 rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToString(DATE_FORMAT) == newSetDate.ToString(DATE_FORMAT)).OrderBy(r => r.Datum).ToList();
             }
+
+            if (rondleidingen.Count <= 0)
+            {
+                Console.WriteLine("Vandaag zijn wij gesloten.");
+                ReadKey();
+                return 0;
+            }
             List<DateTime> tijden = new List<DateTime>();
             DateTime time = new DateTime(rondleidingen[0].Datum.Year, rondleidingen[0].Datum.Month, rondleidingen[0].Datum.Day, rondleidingen[0].Datum.Hour, rondleidingen[0].Datum.Minute, 0);
             for (int i = 0; i < rondleidingen.Count; i++)
@@ -740,7 +747,7 @@ namespace Project_B_V2._0
                 }
                 if (rondleidingInformatie.Count % 2 == 0) Console.WriteLine(new string('#', 52));
                 Console.WriteLine("Gebruik de pijltoesten om te navigeren.");
-                Console.WriteLine("Druk op [2] om je reservering en unieke te bekijken.");
+                Console.WriteLine("Druk op [2] om je reservering en unieke code te bekijken.");
                 Console.WriteLine("Druk op [3] om je reservering te annuleren.");
                 Console.WriteLine("Druk op [4] om naar de gidsomgeving te gaan.");
                 Console.WriteLine("Druk op [5] om naar de afdelingshoofdomgeving te gaan.");
@@ -781,6 +788,7 @@ namespace Project_B_V2._0
                             key = ReadKey();
                             if (key.Key.ToString().ToUpper() == "Y")
                             {
+                                alleRondleidingen[alleRondleidingen.FindIndex(r => r.Datum == gebruikers[a].Reservering)].Bezetting -= 1;
                                 gebruikers[a].Reservering = tijden[pos];
 
                                 JsonManager.SerializeGebruikers(gebruikers);
@@ -869,16 +877,16 @@ namespace Project_B_V2._0
                     if (index != -1 && gebruikers[index].Reservering == default)
                     {
                         //Als de gebruiker geen reservering heeft, geef de volgende melding
-                            Console.WriteLine();
-                            Console.WriteLine("U heeft nog geen reservering geplaatst");
-                            Thread.Sleep(2000);
-                            return 0;
+                        Console.WriteLine();
+                        Console.WriteLine("U heeft nog geen reservering geplaatst");
+                        Thread.Sleep(3000);
+                        return 0;
                     }
                     else if (index == -1)
                     {
                         Console.WriteLine();
                         Console.WriteLine("Deze unieke code is bij ons niet bekend. U wordt weer terug gestuurd.");
-                        Thread.Sleep(2000);
+                        Thread.Sleep(3000);
                         return 0;
                     }
 
@@ -886,15 +894,15 @@ namespace Project_B_V2._0
 
                     JsonManager.SerializeRondleidingen(alleRondleidingen);
 
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine($"Uw reservering om {gebruikers[index].Reservering.ToString(TIME_FORMAT)} is succesvol geannuleerd");
+
                     //Zet de resveringsdatum naar default om te legen / resetten
                     gebruikers[index].Reservering = default;
 
                     JsonManager.SerializeGebruikers(gebruikers);
-
-                    Console.WriteLine();
-                    Console.WriteLine();
-                    Console.WriteLine("Uw reservering is succesvol geannuleerd");
-                    Thread.Sleep(2000);
+                    Thread.Sleep(3000);
                     return 0;
                 }
                 else if (IsKeyPressed(key, "D4") || IsKeyPressed(key, "NUMPAD4"))
@@ -951,7 +959,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Maandag".PadLeft(17).PadRight(30),
-                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[0].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        { rondleidingenPerDay[0].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[0].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -960,7 +969,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Dinsdag".PadLeft(18).PadRight(30),
-                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[1].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        { rondleidingenPerDay[1].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[1].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -969,7 +979,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Donderdag".PadLeft(18).PadRight(30),
-                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[3].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        { rondleidingenPerDay[3].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[3].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -978,7 +989,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Vrijdag".PadLeft(18).PadRight(30),
-                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[4].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        { rondleidingenPerDay[4].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[4].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -990,7 +1002,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Woensdag".PadLeft(18).PadRight(30),
-                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[2].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        { rondleidingenPerDay[2].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[2].Select(r => r.Bezetting).Average()}".PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -999,7 +1012,8 @@ namespace Project_B_V2._0
                         "".PadRight(30),
                         "".PadRight(30),
                         "Zaterdag".PadLeft(18).PadRight(30),
-                        $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[5].Select(r => r.Bezetting).Average()}".PadRight(30),
+                        { rondleidingenPerDay[5].Count() != 0 ? $"Gemiddeld aantal bezoekers: {(int)rondleidingenPerDay[5].Select(r => r.Bezetting).Average()}".PadLeft(12).PadRight(30) :
+                        $"Geen rondleidingen bekend".PadRight(30)},
                         "".PadRight(30),
                         "".PadRight(30),
                     },
@@ -1013,14 +1027,33 @@ namespace Project_B_V2._0
                 }
                 Console.WriteLine(new string('#', 104));
 
-                ReadLine();
+                Console.WriteLine("");
+                Console.WriteLine("Wilt u de data naar een bestand overbrengen? Y / N?");
+                string answer = ReadLine();
+
+                if (answer == "Y")
+                {
+                    JsonManager.SerializeBezettingsgraden(rondleidingen);
+                }
+                else if (answer == "N")
+                {
+                    return 0;
+                }
+                else
+                {
+                    Console.WriteLine("Voer Y of N in!");
+                }
 
             }
             else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
             {
                 return 5;
 
-            } 
+            }
+            else if (IsKeyPressed(key, "Escape"))
+            {
+                return 2;
+            }
             return 0;
         }
     }
