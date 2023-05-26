@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using System.Globalization;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace Project_B_V2._0
 {
@@ -60,8 +62,61 @@ namespace Project_B_V2._0
             _currentScreen = 0;
             do
             {
-                Display();
-                if (!Console.IsInputRedirected) Refresh();
+                try
+                {
+                    Display();
+                    if (!Console.IsInputRedirected) Refresh();
+
+                }
+                catch (Exception ex)
+                {
+                    if (!Console.IsInputRedirected) Console.Clear();
+                    Console.WriteLine($"De volgende fout heeft plaatsgevonden: {ex.GetType()}.");
+                    Console.WriteLine($"Bericht van de fout: {ex.Message}");
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+
+                    switch (ex)
+                    {
+                        case FormatException:
+                            Console.WriteLine("U heeft een verkeerde invoer gegeven. Druk op een toets om terug te gaan.");
+                            break;
+                        case IndexOutOfRangeException:
+                            Console.WriteLine("Er is een interne fout opgetreden. Dit komt hoogstwaarschijnlijk door beschadigde bestanden of missense data.");
+                            break;
+                        case ArgumentOutOfRangeException:
+                            Console.WriteLine("Er is een interne fout opgetreden. Dit komt hoogstwaarschijnlijk door beschadigde bestanden of missense data.");
+                            break;
+                        case OverflowException:
+                            Console.WriteLine("Er is een te grootte of te kleine waarde ingevult.");
+                            break;
+                        case NullReferenceException:
+                            Console.WriteLine("Er mist data in het programma, dit komt hoogstwaarschijnlijk door beschadigde bestanden.");
+                            break;
+                        case IOException:
+                            Console.WriteLine("Een van de bestanden die het programma probeerd te lezen is geopend door een ander programma, sluit dat programma en druk dan op een toets.");
+                            break;
+                        case JsonReaderException:
+                            if (ex.StackTrace.Contains("RondleidingenWeekschema")) Console.WriteLine("RondleidingenWeekschema.json is beschadigt geraakt.");
+                            else if (ex.StackTrace.Contains("Rondleidingen")) Console.WriteLine("Rondleidingen.json is beschadigt geraakt.");
+                            else if (ex.StackTrace.Contains("Gebruikers")) Console.WriteLine("Gebruikers.json is beschadigt geraakt.");
+                            else if (ex.StackTrace.Contains("Medewerkers")) Console.WriteLine("Medewerkers.json is beschadigt geraakt.");
+                            else Console.WriteLine("Een van de bestanden die het programma gebruikt zijn beschadigt geraakt.");
+                            break;
+                        default:
+                            Console.WriteLine("Er heeft een onbekende fout plaatsgevonden. Hieronder staat de foutcode, geef deze door aan het afdeelingshoofd.");
+                            Console.WriteLine(ex);
+                            break;
+                    }
+                    if (Console.IsInputRedirected)
+                    {
+                        Console.ReadLine();
+                        continue;
+                    }
+                    Console.ReadKey();
+                    if (!Console.IsInputRedirected) Console.Clear();
+                }
             } while (_currentScreen != -1);
         }
 
@@ -540,7 +595,7 @@ namespace Project_B_V2._0
                 {
                     Console.WriteLine("Hoeveel gebruikers wilt u aanmaken: ");
                     (string?, int) answer = AskForInput(0);
-                    isNum = int.TryParse(answer.Item1, out _);
+                    isNum = Regex.IsMatch(answer.Item1, @"^\d+$");
                     if (!isNum)
                     {
                         Console.WriteLine("Dit was geen getal...");
