@@ -79,14 +79,21 @@ namespace Project_B_V2._0
 
         internal static (List<Mederwerker>, Exception) MaakGitsen(int hoeveelheid)
         {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()-_=+[]{}|;',.<>/?";
             Exception ex = new Exception();
             List<Mederwerker> Mederwerker = new List<Mederwerker>();
+            Random rnd = new Random();
             try
             {
                 for (int a = 0; a < hoeveelheid; a++)
                 {
+                    string code = "";
+                    for (int b = 0; b < 9; b++)
+                    {
+                        code += chars[rnd.Next(0, chars.Length)];
+                    }
                     Mederwerker.Add(new Mederwerker {
-                        BeveiligingsCode = a.ToString(),
+                        BeveiligingsCode = code,
                         Role = Roles.Gids,
                     });
                 }

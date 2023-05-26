@@ -121,5 +121,32 @@ namespace Project_B_V2._0
 
 
         }
+
+        internal static string SerializeMedewerkers(List<Mederwerker> data)
+        {
+            if (File.Exists("Mederwerker.json"))
+            {
+                File.Delete("Mederwerker.json");
+            }
+
+            File.WriteAllText("Mederwerker.json", JsonConvert.SerializeObject(data, Formatting.Indented));
+
+
+            return "200: Success";
+        }
+
+        internal static List<Mederwerker> DeserializeMedewerkers()
+        {
+            //TODO Implementeer logica om lijst / data te schrijven naar JSON
+            if (!File.Exists("Mederwerker.json"))
+            {
+                return new List<Mederwerker>();
+            }
+
+            List<Mederwerker> data = JsonConvert.DeserializeObject<List<Mederwerker>>(File.ReadAllText("Mederwerker.json"));
+
+
+            return data;
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace Project_B_V2._0
                 _screens.Add(new HomeScreen(newSetDate)); // 0
                 _screens.Add(new TestDataGeneratorScreen(newSetDate)); // 1
                 _screens.Add(new AfdelingshoofdScherm(newSetDate)); //2
-                _screens.Add(new InlogGidsScherm(newSetDate)); //3
+                _screens.Add(new EmptyScreen(newSetDate)); //3  empty because we don't need gitsloginscreen and this is to preserve the return numbers
                 _screens.Add(new GidsScherm(newSetDate)); //4
                 _screens.Add(new WeekSchema(newSetDate)); //5
             }
@@ -52,7 +52,7 @@ namespace Project_B_V2._0
                 _screens.Add(new HomeScreen(DateTime.Now)); // 0
                 _screens.Add(new TestDataGeneratorScreen(DateTime.Now)); // 1
                 _screens.Add(new AfdelingshoofdScherm(DateTime.Now)); //2
-                _screens.Add(new InlogGidsScherm(DateTime.Now)); //3
+                _screens.Add(new EmptyScreen(DateTime.Now)); //3  empty because we don't need gitsloginscreen and this is to preserve the return numbers
                 _screens.Add(new GidsScherm(DateTime.Now)); //4
                 _screens.Add(new WeekSchema(DateTime.Now)); //5
             }
@@ -527,6 +527,7 @@ namespace Project_B_V2._0
             Console.WriteLine("Druk op [1] om gebruikers aan te maken.");
             Console.WriteLine("Druk op [2] om rondleidingen aan te maken.");
             Console.WriteLine("Druk op [3] om PR-1 test data aan te maken.");
+            Console.WriteLine("Druk op [4] om gitsen en de afdeelingshoofd aan te maken.");
             ConsoleKeyInfo input = ReadKey();
             //(string, int) answer = AskForInput(0);
             
@@ -643,6 +644,30 @@ namespace Project_B_V2._0
                 File.Delete("output.txt");
                 dualOutput.ReStartWriter();
                 Thread.Sleep(3000);
+            }
+            else if (IsKeyPressed(input, "D4") || IsKeyPressed(input, "NUMPAD4"))
+            {
+                Console.WriteLine();
+                Console.WriteLine("Vul het aantal gitsen in die u wilt maken.");
+                (string?, int) amount = AskForInput(1);
+                if (amount.Item2 != -1)
+                {
+                    return amount.Item2;
+                }
+
+                List<Mederwerker> Gitsen = TestDataGenerator.MaakGitsen(Convert.ToInt32(amount.Item1)).Item1;
+
+                Gitsen.Add(new Mederwerker
+                {
+                    BeveiligingsCode = "afdeelingshoofd",
+                    Role = Roles.Afdelingshoofd,
+                });
+
+                JsonManager.SerializeMedewerkers(Gitsen);
+                Console.WriteLine();
+                Console.WriteLine("Gitsen en het afdeelingshoofd zijn opgeslagen!");
+                Thread.Sleep(3000);
+                return 1;
             }
             else if (IsKeyPressed(input, ESCAPE_KEY))
             {
@@ -794,7 +819,7 @@ namespace Project_B_V2._0
                         if (gebruikers[a].UniekeCode == answer.Item1 && gebruikers[a].Reservering != new DateTime(1, 1, 1))
                         {
                             Console.WriteLine();
-                            Console.WriteLine($"U heeft al een reservering geplaatst om {gebruikers[a].Reservering.ToString(DATE_TIME_FORMAT)}");
+                            Console.WriteLine($"U heeft al een reservering staan op {gebruikers[a].Reservering.ToString(DATE_TIME_FORMAT)}");
                             Console.WriteLine($"Wilt u de uw reservering verplaatsen naar: {tijden[pos].ToString(DATE_TIME_FORMAT)}? (y/n)");
                             key = ReadKey();
                             if (key.Key.ToString().ToUpper() == "Y")
@@ -865,10 +890,10 @@ namespace Project_B_V2._0
                     Console.WriteLine("Uw gegevens:");
                     Console.WriteLine(BoxAroundText(new List<string>
                     {
-                        $"Uw unieke code: {gebruiker.UniekeCode}".PadRight(43),
-                        gebruiker.Reservering != default ? $"Uw heb uw reservering staan op: {gebruiker.Reservering.ToString(TIME_FORMAT)}".PadRight(43)
-                        : "U heeft nog geen reservering".PadRight(43),
-                    }, "#", 2, 1, 43, false));
+                        $"Uw unieke code: {gebruiker.UniekeCode}".PadRight(47),
+                        gebruiker.Reservering != default ? $"Uw heb uw reservering staan op: {gebruiker.Reservering.ToString(DATE_TIME_FORMAT)}".PadRight(47)
+                        : "U heeft nog geen reservering".PadRight(47),
+                    }, "#", 2, 1, 47, false));
                     Console.WriteLine("Druk op een knop om terug te gaan...");
                     ReadKey();
                 }
@@ -911,7 +936,7 @@ namespace Project_B_V2._0
 
                     Console.WriteLine();
                     Console.WriteLine();
-                    Console.WriteLine($"Uw reservering om {gebruikers[index].Reservering.ToString(TIME_FORMAT)} is succesvol geannuleerd");
+                    Console.WriteLine($"Uw reservering om {gebruikers[index].Reservering.ToString(DATE_TIME_FORMAT)} is succesvol geannuleerd");
 
                     //Zet de resveringsdatum naar default om te legen / resetten
                     gebruikers[index].Reservering = default;
@@ -922,7 +947,40 @@ namespace Project_B_V2._0
                 }
                 else if (IsKeyPressed(key, "D4") || IsKeyPressed(key, "NUMPAD4"))
                 {
-                    return 3;
+                    cont = true;
+
+                        List<Mederwerker> Gitsen = JsonManager.DeserializeMedewerkers();
+                        Console.WriteLine();
+                        Console.WriteLine();
+                    do
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine(new string('_', 48));
+                        Console.WriteLine("Vul uw unieke gids code in: ");
+                        (string?, int) input = AskForInput(0);
+                        if (input.Item2 != -1)
+                        {
+                            return input.Item2;
+                        }
+                        if (!Gitsen.Select(g => g.BeveiligingsCode).Contains(input.Item1))
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Deze unieke code bestaat niet. Probeer het opnieuw.");
+                            Thread.Sleep(3000);
+                            continue;
+                        }
+                        else if (Gitsen.First(g => g.BeveiligingsCode == input.Item1).Role == Roles.Afdelingshoofd)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Dit scherm is alleen bedoelt voor gitsen.");
+                            Console.WriteLine(" Het afbeeldingshoofd kan inloggen op het afdeelingshoof scherm (optie 4).");
+                            Thread.Sleep(3000);
+                        }
+                        cont = false;
+
+                    } while (cont);
+
+                    return 4;
                 }
                 else if (IsKeyPressed(key, "D5") || IsKeyPressed(key, "NUMPAD5"))
                 { 
@@ -1070,38 +1128,6 @@ namespace Project_B_V2._0
                 return 0;
             }
             return 0;
-        }
-    }
-
-    internal class InlogGidsScherm : Screen 
-    {
-
-        public InlogGidsScherm(DateTime newSetDate) : base(newSetDate) { }
-
-        internal override int DoWork(DualConsoleOutput dualOutput) 
-        {
-            string username = "gids";
-            string password = "123";
-
-            Console.WriteLine("Gebruikersnaam:");
-            string usernameingevoerd = ReadLine();
-            Console.WriteLine("Wachtwoord:");
-            string passwordingevoerd = ReadLine();
-
-            if (username == usernameingevoerd && password == passwordingevoerd)
-            {
-                Console.WriteLine();
-                Console.WriteLine("U wordt doorverwezen naar het gidsscherm");
-                Thread.Sleep(2500);
-                return 4;
-            }
-            else 
-            {
-                Console.WriteLine();
-                Console.WriteLine("Onjuiste gegevens");
-                Thread.Sleep(2000);
-                return 3;
-            }         
         }
     }
 
@@ -1549,5 +1575,12 @@ namespace Project_B_V2._0
             Thread.Sleep(3000);
             return 5;
         }
+    }
+
+    internal class EmptyScreen : Screen
+    {
+        public EmptyScreen(DateTime newSetDate) : base(newSetDate) { }
+
+        internal override int DoWork(DualConsoleOutput dualOutput) { return 0; }
     }
 }
