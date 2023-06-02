@@ -122,28 +122,28 @@ namespace Project_B_V2._0
 
         }
 
-        internal static string SerializeMedewerkers(List<Mederwerker> data)
+        internal static string Serializemedewerker(List<medewerker> data)
         {
-            if (File.Exists("Mederwerkers.json"))
+            if (File.Exists("medewerkers.json"))
             {
-                File.Delete("Mederwerkers.json");
+                File.Delete("medewerkers.json");
             }
 
-            File.WriteAllText("Mederwerkers.json", JsonConvert.SerializeObject(data, Formatting.Indented));
+            File.WriteAllText("medewerkers.json", JsonConvert.SerializeObject(data, Formatting.Indented));
 
 
             return "200: Success";
         }
 
-        internal static List<Mederwerker> DeserializeMedewerkers()
+        internal static List<medewerker> Deserializemedewerker()
         {
             //TODO Implementeer logica om lijst / data te schrijven naar JSON
-            if (!File.Exists("Mederwerkers.json"))
+            if (!File.Exists("medewerkers.json"))
             {
-                return new List<Mederwerker>();
+                return new List<medewerker>();
             }
 
-            List<Mederwerker> data = JsonConvert.DeserializeObject<List<Mederwerker>>(File.ReadAllText("Mederwerkers.json"));
+            List<medewerker> data = JsonConvert.DeserializeObject<List<medewerker>>(File.ReadAllText("medewerkers.json"));
 
 
             return data;

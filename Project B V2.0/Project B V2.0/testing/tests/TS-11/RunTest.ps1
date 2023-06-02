@@ -58,6 +58,19 @@ if ($content1 -ne $content2) {
     $result = $result + "The rondleidingenweekschema.json files are identical.\n"
 }
 
+$content1 = (Get-Content -Path ".\medewerker.json" -raw) -replace "`r`n?", "`n" -replace " +`n", "`n"
+$content2 = (Get-Content -Path ".\expected results\medewerker.json" -raw) -replace "`r`n?", "`n" -replace " +`n", "`n"
+
+Write-Host $content1
+Write-Host $content2
+if ($content1 -ne $content2) {
+    Write-Host "The medewerker.json files are not identical. Test failed!"
+    $result = $result + "The medewerker.json files are not identical. Test failed!\n"
+    $throw = true
+} else {
+    Write-Host "The files medewerker.json are identical."
+    $result = $result + "The medewerker.json files are identical.\n"
+}
 
 Write-Host $result
 if ($throw){

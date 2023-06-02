@@ -86,7 +86,7 @@ namespace Project_B_V2._0
                             if (ex.StackTrace.Contains("RondleidingenWeekschema")) Console.WriteLine("RondleidingenWeekschema.json is beschadigt geraakt.");
                             else if (ex.StackTrace.Contains("Rondleidingen")) Console.WriteLine("Rondleidingen.json is beschadigt geraakt.");
                             else if (ex.StackTrace.Contains("Gebruikers")) Console.WriteLine("Gebruikers.json is beschadigt geraakt.");
-                            else if (ex.StackTrace.Contains("Medewerkers")) Console.WriteLine("Medewerkers.json is beschadigt geraakt.");
+                            else if (ex.StackTrace.Contains("medewerker")) Console.WriteLine("medewerker.json is beschadigt geraakt.");
                             else Console.WriteLine("Een van de bestanden die het programma gebruikt zijn beschadigt geraakt.");
                             break;
                         default:
@@ -655,12 +655,12 @@ namespace Project_B_V2._0
                 Console.WriteLine();
                 Console.WriteLine("Test data aanmaken voor PR-1.");
                 File.Delete("gebruikers.json");
-                File.Delete("Mederwerkers.json");
+                File.Delete("medewerkers.json");
                 File.Delete("rondleidingen.json");
                 File.Delete("rondleidingenweekschema.json");
                 File.Copy(@"..\..\..\testing\preconditions\PR-1\gebruikers.json", "gebruikers.json");
                 File.Copy(@"..\..\..\testing\preconditions\PR-1\rondleidingen.json", "rondleidingen.json");
-                File.Copy(@"..\..\..\testing\preconditions\PR-1\Mederwerkers.json", "Mederwerkers.json");
+                File.Copy(@"..\..\..\testing\preconditions\PR-1\medewerkers.json", "medewerkers.json");
                 File.Copy(@"..\..\..\testing\preconditions\PR-1\rondleidingenweekschema.json", "rondleidingenweekschema.json");
                 List<User> gebruikers = JsonManager.DeserializeGebruikers();
                 List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen();
@@ -697,15 +697,15 @@ namespace Project_B_V2._0
                     return amount.Item2;
                 }
 
-                List<Mederwerker> Gitsen = TestDataGenerator.MaakGitsen(Convert.ToInt32(amount.Item1)).Item1;
+                List<medewerker> Gitsen = TestDataGenerator.MaakGitsen(Convert.ToInt32(amount.Item1)).Item1;
 
-                Gitsen.Add(new Mederwerker
+                Gitsen.Add(new medewerker
                 {
                     BeveiligingsCode = "afdeelingshoofd",
                     Role = Roles.Afdelingshoofd,
                 });
 
-                JsonManager.SerializeMedewerkers(Gitsen);
+                JsonManager.Serializemedewerker(Gitsen);
                 Console.WriteLine();
                 Console.WriteLine("Gitsen en het afdeelingshoofd zijn opgeslagen!");
                 Thread.Sleep(3000);
@@ -991,7 +991,7 @@ namespace Project_B_V2._0
                 {
                     cont = true;
 
-                        List<Mederwerker> Gitsen = JsonManager.DeserializeMedewerkers();
+                        List<medewerker> Gitsen = JsonManager.Deserializemedewerker();
                         Console.WriteLine();
                         Console.WriteLine();
                     do
