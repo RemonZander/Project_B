@@ -701,7 +701,7 @@ namespace Project_B_V2._0
 
                 Gitsen.Add(new medewerker
                 {
-                    BeveiligingsCode = "afdeelingshoofd",
+                    BeveiligingsCode = "@HfkGJ0!=",
                     Role = Roles.Afdelingshoofd,
                 });
 
@@ -1026,6 +1026,7 @@ namespace Project_B_V2._0
                 }
                 else if (IsKeyPressed(key, "D5") || IsKeyPressed(key, "NUMPAD5"))
                 {
+                    medewerker afdeelingshoofd = JsonManager.Deserializemedewerker().First(m => m.Role == Roles.Afdelingshoofd);
                     Console.WriteLine();
                     Console.WriteLine();
                     cont = true;
@@ -1039,7 +1040,7 @@ namespace Project_B_V2._0
                         {
                             return input.Item2;
                         }
-                        if (input.Item1 == "@HfkGJ0!=") cont = false;
+                        if (input.Item1 == afdeelingshoofd.BeveiligingsCode) cont = false;
                         else Console.WriteLine("\nDit was niet uw wachtwoord");
 
                     } while (cont);
