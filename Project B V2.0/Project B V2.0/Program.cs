@@ -95,7 +95,7 @@ namespace Project_B_V2._0
                             Console.WriteLine("Er mist data in het programma, dit komt hoogstwaarschijnlijk door beschadigde bestanden.");
                             break;
                         case IOException:
-                            Console.WriteLine("Een van de bestanden die het programma probeerd te lezen is geopend door een ander programma, sluit dat programma en druk dan op een toets.");
+                            Console.WriteLine("Een van de bestanden die het programma probeerd te lezen bestaad niet.");
                             break;
                         case JsonReaderException:
                             if (ex.StackTrace.Contains("RondleidingenWeekschema")) Console.WriteLine("RondleidingenWeekschema.json is beschadigt geraakt.");
@@ -670,12 +670,12 @@ namespace Project_B_V2._0
                 Console.WriteLine();
                 Console.WriteLine("Test data aanmaken voor PR-1.");
                 File.Delete("gebruikers.json");
-                File.Delete("Mederwerker.json");
+                File.Delete("Mederwerkers.json");
                 File.Delete("rondleidingen.json");
                 File.Delete("rondleidingenweekschema.json");
                 File.Copy(@"..\..\..\testing\preconditions\PR-1\gebruikers.json", "gebruikers.json");
                 File.Copy(@"..\..\..\testing\preconditions\PR-1\rondleidingen.json", "rondleidingen.json");
-                File.Copy(@"..\..\..\testing\preconditions\PR-1\Mederwerker.json", "Mederwerker.json");
+                File.Copy(@"..\..\..\testing\preconditions\PR-1\Mederwerkers.json", "Mederwerkers.json");
                 File.Copy(@"..\..\..\testing\preconditions\PR-1\rondleidingenweekschema.json", "rondleidingenweekschema.json");
                 List<User> gebruikers = JsonManager.DeserializeGebruikers();
                 List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen();
