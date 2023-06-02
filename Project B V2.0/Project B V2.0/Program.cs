@@ -352,7 +352,7 @@ namespace Project_B_V2._0
             else if (DisplayInfo.Count % 2 == 1 && pos == DisplayInfo.Count - 1)
             {
                 lastBox = BoxAroundText(DisplayInfo[^1], "#", 2, 0, totalBoxLength / 2 - 3, false,
-                    new List<string> { $"{(!posNoSelect ? BottomText.Remove(BottomText.Length - 1) : "Niet mogelijk".PadRight(subBoxPadding - 1))}", "".PadRight(subBoxPadding - 1) });
+                    new List<string> { $"{(!posNoSelect ? BottomText.Remove(BottomText.Length - 1) : "██ Niet mogelijk ██".PadRight(subBoxPadding - 1))}", "".PadRight(subBoxPadding - 1) });
                 if (DisplayInfo.Count > 1)
                 {
                     lastBox = lastBox.Remove(0, totalBoxLength / 2 + 3);
@@ -370,7 +370,7 @@ namespace Project_B_V2._0
             if (pos == 0)
             {
                 boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, 2), "#")[0], "#", 2, 0, totalBoxLength, true,
-                    new List<string> { $"{(!posNoSelect ? BottomText : "Niet mogelijk".PadRight(subBoxPadding))}##".PadRight(totalBoxLength), "##".PadLeft(subBoxPadding + 2) + "".PadRight(subBoxPadding + 2) }));
+                    new List<string> { $"{(!posNoSelect ? BottomText : "██ Niet mogelijk ██".PadRight(subBoxPadding))}##".PadRight(totalBoxLength), "##".PadLeft(subBoxPadding + 2) + "".PadRight(subBoxPadding + 2) }));
 
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(2, DisplayInfo.Count - 2), "#")
                     , "#", 2, 0, totalBoxLength, true));
@@ -380,7 +380,7 @@ namespace Project_B_V2._0
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, DisplayInfo.Count - 2), "#"), "#", 2, 0, totalBoxLength, true));
 
                 boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(DisplayInfo.Count - 2, 2), "#")[0], "#", 2, 0, totalBoxLength, true,
-                    new List<string> { $"{(!posNoSelect ? BottomText : "Niet mogelijk".PadRight(subBoxPadding))}##".PadRight(totalBoxLength), "##".PadLeft(subBoxPadding + 2) + "".PadRight(subBoxPadding + 2) }));
+                    new List<string> { $"{(!posNoSelect ? BottomText : "██ Niet mogelijk ██".PadRight(subBoxPadding))}##".PadRight(totalBoxLength), "##".PadLeft(subBoxPadding + 2) + "".PadRight(subBoxPadding + 2) }));
             }
             else if (pos == DisplayInfo.Count && !string.IsNullOrEmpty(lastBox))
             {
@@ -391,7 +391,7 @@ namespace Project_B_V2._0
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, pos), "#"), "#", 2, 0, totalBoxLength, true));
 
                 boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos, 2), "#")[0], "#", 2, 0, totalBoxLength, true,
-                    new List<string> { $"{(!posNoSelect ? BottomText : "Niet mogelijk".PadRight(subBoxPadding))}##".PadRight(totalBoxLength), "##".PadLeft(subBoxPadding + 2) + "".PadRight(subBoxPadding + 2) }));
+                    new List<string> { $"{(!posNoSelect ? BottomText : "██ Niet mogelijk ██".PadRight(subBoxPadding))}##".PadRight(totalBoxLength), "##".PadLeft(subBoxPadding + 2) + "".PadRight(subBoxPadding + 2) }));
 
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos + 2, DisplayInfo.Count - (pos + 2)), "#"), "#", 2, 0, totalBoxLength, true));
             }
@@ -400,7 +400,7 @@ namespace Project_B_V2._0
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(0, pos - 1), "#"), "#", 2, 0, totalBoxLength, true));
 
                 boxes.Add(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos - 1, 2), "#")[0], "#", 2, 0, totalBoxLength, true,
-                    new List<string> { "".PadRight(subBoxPadding) + $"##  {(!posNoSelect ? BottomText : "Niet mogelijk".PadRight(subBoxPadding))}", "##".PadLeft(subBoxPadding + 2) + "".PadRight(subBoxPadding + 2) }));
+                    new List<string> { "".PadRight(subBoxPadding) + $"##  {(!posNoSelect ? BottomText : "██ Niet mogelijk ██".PadRight(subBoxPadding))}", "##".PadLeft(subBoxPadding + 2) + "".PadRight(subBoxPadding + 2) }));
 
                 boxes.AddRange(BoxAroundText(MakeDubbelBoxes(DisplayInfo.GetRange(pos + 1, DisplayInfo.Count - (pos + 1)), "#"), "#", 2, 0, totalBoxLength, true));
             }
@@ -814,7 +814,7 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes = MakeInfoBoxes(rondleidingInformatie.ToList(), pos, "[1] Reserveren".PadRight(21), 
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie.ToList(), pos, "██ [1] Reserveren ██".PadRight(21), 
                     rondleidingen[pos].Bezetting == 13 || rondleidingen[pos].RondleidingGestart || 
                     rondleidingen[pos].Datum.Hour < newSetDate.Hour || 
                     (rondleidingen[pos].Datum.Hour == newSetDate.Hour && rondleidingen[pos].Datum.Minute < newSetDate.Minute), 46, 21);
@@ -1218,34 +1218,34 @@ namespace Project_B_V2._0
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
-                        (rondleidingen[i].Datum.ToString(TIME_FORMAT) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(TIME_FORMAT)).PadRight(24),
-                        $"Nog {rondleidingen[i].MaxGrootte - rondleidingen[i].Bezetting} {(rondleidingen[i].Bezetting == rondleidingen[i].MaxGrootte - 1 ? "plek" : "plekken")}".PadRight(24),
+                        (rondleidingen[i].Datum.ToString(TIME_FORMAT) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(TIME_FORMAT)).PadRight(31),
+                        $"Nog {rondleidingen[i].MaxGrootte - rondleidingen[i].Bezetting} {(rondleidingen[i].Bezetting == rondleidingen[i].MaxGrootte - 1 ? "plek" : "plekken")}".PadRight(31),
                     });
                 }
                 else if (rondleidingen[i].Bezetting < rondleidingen[i].MaxGrootte - 5)
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
-                        (rondleidingen[i].Datum.ToString(TIME_FORMAT) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(TIME_FORMAT)).PadRight(24),
+                        (rondleidingen[i].Datum.ToString(TIME_FORMAT) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(TIME_FORMAT)).PadRight(31),
                     });
                 }
                 else
                 {
                     rondleidingInformatie.Add(new List<string>
                     {
-                        (rondleidingen[i].Datum.ToString(TIME_FORMAT) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(TIME_FORMAT)).PadRight(24),
-                        $"VOL!!!!!".PadRight(24),
+                        (rondleidingen[i].Datum.ToString(TIME_FORMAT) + "-" + rondleidingen[i].Datum.AddMinutes(40).ToString(TIME_FORMAT)).PadRight(31),
+                        $"VOL!!!!!".PadRight(31),
                     });
                 }
 
                 if (rondleidingen[i].RondleidingGestart)
                 {
-                    rondleidingInformatie[^1].Add("Rondleiding gestart".PadRight(24));
-                    rondleidingInformatie[^1].Add("".PadRight(24));
+                    rondleidingInformatie[^1].Add("Rondleiding gestart".PadRight(31));
+                    rondleidingInformatie[^1].Add("".PadRight(31));
                 }
                 else 
                 {
-                    rondleidingInformatie[^1].Add("".PadRight(24));
+                    rondleidingInformatie[^1].Add("".PadRight(31));
                 }
 
                 time = time.AddMinutes(20);
@@ -1261,8 +1261,8 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes = MakeInfoBoxes(rondleidingInformatie.ToList(), pos, "[1] Rondleiding starten ", 
-                    rondleidingen[pos].RondleidingGestart, 52, 24);
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie.ToList(), pos, "██ [1] Rondleiding starten ██".PadRight(31), 
+                    rondleidingen[pos].RondleidingGestart, 66, 31);
                 
                 
                 if (!Console.IsInputRedirected) Console.Clear(); 
@@ -1271,7 +1271,7 @@ namespace Project_B_V2._0
                     Console.Write(boxes[i]);
                 }
 
-                if (rondleidingInformatie.Count % 2 == 0) Console.WriteLine(new string('#', 58));
+                if (rondleidingInformatie.Count % 2 == 0) Console.WriteLine(new string('#', 72));
                 Console.WriteLine("Druk op escape om terug te gaan.");
                 ConsoleKeyInfo key = ReadKey();
 
