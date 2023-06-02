@@ -22,11 +22,7 @@ namespace Project_B_V2._0
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         // State of the application once loaded
-        private const int HIDE = 0;
         private const int MAXIMIZE = 3;
-        private const int MINIMIZE = 6;
-        private const int RESTORE = 9;
-
 
         private static int _currentScreen;
         private static readonly List<Screen> _screens = new List<Screen>();
@@ -37,27 +33,16 @@ namespace Project_B_V2._0
         {
             Console.SetOut(_dualOutput);
             ShowWindow(_thisCon, MAXIMIZE);
+            DateTime newSetDate = DateTime.Now;
 
-            if (args.Length > 0)
-            {
-                DateTime newSetDate = Convert.ToDateTime(args[0]);
+            if (args.Length > 0) newSetDate = Convert.ToDateTime(args[0]);
 
-                _screens.Add(new HomeScreen(newSetDate)); // 0
-                _screens.Add(new TestDataGeneratorScreen(newSetDate)); // 1
-                _screens.Add(new AfdelingshoofdScherm(newSetDate)); //2
-                _screens.Add(new EmptyScreen(newSetDate)); //3  empty because we don't need gitsloginscreen and this is to preserve the return numbers
-                _screens.Add(new GidsScherm(newSetDate)); //4
-                _screens.Add(new WeekSchema(newSetDate)); //5
-            }
-            else
-            {
-                _screens.Add(new HomeScreen(DateTime.Now)); // 0
-                _screens.Add(new TestDataGeneratorScreen(DateTime.Now)); // 1
-                _screens.Add(new AfdelingshoofdScherm(DateTime.Now)); //2
-                _screens.Add(new EmptyScreen(DateTime.Now)); //3  empty because we don't need gitsloginscreen and this is to preserve the return numbers
-                _screens.Add(new GidsScherm(DateTime.Now)); //4
-                _screens.Add(new WeekSchema(DateTime.Now)); //5
-            }
+            _screens.Add(new HomeScreen(newSetDate)); // 0
+            _screens.Add(new TestDataGeneratorScreen(newSetDate)); // 1
+            _screens.Add(new AfdelingshoofdScherm(newSetDate)); //2
+            _screens.Add(new EmptyScreen(newSetDate)); //3  empty because we don't need gitsloginscreen and this is to preserve the return numbers
+            _screens.Add(new GidsScherm(newSetDate)); //4
+            _screens.Add(new WeekSchema(newSetDate)); //5
 
             _currentScreen = 0;
             do
@@ -1040,7 +1025,24 @@ namespace Project_B_V2._0
                     return 4;
                 }
                 else if (IsKeyPressed(key, "D5") || IsKeyPressed(key, "NUMPAD5"))
-                { 
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    cont = true;
+                    do
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine(new string('_', 48));
+                        Console.WriteLine("Vul uw wachtwoord in: ");
+                        (string?, int) input = AskForInput(0);
+                        if (input.Item2 != -1)
+                        {
+                            return input.Item2;
+                        }
+                        if (input.Item1 == "@HfkGJ0!=") cont = false;
+                        else Console.WriteLine("\nDit was niet uw wachtwoord");
+
+                    } while (cont);
                     return 2;
                 }
 
