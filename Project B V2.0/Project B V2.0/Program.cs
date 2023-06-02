@@ -1631,6 +1631,7 @@ namespace Project_B_V2._0
             Console.WriteLine("het standaard weekschema is aangepast.");
             Thread.Sleep(3000);
             return 5;
+            //.
         }
     }
 
