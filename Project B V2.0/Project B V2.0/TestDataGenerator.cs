@@ -77,11 +77,11 @@ namespace Project_B_V2._0
             return (Users, ex);
         }
 
-        internal static (List<Mederwerker>, Exception) MaakGitsen(int hoeveelheid)
+        internal static (List<medewerker>, Exception) MaakGitsen(int hoeveelheid)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()-_=+[]{}|;',.<>/?";
             Exception ex = new Exception();
-            List<Mederwerker> Mederwerker = new List<Mederwerker>();
+            List<medewerker> medewerker = new List<medewerker>();
             Random rnd = new Random();
             try
             {
@@ -92,7 +92,7 @@ namespace Project_B_V2._0
                     {
                         code += chars[rnd.Next(0, chars.Length)];
                     }
-                    Mederwerker.Add(new Mederwerker {
+                    medewerker.Add(new medewerker {
                         BeveiligingsCode = code,
                         Role = Roles.Gids,
                     });
@@ -102,7 +102,7 @@ namespace Project_B_V2._0
             {
                 ex = exception;
             }
-            return (Mederwerker, ex);
+            return (medewerker, ex);
         }
 
         internal static (List<Rondleiding>, Exception) MaakRondleidingen(DateTime start, DateTime end, bool useScedule)
