@@ -670,10 +670,12 @@ namespace Project_B_V2._0
                 Console.WriteLine();
                 Console.WriteLine("Test data aanmaken voor PR-1.");
                 File.Delete("gebruikers.json");
+                File.Delete("Mederwerker.json");
                 File.Delete("rondleidingen.json");
                 File.Delete("rondleidingenweekschema.json");
                 File.Copy(@"..\..\..\testing\preconditions\PR-1\gebruikers.json", "gebruikers.json");
                 File.Copy(@"..\..\..\testing\preconditions\PR-1\rondleidingen.json", "rondleidingen.json");
+                File.Copy(@"..\..\..\testing\preconditions\PR-1\Mederwerker.json", "Mederwerker.json");
                 File.Copy(@"..\..\..\testing\preconditions\PR-1\rondleidingenweekschema.json", "rondleidingenweekschema.json");
                 List<User> gebruikers = JsonManager.DeserializeGebruikers();
                 List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen();
@@ -827,7 +829,7 @@ namespace Project_B_V2._0
 
             do
             {
-                List<string> boxes = MakeInfoBoxes(rondleidingInformatie.ToList(), pos, "[1] Reserveren       ", 
+                List<string> boxes = MakeInfoBoxes(rondleidingInformatie.ToList(), pos, "[1] Reserveren".PadRight(21), 
                     rondleidingen[pos].Bezetting == 13 || rondleidingen[pos].RondleidingGestart || 
                     rondleidingen[pos].Datum.Hour < newSetDate.Hour || 
                     (rondleidingen[pos].Datum.Hour == newSetDate.Hour && rondleidingen[pos].Datum.Minute < newSetDate.Minute), 46, 21);

@@ -9,19 +9,6 @@ namespace Project_B_V2._0
 {
     /// <summary>
     /// This class is used to store the amount and max visitors of the tours per day.
-    /// This is used for the year settings.
-    /// </summary>
-    /// <param name="Date">this should be the date for wich these tour settings will apply</param>
-    /// <param name="Rondleidingen">this is the list of tuples where the date is the time notation of the tour and the int is the max amount of visitors</param>
-    public class RondleidingSettings
-    {
-        public DateOnly Date { get; set; }
-
-        public List<Tuple<TimeOnly, int>>? Rondleidingen { get; set; }
-    }
-
-    /// <summary>
-    /// This class is used to store the amount and max visitors of the tours per day.
     /// This is used for the week scedule.
     /// </summary>
     /// <param name="Day">This should be a day of the week.</param>
