@@ -132,8 +132,6 @@ namespace Project_B_V2._0
                 {
                     advicePerRondleiding += $"De bezetting is {bezettingsgraad}% op {rondleiding.Datum}, verhoog de groeps grootte met 1 of 2 plaatsen\n";
                 }
-
-
             }
 
             return $"Het advies luid: \n{advicePerRondleiding}";
