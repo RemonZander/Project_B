@@ -149,7 +149,7 @@ namespace Project_B_V2._0
         internal static List<RondleidingSettingsDayOfWeek> MaakStdWeekschema() 
         {
             List<RondleidingSettingsDayOfWeek> dagInfo = new List<RondleidingSettingsDayOfWeek>();
-            TimeOnly tijd = new TimeOnly(10, 0);
+            TimeOnly tijd = new TimeOnly(11, 0);
 
             for (int d = 1; d < 7; d++) 
             {
@@ -159,12 +159,12 @@ namespace Project_B_V2._0
                 DayOfWeek dag = (DayOfWeek)d;
                 dagInfo[d-1].Day = dag;
 
-                for (int i = 0; i <= 19; i++)
+                for (int i = 0; i < 18; i++)
                 {
-                    dagInfo[d-1].Rondleidingen.Add(Tuple.Create(tijd, 13));
+                    dagInfo[d-1].Rondleidingen?.Add(Tuple.Create(tijd, 13));
                     tijd = tijd.AddMinutes(20);
                 }
-                tijd = new TimeOnly(10, 0);
+                tijd = new TimeOnly(11, 0);
             }
             return dagInfo;
         }

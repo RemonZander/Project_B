@@ -28,9 +28,10 @@ namespace Project_B_V2._0
         private static readonly List<Screen> _screens = new List<Screen>();
 
         private static readonly DualConsoleOutput _dualOutput = new DualConsoleOutput(@"output.txt", Console.Out);
-
+        private static string[]? _args;
         static void Main(string[] args)
         {
+            _args = args;
             Console.SetOut(_dualOutput);
             ShowWindow(_thisCon, MAXIMIZE);
             DateTime newSetDate = DateTime.Now;
@@ -107,7 +108,7 @@ namespace Project_B_V2._0
 
         static internal void Display()
         {
-            _currentScreen = _screens[_currentScreen].DoWork(_dualOutput);
+            _currentScreen = _screens[_currentScreen].DoWork(_dualOutput, _args?.Length == 0 ? DateTime.Now : Convert.ToDateTime(_args?[0]));
         }
 
         static internal void Refresh()
@@ -128,7 +129,7 @@ namespace Project_B_V2._0
         protected const string DATE_FORMAT = "d-M-yyyy";
         protected const string TIME_FORMAT = "HH:mm";
         protected const string DATE_TIME_FORMAT = "d-M-yyyy HH:mm";
-        protected readonly DateTime newSetDate;
+        protected DateTime newSetDate;
 
         public Screen(DateTime newSetDate)
         {
@@ -139,7 +140,7 @@ namespace Project_B_V2._0
         /// This is the main function of the current screen. Here is all the logic of that current screen
         /// </summary>
         /// <returns>This function returns the ID of the next screen to display</returns>
-        internal abstract int DoWork(DualConsoleOutput dualOutput);
+        internal abstract int DoWork(DualConsoleOutput dualOutput, DateTime newSetDateUpdate);
 
         protected static ConsoleKeyInfo ReadKey()
         {
@@ -561,8 +562,9 @@ namespace Project_B_V2._0
         /// This is the main entrypoint for the current screen. In here you can do whatever you want your screen to do.
         /// </summary>
         /// <returns>here you return the index of the next screen. This index is based on the Screens field in the program class</returns>
-        internal override int DoWork(DualConsoleOutput dualOutput)
+        internal override int DoWork(DualConsoleOutput dualOutput, DateTime newSetDateUpdate)
         {
+            newSetDate = newSetDateUpdate;
             Console.WriteLine("TestDataGeneratorScreen");
             Console.WriteLine("Druk op [1] om gebruikers aan te maken.");
             Console.WriteLine("Druk op [2] om rondleidingen aan te maken.");
@@ -727,8 +729,9 @@ namespace Project_B_V2._0
 
         public HomeScreen(DateTime newSetDate) : base(newSetDate) { }
 
-        internal override int DoWork(DualConsoleOutput dualOutput)
+        internal override int DoWork(DualConsoleOutput dualOutput, DateTime newSetDateUpdate)
         {
+            newSetDate = newSetDateUpdate;
             if (newSetDate.DayOfWeek == DayOfWeek.Sunday)
             {
                 Console.WriteLine("Op zondag zijn wij gesloten. \nMorgen vanaf 10:00 zijn we weer open.");
@@ -761,10 +764,9 @@ namespace Project_B_V2._0
                 return 0;
             }
             List<DateTime> tijden = new List<DateTime>();
-            DateTime time = new DateTime(rondleidingen[0].Datum.Year, rondleidingen[0].Datum.Month, rondleidingen[0].Datum.Day, rondleidingen[0].Datum.Hour, rondleidingen[0].Datum.Minute, 0);
             for (int i = 0; i < rondleidingen.Count; i++)
             {
-                tijden.Add(time);
+                tijden.Add(new DateTime(rondleidingen[i].Datum.Year, rondleidingen[i].Datum.Month, rondleidingen[i].Datum.Day, rondleidingen[i].Datum.Hour, rondleidingen[i].Datum.Minute, 0));
                 if (rondleidingen[i].RondleidingGestart)
                 {
                     rondleidingInformatie.Add(new List<string>
@@ -1061,8 +1063,9 @@ namespace Project_B_V2._0
 
         public AfdelingshoofdScherm(DateTime newSetDate) : base(newSetDate) { }
 
-        internal override int DoWork(DualConsoleOutput dualOutput)
+        internal override int DoWork(DualConsoleOutput dualOutput, DateTime newSetDateUpdate)
         {
+            newSetDate = newSetDateUpdate;
             Console.WriteLine("AfdelingshoofdScherm");
             Console.WriteLine("Druk op [1] om de rondleidings bezettingsgraad te zien.");
             Console.WriteLine("Druk op [2] om het schema voor een bepaalde dag aan te passen.");
@@ -1196,8 +1199,9 @@ namespace Project_B_V2._0
 
         public GidsScherm(DateTime newSetDate) : base(newSetDate) { }
 
-        internal override int DoWork(DualConsoleOutput dualOutput)
+        internal override int DoWork(DualConsoleOutput dualOutput, DateTime newSetDateUpdate)
         {
+            newSetDate = newSetDateUpdate;
             int pos = 0;
             bool cont = true;
             List<List<string>> rondleidingInformatie = new List<List<string>>();
@@ -1211,10 +1215,9 @@ namespace Project_B_V2._0
                 rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToString(DATE_FORMAT) == newSetDate.ToString(DATE_FORMAT)).ToList();
             }
             List<DateTime> tijden = new List<DateTime>();
-            DateTime time = new DateTime(rondleidingen[0].Datum.Year, rondleidingen[0].Datum.Month, rondleidingen[0].Datum.Day, rondleidingen[0].Datum.Hour, rondleidingen[0].Datum.Minute, 0);
             for (int i = 0; i < rondleidingen.Count; i++)
             {
-                tijden.Add(time);
+                tijden.Add(new DateTime(rondleidingen[i].Datum.Year, rondleidingen[i].Datum.Month, rondleidingen[i].Datum.Day, rondleidingen[i].Datum.Hour, rondleidingen[i].Datum.Minute, 0));
                 if (rondleidingen[i].Bezetting >= rondleidingen[i].MaxGrootte - 5 && rondleidingen[i].Bezetting < rondleidingen[i].MaxGrootte)
                 {
                     rondleidingInformatie.Add(new List<string>
@@ -1248,8 +1251,6 @@ namespace Project_B_V2._0
                 {
                     rondleidingInformatie[^1].Add("".PadRight(31));
                 }
-
-                time = time.AddMinutes(20);
             }
 
             if (rondleidingInformatie.Count % 2 == 1)
@@ -1420,8 +1421,9 @@ namespace Project_B_V2._0
             return input;
         }
 
-        internal override int DoWork(DualConsoleOutput dualOutput)
+        internal override int DoWork(DualConsoleOutput dualOutput, DateTime newSetDateUpdate)
         {
+            newSetDate = newSetDateUpdate;
             bool cont = true;
             int editDay = 0;
             int bezetting = 0;
@@ -1642,6 +1644,6 @@ namespace Project_B_V2._0
     {
         public EmptyScreen(DateTime newSetDate) : base(newSetDate) { }
 
-        internal override int DoWork(DualConsoleOutput dualOutput) { return 0; }
+        internal override int DoWork(DualConsoleOutput dualOutput, DateTime newSetDateUpdate) { return 0; }
     }
 }

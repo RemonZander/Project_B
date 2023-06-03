@@ -6,7 +6,7 @@
     <RootNamespace>Project_B_V2._0</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject></StartupObject>
+    <StartupObject>Project_B_V2._0.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
