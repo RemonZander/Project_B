@@ -148,5 +148,15 @@ namespace Project_B_V2._0
 
             return data;
         }
+
+        internal static void SerializeResults(List<Result> data)
+        {
+            if (File.Exists("results.json"))
+            {
+                File.Delete("results.json");
+            }
+
+            File.WriteAllText("results.json", JsonConvert.SerializeObject(data, Formatting.Indented));
+        }
     }
 }
