@@ -739,6 +739,19 @@ namespace Project_B_V2._0
                 return 0;
             }
 
+            if (JsonManager.Deserializemedewerker().Count == 0)
+            {
+                List<medewerker> Gitsen = TestDataGenerator.MaakGitsen(10).Item1;
+
+                Gitsen.Add(new medewerker
+                {
+                    BeveiligingsCode = "@HfkGJ0!=",
+                    Role = Roles.Afdelingshoofd,
+                });
+
+                JsonManager.Serializemedewerker(Gitsen);
+            }
+
             int pos = 0;
             bool cont = true;
             List<List<string>> rondleidingInformatie = new List<List<string>>();
@@ -751,8 +764,9 @@ namespace Project_B_V2._0
 
             if (rondleidingen.Count <= 0)
             {
-                JsonManager.SerializeRondleidingen(TestDataGenerator.MaakRondleidingen(new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 11, 0, 0),
+                alleRondleidingen.AddRange(TestDataGenerator.MaakRondleidingen(new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 11, 0, 0),
                     new DateTime(newSetDate.Year, newSetDate.Month, newSetDate.Day, 17, 0, 0), true).Item1);
+                JsonManager.SerializeRondleidingen(alleRondleidingen);
 
                 rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.ToString(DATE_FORMAT) == newSetDate.ToString(DATE_FORMAT)).OrderBy(r => r.Datum).ToList();
             }
@@ -802,8 +816,6 @@ namespace Project_B_V2._0
                         "".PadRight(21),
                     });
                 }
-
-                //time = time.AddMinutes(20);
             }
 
             if (rondleidingInformatie.Count % 2 == 1)
@@ -1078,7 +1090,7 @@ namespace Project_B_V2._0
                 List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r =>
                 cultureInfo.Calendar.GetWeekOfYear(r.Datum, cultureInfo.DateTimeFormat.CalendarWeekRule, cultureInfo.DateTimeFormat.FirstDayOfWeek) ==
                 cultureInfo.Calendar.GetWeekOfYear(newSetDate, cultureInfo.DateTimeFormat.CalendarWeekRule, cultureInfo.DateTimeFormat.FirstDayOfWeek)).ToList();*/
-                List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.Month == newSetDate.Month).ToList();
+                List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen();
                 List<List<Rondleiding>> rondleidingenPerDay = new List<List<Rondleiding>>
                 {
                     rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Monday).ToList(),
