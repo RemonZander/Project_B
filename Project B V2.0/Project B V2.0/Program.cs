@@ -990,14 +990,20 @@ namespace Project_B_V2._0
                 Console.WriteLine(new string('#', 104));
 
                 Console.WriteLine("");
-                Console.WriteLine("Wilt u de data naar een bestand overbrengen? Y / N?");
-                string answer = ReadLine();
+                RondleidingenAdviesAlgoritme adviesRondleidingen = new RondleidingenAdviesAlgoritme();
 
-                if (answer == "Y")
+                Console.WriteLine(adviesRondleidingen.PrintAdviesPerRondleiding(rondleidingen));
+                Console.WriteLine(adviesRondleidingen.PrintAdviesPerDag(adviesRondleidingen.BerekenGemiddeldeGroepsgroottePerDag(rondleidingenPerDay), adviesRondleidingen.BerekenGemiddeldeBezettingPerDag(rondleidingenPerDay)));
+                Console.WriteLine("");
+                Console.WriteLine("Wilt u de data naar een bestand overbrengen? Y / N?");
+                ConsoleKeyInfo input = ReadKey();
+
+                if (IsKeyPressed(input, "Y"))
                 {
                     JsonManager.SerializeBezettingsgraden(rondleidingen);
+                    return 0;
                 }
-                else if (answer == "N")
+                else if (IsKeyPressed(input, "N"))
                 {
                     return 0;
                 }
@@ -1005,7 +1011,6 @@ namespace Project_B_V2._0
                 {
                     Console.WriteLine("Voer Y of N in!");
                 }
-
             }
             else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
             {
@@ -1193,6 +1198,17 @@ namespace Project_B_V2._0
             return input;
         }
 
+        private static List<string> AddRondleidingenAvg(List<string> input, List<RondleidingSettingsDayOfWeek> defaultWeekschedule, List<List<Rondleiding>> rondleidingenPerDay, int pos)
+        {
+            for (int j = 0; j < rondleidingenPerDay.Count; j++)
+            {
+                if (rondleidingenPerDay[pos].Count == 0) continue;
+                IEnumerable<Rondleiding> bezettingPerDay = rondleidingenPerDay[pos].Where(x => x.Datum.ToString(TIME_FORMAT) == defaultWeekschedule[pos].Rondleidingen[j].Item1.ToString(TIME_FORMAT));
+                input.Add($"{bezettingPerDay.Average(x => x.Bezetting)}");
+            }
+            return input;
+        }
+
         internal override int DoWork(DualConsoleOutput dualOutput)
         {
             bool cont = true;
@@ -1212,6 +1228,18 @@ namespace Project_B_V2._0
             {
                 defaultWeekschedule = JsonManager.DeserializeRondleidingenWeekschema();
             }
+
+            RondleidingenAdviesAlgoritme adviesRondleidingen = new RondleidingenAdviesAlgoritme();
+            List<Rondleiding> rondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum.Month == newSetDate.Month).ToList();
+            List<List<Rondleiding>> rondleidingenPerDay = new List<List<Rondleiding>>
+            {
+                rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Monday).ToList(),
+                rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Tuesday).ToList(),
+                rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Wednesday).ToList(),
+                rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Thursday).ToList(),
+                rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Friday).ToList(),
+                rondleidingen.Where(r => r.Datum.DayOfWeek == DayOfWeek.Saturday).ToList(),
+            };
 
             List<List<string>> dayofweeklines1and2 = new List<List<string>>
             {
@@ -1274,38 +1302,112 @@ namespace Project_B_V2._0
                 },
             };
 
+            List<List<string>> dayofweeklines1and2Avg = new List<List<string>>
+            {
+                new List<string>
+                {
+                    "".PadRight(45),
+                    "".PadRight(45),
+                    "Maandag".PadLeft(25).PadRight(45),
+                    "".PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+
+                },
+                new List<string>
+                {
+                    "".PadRight(45),
+                    "".PadRight(45),
+                    "Dinsdag".PadLeft(25).PadRight(45),
+                    "".PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+
+                },
+                new List<string>
+                {
+                    "".PadRight(45),
+                    "".PadRight(45),
+                    "Donderdag".PadLeft(26).PadRight(45),
+                    "".PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+
+                },
+                new List<string>
+                {
+                    "".PadRight(45),
+                    "".PadRight(45),
+                    "Vrijdag".PadLeft(25).PadRight(45),
+                    "".PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+
+                },
+            };
+            List<List<string>> dayofweeklines1and3Avg = new List<List<string>>
+            {
+                new List<string>
+                {
+                    "".PadRight(45),
+                    "".PadRight(45),
+                    "Woensdag".PadLeft(26).PadRight(45),
+                    "".PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+
+                },
+                new List<string>
+                {
+                    "".PadRight(45),
+                    "".PadRight(45),
+                    "Zaterdag".PadLeft(26).PadRight(45),
+                    "".PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+
+                },
+            };
+
             for (int i = 0; i < defaultWeekschedule.Count; i++)
             {
                 if (defaultWeekschedule[i].Day == DayOfWeek.Wednesday)
                 {
                     dayofweeklines1and3[0] = AddRondleidingenInfo(dayofweeklines1and3[0], defaultWeekschedule, i);
+                    dayofweeklines1and3Avg[0] = AddRondleidingenAvg(dayofweeklines1and3Avg[0], defaultWeekschedule, rondleidingenPerDay, i);
                 }
                 else if (defaultWeekschedule[i].Day == DayOfWeek.Saturday)
                 {
                     dayofweeklines1and3[1] = AddRondleidingenInfo(dayofweeklines1and3[1], defaultWeekschedule, i);
+                    dayofweeklines1and3Avg[1] = AddRondleidingenAvg(dayofweeklines1and3Avg[1], defaultWeekschedule, rondleidingenPerDay, i);
                 }
                 else if (defaultWeekschedule[i].Day == DayOfWeek.Monday)
                 {
                     dayofweeklines1and2[0] = AddRondleidingenInfo(dayofweeklines1and2[0], defaultWeekschedule, i);
+                    dayofweeklines1and2Avg[0] = AddRondleidingenAvg(dayofweeklines1and2Avg[0], defaultWeekschedule, rondleidingenPerDay, i);
                 }
                 else if (defaultWeekschedule[i].Day == DayOfWeek.Tuesday)
                 {
                     dayofweeklines1and2[1] = AddRondleidingenInfo(dayofweeklines1and2[1], defaultWeekschedule, i);
+                    dayofweeklines1and2Avg[1] = AddRondleidingenAvg(dayofweeklines1and2Avg[1], defaultWeekschedule, rondleidingenPerDay, i);
                 }
                 else if (defaultWeekschedule[i].Day == DayOfWeek.Thursday)
                 {
                     dayofweeklines1and2[2] = AddRondleidingenInfo(dayofweeklines1and2[2], defaultWeekschedule, i);
+                    dayofweeklines1and2Avg[2] = AddRondleidingenAvg(dayofweeklines1and2Avg[2], defaultWeekschedule, rondleidingenPerDay, i);
                 }
                 else if (defaultWeekschedule[i].Day == DayOfWeek.Friday)
                 {
                     dayofweeklines1and2[3] = AddRondleidingenInfo(dayofweeklines1and2[3], defaultWeekschedule, i);
+                    dayofweeklines1and2Avg[3] = AddRondleidingenAvg(dayofweeklines1and2Avg[3], defaultWeekschedule, rondleidingenPerDay, i);
                 }
             }
             List<string> weekboxes = MakeDayOfWeekView(dayofweeklines1and2, dayofweeklines1and3, "#", 143);
+            List<string> weekboxesAverages = MakeDayOfWeekView(dayofweeklines1and2Avg, dayofweeklines1and3Avg, "#", 143);
 
             for (int a = 0; a < weekboxes.Count; a++)
             {
                 Console.Write(weekboxes[a]);
+            }
+            Console.WriteLine(new string('#', 149));
+
+            for (int b = 0; b < weekboxesAverages.Count; b++)
+            {
+                Console.Write(weekboxes[b]);
             }
             Console.WriteLine(new string('#', 149));
 
