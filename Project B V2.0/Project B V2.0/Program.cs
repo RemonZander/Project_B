@@ -1870,6 +1870,7 @@ namespace Project_B_V2._0
                     }
 
                     JsonManager.SerializeRondleidingenWeekschema(defaultWeekschedule);
+                    return 3;
                 }
                 else if (IsKeyPressed(key, ESCAPE_KEY))
                 {
