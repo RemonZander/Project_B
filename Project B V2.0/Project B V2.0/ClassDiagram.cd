@@ -3,24 +3,21 @@
   <Class Name="Project_B_V2._0.Program">
     <Position X="0.75" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAAEAAAAAhAAAAAAAAAAQAAAAAAggIAAAAiBABgAAE=</HashCode>
+      <HashCode>ABAAEAAAAABAAAAAAAAAAQAAAAAAAgIBQAACBBBgAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Field Name="screens" />
-    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Project_B_V2._0.Screen">
     <Position X="4" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACRAAAAAAASAYAAAQAAAAARBAACAECCAASAAAEAAAAQ=</HashCode>
+      <HashCode>ACBAAAAAAASAYAAAQAAAAARBAACgEACAISAAIBAAABQ=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Project_B_V2._0.TestDataGeneratorScreen">
     <Position X="6.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAwAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAgAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -34,15 +31,15 @@
   <Class Name="Project_B_V2._0.Rondleiding">
     <Position X="3.5" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAgAAAAAAAAAAAAAAAAgCAAAAAAgAEAAAAAA=</HashCode>
+      <HashCode>ACAAAAAAAgAAAAAAAAAAABAAAAACAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Rondleiding.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Project_B_V2._0.Mederwerker">
+  <Class Name="Project_B_V2._0.medewerker">
     <Position X="0.75" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
-      <FileName>Mederwerker.cs</FileName>
+      <FileName>Medewerker.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Role" />
@@ -59,7 +56,7 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -74,7 +71,7 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -89,11 +86,11 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Project_B_V2._0.InlogGidsScherm">
+  <Class Name="Project_B_V2._0.EmptyScreen">
     <Position X="11.75" Y="3.25" Width="1.5" />
     <InheritanceLine Type="Project_B_V2._0.Screen" FixedToPoint="true">
       <Path>
@@ -104,7 +101,7 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>

@@ -77,16 +77,23 @@ namespace Project_B_V2._0
             return (Users, ex);
         }
 
-        internal static (List<Mederwerker>, Exception) MaakGitsen(int hoeveelheid)
+        internal static (List<medewerker>, Exception) MaakGitsen(int hoeveelheid)
         {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()-_=+[]{}|;',.<>/?";
             Exception ex = new Exception();
-            List<Mederwerker> Mederwerker = new List<Mederwerker>();
+            List<medewerker> medewerker = new List<medewerker>();
+            Random rnd = new Random();
             try
             {
                 for (int a = 0; a < hoeveelheid; a++)
                 {
-                    Mederwerker.Add(new Mederwerker {
-                        BeveiligingsCode = a.ToString(),
+                    string code = "";
+                    for (int b = 0; b < 9; b++)
+                    {
+                        code += chars[rnd.Next(0, chars.Length)];
+                    }
+                    medewerker.Add(new medewerker {
+                        BeveiligingsCode = code,
                         Role = Roles.Gids,
                     });
                 }
@@ -95,7 +102,7 @@ namespace Project_B_V2._0
             {
                 ex = exception;
             }
-            return (Mederwerker, ex);
+            return (medewerker, ex);
         }
 
         internal static (List<Rondleiding>, Exception) MaakRondleidingen(DateTime start, DateTime end, bool useScedule)
@@ -142,7 +149,7 @@ namespace Project_B_V2._0
         internal static List<RondleidingSettingsDayOfWeek> MaakStdWeekschema() 
         {
             List<RondleidingSettingsDayOfWeek> dagInfo = new List<RondleidingSettingsDayOfWeek>();
-            TimeOnly tijd = new TimeOnly(10, 0);
+            TimeOnly tijd = new TimeOnly(11, 0);
 
             for (int d = 1; d < 7; d++) 
             {
@@ -152,12 +159,12 @@ namespace Project_B_V2._0
                 DayOfWeek dag = (DayOfWeek)d;
                 dagInfo[d-1].Day = dag;
 
-                for (int i = 0; i <= 19; i++)
+                for (int i = 0; i < 18; i++)
                 {
-                    dagInfo[d-1].Rondleidingen.Add(Tuple.Create(tijd, 13));
+                    dagInfo[d-1].Rondleidingen?.Add(Tuple.Create(tijd, 13));
                     tijd = tijd.AddMinutes(20);
                 }
-                tijd = new TimeOnly(10, 0);
+                tijd = new TimeOnly(11, 0);
             }
             return dagInfo;
         }
