@@ -803,7 +803,7 @@ namespace Project_B_V2._0
                     });
                 }
 
-                time = time.AddMinutes(20);
+                //time = time.AddMinutes(20);
             }
 
             if (rondleidingInformatie.Count % 2 == 1)
@@ -1164,10 +1164,11 @@ namespace Project_B_V2._0
                 Console.WriteLine(new string('#', 104));
 
                 Console.WriteLine("");
-                RondleidingenAdviesAlgoritme adviesRondleidingen = new RondleidingenAdviesAlgoritme();
+                //TODO: Clean up
+                //RondleidingenAdviesAlgoritme adviesRondleidingen = new RondleidingenAdviesAlgoritme();
 
-                Console.WriteLine(adviesRondleidingen.PrintAdviesPerRondleiding(rondleidingen));
-                Console.WriteLine(adviesRondleidingen.PrintAdviesPerDag(adviesRondleidingen.BerekenGemiddeldeGroepsgroottePerDag(rondleidingenPerDay), adviesRondleidingen.BerekenGemiddeldeBezettingPerDag(rondleidingenPerDay)));
+                //Console.WriteLine(adviesRondleidingen.PrintAdviesPerRondleiding(rondleidingen));
+                //Console.WriteLine(adviesRondleidingen.PrintAdviesPerDag(adviesRondleidingen.BerekenGemiddeldeGroepsgroottePerDag(rondleidingenPerDay), adviesRondleidingen.BerekenGemiddeldeBezettingPerDag(rondleidingenPerDay)));
                 Console.WriteLine("");
                 Console.WriteLine("Wilt u de data naar een bestand overbrengen? Y / N?");
                 ConsoleKeyInfo input = ReadKey();
@@ -1539,7 +1540,7 @@ namespace Project_B_V2._0
                     "".PadRight(45),
                     "Maandag".PadLeft(25).PadRight(45),
                     "".PadRight(45),
-                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gem. bezetting".PadLeft(15)).PadRight(45),
 
                 },
                 new List<string>
@@ -1548,7 +1549,7 @@ namespace Project_B_V2._0
                     "".PadRight(45),
                     "Dinsdag".PadLeft(25).PadRight(45),
                     "".PadRight(45),
-                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gem. bezetting".PadLeft(15)).PadRight(45),
 
                 },
                 new List<string>
@@ -1557,7 +1558,7 @@ namespace Project_B_V2._0
                     "".PadRight(45),
                     "Donderdag".PadLeft(26).PadRight(45),
                     "".PadRight(45),
-                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gem. bezetting".PadLeft(15)).PadRight(45),
 
                 },
                 new List<string>
@@ -1566,7 +1567,7 @@ namespace Project_B_V2._0
                     "".PadRight(45),
                     "Vrijdag".PadLeft(25).PadRight(45),
                     "".PadRight(45),
-                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gem. bezetting".PadLeft(15)).PadRight(45),
 
                 },
             };
@@ -1578,7 +1579,7 @@ namespace Project_B_V2._0
                     "".PadRight(45),
                     "Woensdag".PadLeft(26).PadRight(45),
                     "".PadRight(45),
-                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gem. bezetting".PadLeft(15)).PadRight(45),
 
                 },
                 new List<string>
@@ -1587,7 +1588,7 @@ namespace Project_B_V2._0
                     "".PadRight(45),
                     "Zaterdag".PadLeft(26).PadRight(45),
                     "".PadRight(45),
-                    ("Rondleidingen".PadLeft(19) + "Gemiddelde bezetting".PadLeft(18)).PadRight(45),
+                    ("Rondleidingen".PadLeft(19) + "Gem. bezetting".PadLeft(15)).PadRight(45),
 
                 },
             };
@@ -1636,7 +1637,7 @@ namespace Project_B_V2._0
 
             for (int b = 0; b < weekboxesAverages.Count; b++)
             {
-                Console.Write(weekboxes[b]);
+                Console.Write(weekboxesAverages[b]);
             }
             Console.WriteLine(new string('#', 149));
 
