@@ -890,9 +890,15 @@ namespace Project_B_V2._0
 
                     for (int a = 0; a < gebruikers.Count; a++)
                     {
-                        if (gebruikers[a].UniekeCode == answer.Item1 && gebruikers[a].Reservering != new DateTime(1, 1, 1))
+                        if (gebruikers[a].UniekeCode == answer.Item1 && gebruikers[a].Reservering != new DateTime(1, 1, 1) && gebruikers[a].Reservering.ToString(DATE_FORMAT) == newSetDate.ToString(DATE_FORMAT))
                         {
                             Console.WriteLine();
+                            if (gebruikers[a].Reservering.ToString(DATE_TIME_FORMAT) == tijden[pos].ToString(DATE_TIME_FORMAT))
+                            {
+                                Console.WriteLine("U heeft al een reservering om deze tijd staan.");
+                                Thread.Sleep(3000);
+                                return 0;
+                            }
                             Console.WriteLine($"U heeft al een reservering staan op {gebruikers[a].Reservering.ToString(DATE_TIME_FORMAT)}");
                             Console.WriteLine($"Wilt u de uw reservering verplaatsen naar: {tijden[pos].ToString(DATE_TIME_FORMAT)}? (y/n)");
                             key = ReadKey();
@@ -918,7 +924,7 @@ namespace Project_B_V2._0
                             Thread.Sleep(2000);
                             return 0;
                         }
-                        else if (gebruikers[a].UniekeCode == answer.Item1)
+                        else if (gebruikers[a].UniekeCode == answer.Item1 && gebruikers[a].Reservering == new DateTime(1, 1, 1))
                         {
                             gebruikers[a].Reservering = tijden[pos];
 
@@ -937,7 +943,7 @@ namespace Project_B_V2._0
                     }
 
                     Console.WriteLine();
-                    Console.WriteLine("Deze unieke code is bij ons niet bekent");
+                    Console.WriteLine("Deze unieke code is bij ons niet bekent of u gebruikt een oude unieke code.");
                     Thread.Sleep(2000);
                 }
                 else if (IsKeyPressed(key, "D2") || IsKeyPressed(key, "NUMPAD2"))
@@ -955,7 +961,18 @@ namespace Project_B_V2._0
                     List<User> gebruikers = JsonManager.DeserializeGebruikers();
 
                     //Als de gebruiker is gevonden, returned hij het naar een nieuwe variabel
-                    User gebruiker = gebruikers.First(geb => geb.UniekeCode == answer.Item1);
+                    User gebruiker = new User();
+                    try
+                    {
+                        gebruiker = gebruikers.First(geb => geb.UniekeCode == answer.Item1);
+
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Deze unieke code is bij ons niet bekent of u gebruikt een oude unieke code.");
+                        Thread.Sleep(3000);
+                        return 0;
+                    }
 
                     Console.WriteLine();
                     Console.WriteLine();
@@ -964,10 +981,10 @@ namespace Project_B_V2._0
                     Console.WriteLine("Uw gegevens:");
                     Console.WriteLine(BoxAroundText(new List<string>
                     {
-                        $"Uw unieke code: {gebruiker.UniekeCode}".PadRight(47),
-                        gebruiker.Reservering != default ? $"Uw heb uw reservering staan op: {gebruiker.Reservering.ToString(DATE_TIME_FORMAT)}".PadRight(47)
-                        : "U heeft nog geen reservering".PadRight(47),
-                    }, "#", 2, 1, 47, false));
+                        $"Uw unieke code: {gebruiker.UniekeCode}".PadRight(50),
+                        gebruiker.Reservering != default ? $"Uw heeft uw reservering staan op: {gebruiker.Reservering.ToString(DATE_TIME_FORMAT)}".PadRight(50)
+                        : "U heeft nog geen reservering".PadRight(50),
+                    }, "#", 2, 1, 50, false));
                     Console.WriteLine("Druk op een knop om terug te gaan...");
                     ReadKey();
                 }
@@ -996,10 +1013,10 @@ namespace Project_B_V2._0
                         Thread.Sleep(3000);
                         return 0;
                     }
-                    else if (index == -1)
+                    else if (index == -1 || gebruikers[index].Reservering.ToString(DATE_FORMAT) != newSetDate.ToString(DATE_FORMAT))
                     {
                         Console.WriteLine();
-                        Console.WriteLine("Deze unieke code is bij ons niet bekend. U wordt weer terug gestuurd.");
+                        Console.WriteLine("Deze unieke code is bij ons niet bekent of u gebruikt een oude unieke code.");
                         Thread.Sleep(3000);
                         return 0;
                     }
