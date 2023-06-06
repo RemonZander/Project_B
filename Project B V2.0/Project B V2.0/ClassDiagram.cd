@@ -3,9 +3,12 @@
   <Class Name="Project_B_V2._0.Program">
     <Position X="0.75" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ABAAEAAAAABAAAAAAAAAAQAAAAAAAgIBQAACBBBgAAA=</HashCode>
+      <HashCode>ABAAAAAAAABAAAAAAAAAAQAAAAAAAgABQAAABBBgAQA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_dualOutput" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="Project_B_V2._0.Screen">
     <Position X="4" Y="0.75" Width="1.5" />
@@ -22,21 +25,21 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Project_B_V2._0.User">
-    <Position X="0.75" Y="6" Width="1.5" />
+    <Position X="11.25" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
       <FileName>User.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Project_B_V2._0.Rondleiding">
-    <Position X="3.5" Y="6" Width="1.5" />
+    <Position X="13.25" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAAgAAAAAAAAAAABAAAAACAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Rondleiding.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Project_B_V2._0.medewerker">
-    <Position X="0.75" Y="7.75" Width="1.5" />
+    <Position X="11.25" Y="8" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
       <FileName>Medewerker.cs</FileName>
@@ -49,8 +52,8 @@
     <Position X="8.25" Y="3.25" Width="1.5" />
     <InheritanceLine Type="Project_B_V2._0.Screen" FixedToPoint="true">
       <Path>
-        <Point X="4.648" Y="0.75" />
-        <Point X="4.648" Y="0.375" />
+        <Point X="5.359" Y="0.75" />
+        <Point X="5.359" Y="0.375" />
         <Point X="9" Y="0.375" />
         <Point X="9" Y="3.25" />
       </Path>
@@ -64,8 +67,8 @@
     <Position X="10" Y="3.25" Width="1.5" />
     <InheritanceLine Type="Project_B_V2._0.Screen" FixedToPoint="true">
       <Path>
-        <Point X="4.293" Y="0.75" />
-        <Point X="4.293" Y="0.375" />
+        <Point X="4.344" Y="0.75" />
+        <Point X="4.344" Y="0.375" />
         <Point X="10.75" Y="0.375" />
         <Point X="10.75" Y="3.25" />
       </Path>
@@ -79,8 +82,8 @@
     <Position X="13.75" Y="3.25" Width="1.5" />
     <InheritanceLine Type="Project_B_V2._0.Screen" FixedToPoint="true">
       <Path>
-        <Point X="4.985" Y="0.75" />
-        <Point X="4.985" Y="0.375" />
+        <Point X="5.156" Y="0.75" />
+        <Point X="5.156" Y="0.375" />
         <Point X="14.5" Y="0.375" />
         <Point X="14.5" Y="3.25" />
       </Path>
@@ -90,23 +93,73 @@
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Project_B_V2._0.EmptyScreen">
+  <Class Name="Project_B_V2._0.WeekSchema">
     <Position X="11.75" Y="3.25" Width="1.5" />
     <InheritanceLine Type="Project_B_V2._0.Screen" FixedToPoint="true">
       <Path>
-        <Point X="5.274" Y="0.75" />
-        <Point X="5.274" Y="0.375" />
+        <Point X="4.75" Y="0.75" />
+        <Point X="4.75" Y="0.375" />
         <Point X="12.5" Y="0.375" />
-        <Point X="12.5" Y="3.25" />
+        <Point X="12.5" Y="3.625" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Project_B_V2._0.AdviesScherm">
+    <Position X="15.75" Y="3.25" Width="1.5" />
+    <InheritanceLine Type="Project_B_V2._0.Screen" FixedToPoint="true">
+      <Path>
+        <Point X="4.953" Y="0.75" />
+        <Point X="4.953" Y="0.375" />
+        <Point X="16.688" Y="0.375" />
+        <Point X="16.688" Y="3.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAQAABAAAAAAAAAAAAAAAAAAAAAAAAEAAAE=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Project_B_V2._0.DualConsoleOutput">
+    <Position X="0.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAgCAAAAAIAAAAAAAAgAAAAIAAAQAAAAGMAAA=</HashCode>
+      <FileName>DualConsoleOutput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Project_B_V2._0.JsonManager">
+    <Position X="7.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAQAGAACBAAAwEAAAIAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>JsonManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Project_B_V2._0.Result">
+    <Position X="13.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAACAEAAAAAQA=</HashCode>
+      <FileName>results.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Project_B_V2._0.RondleidingSettingsDayOfWeek">
+    <Position X="15.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RondleidingSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Project_B_V2._0.TestDataGenerator">
+    <Position X="15.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAgAAAAAAAAABAAAAAIAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TestDataGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Enum Name="Project_B_V2._0.Roles">
-    <Position X="0.75" Y="9.75" Width="1.5" />
+    <Position X="11.25" Y="10" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAACAAAAAAAAA=</HashCode>
       <FileName>Roles.cs</FileName>

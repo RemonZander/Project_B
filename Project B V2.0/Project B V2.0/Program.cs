@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
-using System.Globalization;
+﻿using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using System.Security.Cryptography;
 
 namespace Project_B_V2._0
 {
@@ -337,6 +328,17 @@ namespace Project_B_V2._0
             return output += new string(Convert.ToChar(sym), maxlength + 2 + spacingside * 2) + "\n";
         }
 
+        /// <summary>
+        /// This function makes a list of dubbleboxes with the correct bottomText depending on your current position in the list. This function will work with
+        /// even en uneven number of single boxes.
+        /// </summary>
+        /// <param name="DisplayInfo">This is the info you want to display, this is a list list of string where each string is one line of info per item</param>
+        /// <param name="pos">This is your current position in the list</param>
+        /// <param name="BottomText">This is the text you want to add to the box</param>
+        /// <param name="posNoSelect">This is a bool and when true it will display "██ Niet mogelijk ██".PadRight(subBoxPadding - 1)</param>
+        /// <param name="totalBoxLength">This is the total horizontal length</param>
+        /// <param name="subBoxPadding">This is the amount of padding a single line of a single info item needs to make sure the dubble symbols in makedubbelboxes will be a straight line</param>
+        /// <returns>This returns a list of boxes to be printed to the screen</returns>
         protected static List<string> MakeInfoBoxes(List<List<string>> DisplayInfo, int pos, string BottomText, bool posNoSelect, int totalBoxLength, int subBoxPadding) 
         {
             List<string> boxes = new List<string>();
@@ -414,6 +416,13 @@ namespace Project_B_V2._0
             return boxes;
         }
         
+        /// <summary>
+        /// This function is used for navigation. It returns the new position when one of the arrow keys has been pressed
+        /// </summary>
+        /// <param name="pos">This is the current position</param>
+        /// <param name="naviagetionLength">This max amount of items in navigation list</param>
+        /// <param name="key">This is the current pressed key</param>
+        /// <returns>This returns the new pos based on the key pressed</returns>
         protected static int NavigateBoxes(int pos, int naviagetionLength, ConsoleKeyInfo key) 
         {
            
@@ -520,6 +529,14 @@ namespace Project_B_V2._0
 
         }
 
+        /// <summary>
+        /// This function makes the weekscedule view you can find in the afdelingshood screen.
+        /// </summary>
+        /// <param name="box1andbox2Lines">These are the lines for the first 2 boxes from the left</param>
+        /// <param name="box3Lines">These are the lines for the last 3ed box on the right</param>
+        /// <param name="sym">This is the box symbol</param>
+        /// <param name="maxLength">This is the total horizontal length<</param>
+        /// <returns>This returns a list of boxes to be printed to the screen</returns>
         protected static List<string> MakeDayOfWeekView(List<List<string>> box1andbox2Lines, List<List<string>> box3Lines, string sym, int maxLength)
         {
             List<List<string>> box1andbox2 = MakeDubbelBoxes(box1andbox2Lines, sym);
