@@ -862,7 +862,7 @@ namespace Project_B_V2._0
                 Console.WriteLine("Druk op [3] om je reservering te annuleren.");
                 Console.WriteLine("Druk op [4] om naar de gidsomgeving te gaan.");
                 Console.WriteLine("Druk op [5] om naar de afdelingshoofdomgeving te gaan.");
-                Console.WriteLine("Druk op [9] voor developper scherm.");
+                //Console.WriteLine("Druk op [9] voor developper scherm.");
                 Console.WriteLine("Druk op escape om terug te gaan.");
                 ConsoleKeyInfo key = ReadKey();
 
@@ -1096,10 +1096,10 @@ namespace Project_B_V2._0
                     return 2;
                 }
 
-                else if (IsKeyPressed(key, "D9") || IsKeyPressed(key, "NUMPAD9"))
+/*                else if (IsKeyPressed(key, "D9") || IsKeyPressed(key, "NUMPAD9"))
                 {
                     return 1;
-                }
+                }*/
 
             } while (cont);
             return 0;
