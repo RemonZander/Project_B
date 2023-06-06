@@ -60,7 +60,7 @@ namespace Project_B_V2._0
                         Reservering = rondleidingen[nextRondleiding].Datum,
                     });
                     rondleidingen[nextRondleiding].Bezetting += 1;
-                    if (rondleidingen[nextRondleiding].Bezetting >= 13)
+                    if (rondleidingen[nextRondleiding].Bezetting >= rondleidingen[nextRondleiding].MaxGrootte)
                     {
                         rondleidingenNew.Add(rondleidingen[nextRondleiding]);
                         rondleidingen.RemoveAt(nextRondleiding);

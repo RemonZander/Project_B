@@ -561,7 +561,7 @@ namespace Project_B_V2._0
             Console.WriteLine("Geef de eind datum op vanaf wanneer je rondleidingen wilt maken. Format: dd-MM-YYYY");
             DateTime end = Convert.ToDateTime(ReadLine());
             Console.WriteLine();
-            (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end, false);
+            (List<Rondleiding>, Exception) result = TestDataGenerator.MaakRondleidingen(start, end, true);
             if (result.Item2.Message != "Exception of type 'System.Exception' was thrown.")
             {
                 Console.WriteLine($"Er is een error opgetreden: {result.Item2}");
@@ -1682,7 +1682,8 @@ namespace Project_B_V2._0
             int bezetting = 0;
             TimeOnly tijd = new TimeOnly();
             avgBezetting = new List<List<double>>();
-            alleRondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum <= newSetDate.AddDays(-1)).ToList();
+            //alleRondleidingen = JsonManager.DeserializeRondleidingen().Where(r => r.Datum <= newSetDate.AddDays(-1)).ToList();
+            alleRondleidingen = JsonManager.DeserializeRondleidingen();
             List<RondleidingSettingsDayOfWeek> defaultWeekschedule = new List<RondleidingSettingsDayOfWeek>();
 
             if (!Console.IsInputRedirected) Console.Clear();
